@@ -1,0 +1,110 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.8.0_05" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			"background": new java.awt.Color( 255, 255, 255, 255 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "panel1"
+				"preferredSize": new java.awt.Dimension( 200, 0 )
+				"background": new java.awt.Color( 255, 255, 255, 255 )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "East"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "panel2"
+				"preferredSize": new java.awt.Dimension( 200, 100 )
+				"background": new java.awt.Color( 255, 255, 255, 255 )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "South"
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.swingx.VerticalLayout ) ) {
+				name: "panel3"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jformdesigner.runtime.NullLayout ) ) {
+					name: "panel4"
+					"background": new java.awt.Color( 255, 255, 255, 255 )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button2"
+						"text": "Ajouter"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+						"x": 480
+						"y": 5
+					} )
+				} )
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					"background": sfield java.awt.Color orange
+					"viewportBorder": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"doubleBuffered": true
+					"border": new javax.swing.border.LineBorder( sfield java.awt.Color black, 1, false )
+					add( new FormComponent( "javax.swing.JTable" ) {
+						name: "table1"
+						"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+							add( new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+							} )
+							add( new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+								add( null )
+							} )
+						}, new java.util.Vector {
+							add( "ID Groupe" )
+							add( "Libelle" )
+							add( "ID Filliere" )
+							add( "Filliere" )
+							add( "Modifier" )
+							add( "Supprimer" )
+						}, new java.util.Vector {
+							add( class java.lang.String )
+							add( class java.lang.String )
+							add( class java.lang.String )
+							add( class java.lang.String )
+							add( null )
+							add( null )
+						}, new java.util.Vector {
+							add( false )
+							add( null )
+							add( null )
+							add( false )
+							add( null )
+							add( null )
+						}, new java.util.Vector {
+							add( new com.jformdesigner.model.SwingTableColumn( null, 0, 0, 0, false ) )
+							add( new com.jformdesigner.model.SwingTableColumn( null, 125, 0, 0, true ) )
+							add( null )
+							add( new com.jformdesigner.model.SwingTableColumn( null, 125, 0, 0, true ) )
+							add( null )
+							add( null )
+						} )
+						"gridColor": sfield java.awt.Color black
+						"autoResizeMode": 0
+						"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						"fillsViewportHeight": true
+					} )
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 130, 0 )
+			"size": new java.awt.Dimension( 840, 585 )
+		} )
+		add( new FormComponent( "javax.swing.JButton" ) {
+			name: "button1"
+			"text": "text"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 645, 0 )
+		} )
+	}
+}
