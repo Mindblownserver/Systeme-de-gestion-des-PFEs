@@ -22,7 +22,7 @@ import ui.Components.MyTextField;
  * @author yassine
  */
 public class LoginPanel extends javax.swing.JLayeredPane {
-
+    MyButton submitBtn;
     private JPanel buttonPanel = new JPanel(new FlowLayout());
     public LoginPanel() {
         initComponents();
@@ -45,7 +45,7 @@ public class LoginPanel extends javax.swing.JLayeredPane {
         passField.setFont(new  Font("sansserif",10,34));
         login.add(passField, "w 500");
         
-        MyButton submitBtn = new MyButton("S'authentifier", new Color(44, 103, 242), new Color(255, 255, 255));
+        submitBtn = new MyButton("S'authentifier", new Color(44, 103, 242), new Color(255, 255, 255));
         submitBtn.setFont(new  Font("sansserif",0,34));
         submitBtn.setPreferredSize(new Dimension(280,50));
         buttonPanel.add(submitBtn);
@@ -53,11 +53,16 @@ public class LoginPanel extends javax.swing.JLayeredPane {
         MyButton fermerBtn = new MyButton("Fermer", new Color(255, 255, 255), new Color(44, 103, 242));
         fermerBtn.setFont(new  Font("sansserif",0,34));
         fermerBtn.setPreferredSize(new Dimension(180,50));
+        fermerBtn.addActionListener(l->{
+            System.exit(0);
+        });
         buttonPanel.add(fermerBtn);
         buttonPanel.setOpaque(false);
         login.add(buttonPanel);
     }
-    
+    public MyButton getAuthBtn(){
+        return submitBtn;
+    }
     class MyLbl extends JLabel{
         MyLbl(String text, int taille, int bold){
             setText(text);

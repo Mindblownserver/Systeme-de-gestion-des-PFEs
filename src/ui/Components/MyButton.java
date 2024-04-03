@@ -37,6 +37,7 @@ public class MyButton extends javax.swing.JButton {
         initComponents();
         this.setBackground(bg);
         this.setForeground(fg);
+        // add on mouse press & release events to change button color
     }
 
     
@@ -44,7 +45,7 @@ public class MyButton extends javax.swing.JButton {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(44, 103, 242));
+        setBackground(null);
         setForeground(new java.awt.Color(255, 255, 255));
         setBorder(null);
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));

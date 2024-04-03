@@ -24,3 +24,8 @@ public class MyComponents {
         }
     }
 }
+
+//
+//            Component res; 
+//            res=(Component)value;
+//            res.setFont(h1);

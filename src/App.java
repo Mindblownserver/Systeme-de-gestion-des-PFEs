@@ -1,5 +1,7 @@
 
-import ui.MainLoginWindow;
+import java.awt.Font;
+import javax.swing.UIManager;
+import ui.MainWindow;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,6 +14,8 @@ import ui.MainLoginWindow;
  */
 public class App { 
     public static void main(String[] args) {
-        new MainLoginWindow();
+                    UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Arial", Font.BOLD, 44));
+
+        new MainWindow();
     }
 }
