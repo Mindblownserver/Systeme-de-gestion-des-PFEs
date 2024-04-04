@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import net.miginfocom.swing.MigLayout;
 
@@ -32,6 +33,8 @@ import net.miginfocom.swing.MigLayout;
 public class ViewEnseignantPanel extends javax.swing.JPanel {
     private JTabbedPane addtionalInfo;
     private JLabel title = new JLabel("Consulter enseignant");
+    private JButton modifyBtn=new JButton("Modifier");
+    private JButton deleteBtn = new JButton("Delete");
     private JPanel pfeEncadre;
     private JPanel pfeRapporte;
     private JPanel this2;
@@ -232,15 +235,15 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 //---- table1 ----
                                 table1.setModel(new DefaultTableModel(
                                         new Object[][] {
-                                                {null, null, null, null, "", null, null, null},
-                                                {null, null, null, null, null, null, null, null},
+                                                {null, null, null, null, "", null, modifyBtn, deleteBtn},
+                                                {null, null, null, null, null, null,modifyBtn, deleteBtn},
                                         },
                                         new String[] {
                                                 "Prenom", "Nom", "cin", "grad", "theme", "peutEtrePresident", "Modifier", "Supprimer"
                                         }
                                 ) {
                                         Class<?>[] columnTypes = new Class<?>[] {
-                                                String.class, String.class, String.class, String.class, Object.class, Object.class, Object.class, Object.class
+                                                String.class, String.class, String.class, String.class, Object.class, Object.class, JButton.class, JButton.class
                                         };
                                         boolean[] columnEditable = new boolean[] {
                                                 false, false, false, false, false, false, false, false
@@ -254,6 +257,8 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                                 return columnEditable[columnIndex];
                                         }
                                 });
+                                TableCellRenderer tableRenderer = table1.getDefaultRenderer(JButton.class);
+                                table1.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
                                 {
                                         TableColumnModel cm = table1.getColumnModel();
                                         cm.getColumn(1).setPreferredWidth(125);
@@ -261,6 +266,8 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                         cm.getColumn(4).setPreferredWidth(175);
                                         cm.getColumn(5).setPreferredWidth(110);
                                 }
+                                
+                                
                                 table1.setGridColor(Color.black);
                                 table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                                 table1.setBorder(null);
