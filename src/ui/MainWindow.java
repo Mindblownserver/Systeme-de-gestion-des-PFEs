@@ -34,8 +34,10 @@ public class MainWindow extends JFrame {
 	private MainLoginPage loginPanel;
 	private ViewSmallClassPanel smallClassP;
         private HomePage homePage;
+        private ViewEnseignantPanel enseignantP;
 
 	public MainWindow(){
+            // remplissage des SD relatifs au info
             // inits
             mb=new JMenuBar();
             file =new JMenu("file");
@@ -54,6 +56,7 @@ public class MainWindow extends JFrame {
             loginPanel = new MainLoginPage();
             smallClassP = new ViewSmallClassPanel("Specialite",null);
             homePage = new HomePage();
+            enseignantP = new ViewEnseignantPanel();
             this.setUndecorated(true);
             // Setup menu bar
             {
@@ -80,12 +83,22 @@ public class MainWindow extends JFrame {
             cardContainer.add(loginPanel,"1");
             cardContainer.add(homePage,"2");
             cardContainer.add(smallClassP,"3");
+            cardContainer.add(enseignantP,"4");
             cl.show(cardContainer,"1");
             // setup button events
             loginPanel.getAuthBtn().addActionListener(e->{
                 this.setJMenuBar(mb);
                 cl.show(cardContainer,"2");
             });
+            
+            homePage.getEnseignantBtn().addActionListener(l->{
+                cl.show(cardContainer, "4");
+            });
+            // to be replaced soon
+            homePage.getPfeBtn().addActionListener(l->{
+                cl.show(cardContainer, "3");
+            });
+            
             
             fileExit.addActionListener(l->{
                 System.exit(0);

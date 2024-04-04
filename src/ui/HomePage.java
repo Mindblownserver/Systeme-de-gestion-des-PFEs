@@ -16,6 +16,19 @@ public class HomePage extends javax.swing.JPanel {
     public HomePage() {
         initComponents();
     }
+    public javax.swing.JButton getPfeBtn(){
+        return pfeBtn;
+    }
+    public javax.swing.JButton getJuryBtn(){
+        return juryBtn;
+    }
+    public javax.swing.JButton getEtudiantBtn(){
+        return etudiantBtn;
+    }
+    public javax.swing.JButton getEnseignantBtn(){
+        return enseignantBtn;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,16 +44,16 @@ public class HomePage extends javax.swing.JPanel {
         contentCenter = new javax.swing.JPanel();
         PFEPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        pfeBtn = new javax.swing.JButton();
         JuryPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        juryBtn = new javax.swing.JButton();
         EtudiantPanel = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        etudiantBtn = new javax.swing.JButton();
         EnseignantPanel = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        enseignantBtn = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -82,14 +95,14 @@ public class HomePage extends javax.swing.JPanel {
         jLabel1.setText("Consulter la rebrique des PFEs  ");
         PFEPanel.add(jLabel1);
 
-        jButton1.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
-        jButton1.setText("Consulter PFE");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        pfeBtn.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
+        pfeBtn.setText("Consulter PFE");
+        pfeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                pfeBtnActionPerformed(evt);
             }
         });
-        PFEPanel.add(jButton1);
+        PFEPanel.add(pfeBtn);
 
         contentCenter.add(PFEPanel);
 
@@ -101,14 +114,14 @@ public class HomePage extends javax.swing.JPanel {
         jLabel2.setText("Consulter la rebrique des Jurys  ");
         JuryPanel.add(jLabel2);
 
-        jButton2.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
-        jButton2.setText("Consulter Jury");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        juryBtn.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
+        juryBtn.setText("Consulter Jury");
+        juryBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                juryBtnActionPerformed(evt);
             }
         });
-        JuryPanel.add(jButton2);
+        JuryPanel.add(juryBtn);
 
         contentCenter.add(JuryPanel);
 
@@ -120,14 +133,14 @@ public class HomePage extends javax.swing.JPanel {
         jLabel3.setText("Consulter la rebrique des Etudiant  ");
         EtudiantPanel.add(jLabel3);
 
-        jButton3.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
-        jButton3.setText("Consulter Etudiant");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        etudiantBtn.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
+        etudiantBtn.setText("Consulter Etudiant");
+        etudiantBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                etudiantBtnActionPerformed(evt);
             }
         });
-        EtudiantPanel.add(jButton3);
+        EtudiantPanel.add(etudiantBtn);
 
         contentCenter.add(EtudiantPanel);
 
@@ -138,14 +151,14 @@ public class HomePage extends javax.swing.JPanel {
         jLabel4.setText("Consulter la rebrique des Enseignant  ");
         EnseignantPanel.add(jLabel4);
 
-        jButton4.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
-        jButton4.setText("Consulter Enseignant");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        enseignantBtn.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
+        enseignantBtn.setText("Consulter Enseignant");
+        enseignantBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                enseignantBtnActionPerformed(evt);
             }
         });
-        EnseignantPanel.add(jButton4);
+        EnseignantPanel.add(enseignantBtn);
 
         contentCenter.add(EnseignantPanel);
 
@@ -168,21 +181,21 @@ public class HomePage extends javax.swing.JPanel {
         add(contentCenter, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void pfeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pfeBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_pfeBtnActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void juryBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_juryBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_juryBtnActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void etudiantBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_etudiantBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_etudiantBtnActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void enseignantBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enseignantBtnActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_enseignantBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -191,10 +204,8 @@ public class HomePage extends javax.swing.JPanel {
     private javax.swing.JPanel JuryPanel;
     private javax.swing.JPanel PFEPanel;
     private javax.swing.JPanel contentCenter;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton enseignantBtn;
+    private javax.swing.JButton etudiantBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -202,5 +213,7 @@ public class HomePage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton juryBtn;
+    private javax.swing.JButton pfeBtn;
     // End of variables declaration//GEN-END:variables
 }

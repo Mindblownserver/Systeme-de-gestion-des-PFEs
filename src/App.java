@@ -1,4 +1,5 @@
 
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Font;
 import javax.swing.UIManager;
 import ui.MainWindow;
@@ -14,8 +15,13 @@ import ui.MainWindow;
  */
 public class App { 
     public static void main(String[] args) {
-                    UIManager.getLookAndFeelDefaults().put("defaultFont", new Font("Arial", Font.BOLD, 44));
+        try {
+            UIManager.setLookAndFeel( new FlatLightLaf() );
+            UIManager.put( "TextComponent.arc", 15 );
 
+        } catch( Exception ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
         new MainWindow();
     }
 }
