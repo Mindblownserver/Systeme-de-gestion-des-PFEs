@@ -63,7 +63,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
         init();
     }
     public void init(){
-        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+        // JFormDesigner - Component initialization - DO NOT MODIFY                                            
         addtionalInfo = new JTabbedPane();
         pfeEncadre = new JPanel();
         pfeRapporte = new JPanel();
@@ -113,6 +113,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
 
         //======== this2 ========
         {
+        
                 this2.setBackground(Color.white);
                 this2.setLayout(new BorderLayout());
 
@@ -226,7 +227,6 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
 
                         //======== scrollPane1 ========
                         {
-                                scrollPane1.setBackground(Color.orange);
                                 scrollPane1.setViewportBorder(null);
                                 scrollPane1.setDoubleBuffered(true);
                                 scrollPane1.setBorder(null);
@@ -235,18 +235,18 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 //---- table1 ----
                                 table1.setModel(new DefaultTableModel(
                                         new Object[][] {
-                                                {null, null, null, null, "", null, modifyBtn, deleteBtn},
-                                                {null, null, null, null, null, null,modifyBtn, deleteBtn},
+                                                {null, null, null,null, null, "", null, modifyBtn, deleteBtn},
+                                                {null, null, null,null, null, null, null,modifyBtn, deleteBtn},
                                         },
                                         new String[] {
-                                                "Prenom", "Nom", "cin", "grad", "theme", "peutEtrePresident", "Modifier", "Supprimer"
+                                                "Prenom", "Nom", "cin", "Photo","grad", "theme", "peutEtrePresident", "Modifier", "Supprimer"
                                         }
                                 ) {
                                         Class<?>[] columnTypes = new Class<?>[] {
-                                                String.class, String.class, String.class, String.class, Object.class, Object.class, JButton.class, JButton.class
+                                                String.class, String.class, String.class,String.class, String.class, Object.class, Object.class, JButton.class, JButton.class
                                         };
                                         boolean[] columnEditable = new boolean[] {
-                                                false, false, false, false, false, false, false, false
+                                                false, false, false,false, false, false, false, false, false
                                         };
                                         @Override
                                         public Class<?> getColumnClass(int columnIndex) {
@@ -268,10 +268,11 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 }
                                 
                                 
-                                table1.setGridColor(Color.black);
+                                table1.setShowGrid(true);
                                 table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                                 table1.setBorder(null);
                                 table1.setFillsViewportHeight(true);
+                                table1.getTableHeader().setDefaultRenderer( new MyComponents.MyHeaderRenderer());
                                 table1.setRowHeight(40);
                                 table1.setPreferredSize(new Dimension(900, 80));
                                 scrollPane1.setViewportView(table1);

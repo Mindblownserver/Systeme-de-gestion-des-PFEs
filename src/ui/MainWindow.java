@@ -1,4 +1,6 @@
 package ui;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.extras.FlatSVGUtils;
 import java.awt.*;
 import java.util.concurrent.Flow;
 
@@ -30,22 +32,32 @@ public class MainWindow extends JFrame {
 	private JMenuItem fileExit;
         private JPanel cardContainer;
 	private CardLayout cl=new CardLayout();
-	// declare pages
+        // declare pages
 	private MainLoginPage loginPanel;
 	private ViewSmallClassPanel smallClassP;
         private HomePage homePage;
         private ViewEnseignantPanel enseignantP;
-
+        private ViewEtudiantPanel etudiantP;
+        
 	public MainWindow(){
             // remplissage des SD relatifs au info
             // inits
+            System.out.println();
             mb=new JMenuBar();
+            mb.setFont(MyComponents.h2);
             file =new JMenu("file");
+            file.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("file.svg")));
             pfe = new JMenu("PFE");
+            //pfe.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("pfe.svg")));
             jury = new JMenu("Jury");
+            jury.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("jurys.svg")));
             etudiant = new JMenu("Etudiant");
+            //etudiant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("student.svg")));
             enseignant = new JMenu("Enseignant");
+            //enseignant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("enseignant.svg")));
             param = new JMenu("Paramètres");
+            //param.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("param.svg")));
+            param.setFont(MyComponents.h3);
             paramSoutenance = new JMenuItem("Soutenance");
             paramEncadreurExt = new JMenuItem("Encadreur Exterieure");
             paramOrganismeExt = new JMenuItem("Organisme Exterieure");
@@ -57,6 +69,7 @@ public class MainWindow extends JFrame {
             smallClassP = new ViewSmallClassPanel("Specialite",null);
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel();
+            etudiantP = new ViewEtudiantPanel();
             this.setUndecorated(true);
             // Setup menu bar
             {
@@ -82,8 +95,9 @@ public class MainWindow extends JFrame {
             cardContainer.setLayout(cl);
             cardContainer.add(loginPanel,"1");
             cardContainer.add(homePage,"2");
-            cardContainer.add(smallClassP,"3");
-            cardContainer.add(enseignantP,"4");
+            cardContainer.add(smallClassP,"Properties");
+            cardContainer.add(enseignantP,"Enseignant");
+            cardContainer.add(etudiantP,"Etudiant");
             cl.show(cardContainer,"1");
             // setup button events
             loginPanel.getAuthBtn().addActionListener(e->{
@@ -92,11 +106,14 @@ public class MainWindow extends JFrame {
             });
             
             homePage.getEnseignantBtn().addActionListener(l->{
-                cl.show(cardContainer, "4");
+                cl.show(cardContainer, "Enseignant");
+            });
+            homePage.getEtudiantBtn().addActionListener(l->{
+                cl.show(cardContainer, "Etudiant");
             });
             // to be replaced soon
             homePage.getPfeBtn().addActionListener(l->{
-                cl.show(cardContainer, "3");
+                cl.show(cardContainer, "Properties");
             });
             
             
@@ -115,3 +132,12 @@ public class MainWindow extends JFrame {
             this.add(cardContainer);
 	}
 }
+//        Change SVG color
+//        Function<Color, Color> mapper = null;
+//        float[] redHSL = HSLColor.fromRGB(Color.red);
+//        mapper = (color -> {
+//            float[] hsl = HSLColor.fromRGB(color);
+//            return HSLColor.toRGB(redHSL[0], 70.0F, hsl[2]);
+//        });
+//        FlatSVGIcon.ColorFilter.getInstance().setMapper(mapper);
+//        SwingUtilities.windowForComponent(jPanel1).repaint();

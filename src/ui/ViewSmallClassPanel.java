@@ -144,6 +144,7 @@ public class ViewSmallClassPanel extends JPanel {
                 }*/
                 table1.setGridColor(Color.black);
                 table1.setFillsViewportHeight(true);
+                table1.getTableHeader().setDefaultRenderer( new MyComponents.MyHeaderRenderer());
                 table1.setRowHeight(40);
                 table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 table1.setBorder(null);
