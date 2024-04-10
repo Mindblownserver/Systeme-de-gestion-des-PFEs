@@ -29,47 +29,62 @@ public class MainWindow extends JFrame {
 	private JMenuItem paramOrganismeExt;
 	private JMenuItem paramSpecialite;
 	private JMenuItem paramEncadreurExt;
+        private JMenuItem paramLocal;
 	private JMenuItem fileExit;
         private JPanel cardContainer;
 	private CardLayout cl=new CardLayout();
         // declare pages
 	private MainLoginPage loginPanel;
-	private ViewSmallClassPanel smallClassP;
         private HomePage homePage;
         private ViewEnseignantPanel enseignantP;
         private ViewEtudiantPanel etudiantP;
+        private ViewPfePanel pfeP;
+        private ViewSmallClassPanel specialiteP;
+        private ViewSmallClassPanel groupeP;
+        private ViewSmallClassPanel soutenanceP;
+        private ViewSmallClassPanel encadreurExtP;
+        private ViewSmallClassPanel organismeP;
+        private ViewSmallClassPanel localeP;
         
 	public MainWindow(){
             // remplissage des SD relatifs au info
             // inits
             System.out.println();
             mb=new JMenuBar();
-            mb.setFont(MyComponents.h2);
+            mb.setFont(MyComponents.h3);
             file =new JMenu("file");
             file.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("file.svg")));
             pfe = new JMenu("PFE");
-            //pfe.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("pfe.svg")));
+            pfe.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("pfe.svg")));
             jury = new JMenu("Jury");
             jury.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("jurys.svg")));
             etudiant = new JMenu("Etudiant");
-            //etudiant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("student.svg")));
+            etudiant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("etudiant.svg")));
             enseignant = new JMenu("Enseignant");
-            //enseignant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("enseignant.svg")));
+            enseignant.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("enseignant.svg")));
             param = new JMenu("Paramètres");
-            //param.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("param.svg")));
+            param.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("param.svg")));
             param.setFont(MyComponents.h3);
             paramSoutenance = new JMenuItem("Soutenance");
             paramEncadreurExt = new JMenuItem("Encadreur Exterieure");
             paramOrganismeExt = new JMenuItem("Organisme Exterieure");
             paramGroupe = new JMenuItem("Groupe");
             paramSpecialite = new JMenuItem("Specialité");
+            paramLocal = new JMenuItem("Locale");
             fileExit = new JMenuItem("exit");
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
-            smallClassP = new ViewSmallClassPanel("Specialite",null);
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel();
             etudiantP = new ViewEtudiantPanel();
+            pfeP = new ViewPfePanel();
+            specialiteP = new ViewSmallClassPanel("Specialité",null);
+            groupeP = new ViewSmallClassPanel("Groupe", null);
+            soutenanceP = new ViewSmallClassPanel("Soutenance", null);
+            encadreurExtP = new ViewSmallClassPanel("EncadExt",null);
+            organismeP = new ViewSmallClassPanel("Organisme", null);
+            localeP =new ViewSmallClassPanel("Local", null);
+            
             this.setUndecorated(true);
             // Setup menu bar
             {
@@ -84,6 +99,7 @@ public class MainWindow extends JFrame {
                 param.addSeparator();
                 param.add(paramOrganismeExt);
                 param.add(paramEncadreurExt);
+                param.add(paramLocal);
                 mb.add(file);
                 mb.add(pfe);
                 mb.add(jury);
@@ -95,9 +111,15 @@ public class MainWindow extends JFrame {
             cardContainer.setLayout(cl);
             cardContainer.add(loginPanel,"1");
             cardContainer.add(homePage,"2");
-            cardContainer.add(smallClassP,"Properties");
+            cardContainer.add(specialiteP,"Specialité");
+            cardContainer.add(groupeP,"Groupe");
+            cardContainer.add(soutenanceP,"Soutenance");
+            cardContainer.add(localeP,"Local");
+            cardContainer.add(organismeP,"Organisme");
+            cardContainer.add(encadreurExtP,"EncadExt");
             cardContainer.add(enseignantP,"Enseignant");
             cardContainer.add(etudiantP,"Etudiant");
+            cardContainer.add(pfeP, "PFE");
             cl.show(cardContainer,"1");
             // setup button events
             loginPanel.getAuthBtn().addActionListener(e->{
@@ -111,6 +133,26 @@ public class MainWindow extends JFrame {
             homePage.getEtudiantBtn().addActionListener(l->{
                 cl.show(cardContainer, "Etudiant");
             });
+            // paramètres page
+            paramSpecialite.addActionListener(l->{
+                cl.show(cardContainer,"Specialité");
+            });
+            paramGroupe.addActionListener(l->{
+                cl.show(cardContainer,"Groupe");
+            });
+            paramEncadreurExt.addActionListener(l->{
+                cl.show(cardContainer,"EncadExt");
+            });
+            paramLocal.addActionListener(l->{
+                cl.show(cardContainer,"Local"); 
+            });
+            paramOrganismeExt.addActionListener(l->{
+                cl.show(cardContainer,"Organisme"); 
+            });
+            paramSoutenance.addActionListener(l->{
+                cl.show(cardContainer,"Soutenance"); 
+            });
+            
             // to be replaced soon
             homePage.getPfeBtn().addActionListener(l->{
                 cl.show(cardContainer, "Properties");

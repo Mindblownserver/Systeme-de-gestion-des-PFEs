@@ -2,6 +2,7 @@
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.extras.FlatInspector;
 import java.awt.Color;
+import java.awt.Insets;
 import javax.swing.UIManager;
 import ui.MainWindow;
 import ui.MyComponents;
@@ -30,8 +31,10 @@ public class App {
             // Table
             UIManager.put("TableHeader.height", 40);
             UIManager.put("TableHeader.background", MyComponents.secondaryColor);
+            //Menu
+            UIManager.put("MenuBar.itemMargins", new Insets(10, 10, 10, 10));
             //
-            UIManager.put("ComboBox.buttonArrowColor", Color.green);
+            //UIManager.put("ComboBox.buttonArrowColor", Color.green);
 
             
         } catch( Exception ex ) {

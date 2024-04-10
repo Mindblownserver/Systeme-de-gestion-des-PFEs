@@ -4,15 +4,16 @@
  */
 package ui;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -44,8 +46,8 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
     private JTextField prenomField;
     private JLabel nom;
     private JTextField nomField;
-    private JLabel grad;
-    private JTextField gradField;
+    private JLabel photo;
+    private JTextField photoCB;
     private JButton AjouterBtn;
     private JLayeredPane lpane;
     private JPanel buttonPanel;
@@ -53,7 +55,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
     private JScrollPane scrollPane1;
     private JTable table1;
     private boolean estVisible = false;
-    private JButton modifyBtn= new JButton("Modifier"), deleteBtn= new JButton("Supprimer");
+    private JButton modifyBtn= new JButton(), deleteBtn= new JButton();
     public ViewEtudiantPanel() {
 		init();
 	}
@@ -72,8 +74,8 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 		prenomField = new JTextField();
 		nom = new JLabel();
 		nomField = new JTextField();
-		grad = new JLabel();
-		gradField = new JTextField();
+		photo = new JLabel();
+		photoCB = new JTextField();
 		AjouterBtn = new JButton();
 		lpane = new JLayeredPane();
 		buttonPanel = new JPanel();
@@ -81,13 +83,24 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 		scrollPane1 = new JScrollPane();
 		table1 = new JTable();
                 JLabel title = new JLabel();
+                JButton searchBtn= new JButton(),ajouterBtn=new JButton();
+                JTextField searchBar= new JTextField();
+                JComboBox critereCB= new JComboBox<>();
+                JPanel eastBorder = new JPanel();
+                JPanel titlePanel = new JPanel();
+                JLabel grp = new JLabel();
+                JComboBox<String> grpCB = new JComboBox<>();
+
+                deleteBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+                
+                modifyBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
 
 		//======== this ========
 		setLayout(new BorderLayout());
 
 		//======== addtionalInfo ========
 		{
-			addtionalInfo.setPreferredSize(new Dimension(224, 500));
+			addtionalInfo.setPreferredSize(new Dimension(224, 380));
 
 			//======== pfeEncadre ========
 			{
@@ -106,7 +119,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 		//======== this2 ========
 		{
 			this2.setBackground(Color.white);
-			this2.setLayout(new BorderLayout());
+			this2.setLayout(new BorderLayout(10,10));
 
 			//======== panel1 ========
 			{
@@ -115,7 +128,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                                 panel1.setVisible(estVisible);
 				panel1.setBorder(LineBorder.createBlackLineBorder());
 				panel1.setLayout(new MigLayout(
-					"insets 50 4 0 0,hidemode 3,alignx center",
+					"insets 0 4 50 0,hidemode 3,alignx center",
 					// columns
 					"[80,fill]" +
 					"[97,fill]",
@@ -127,6 +140,8 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 					"[32,fill]" +
 					"[41]" +
 					"[32,fill]" +
+					"[42]" +
+                                        "[32,fill]" +
 					"[42]" +
 					"[32,fill]" +
 					"20[41]" 
@@ -153,55 +168,56 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 				panel1.add(nom, "cell 0 5");
 				panel1.add(nomField, "cell 0 6 2 1,width 200px");
 
-				//---- grad ----
-				grad.setText("photo");
-				panel1.add(grad, "cell 0 7");
-				panel1.add(gradField, "cell 0 8 2 1,width 200px");
+				//---- photo ----
+				photo.setText("photo");
+				panel1.add(photo, "cell 0 7");
+				panel1.add(photoCB, "cell 0 8 2 1,width 200px");
+                                
+                                //---- photo ----
+				grp.setText("Fillière");
+				panel1.add(grp, "cell 0 9");
+				panel1.add(grpCB, "cell 0 10 2 1,width 200px");
 
 				//---- AjouterBtn ----
 				AjouterBtn.setText("Ajouter enseignant");
-				panel1.add(AjouterBtn, "cell 0 10 2 1");
+				panel1.add(AjouterBtn, "cell 0 11 2 1");
                                 
 			}
 			this2.add(panel1, BorderLayout.EAST);
 
 			//======== lpane ========
 			{
+                            //======== titlePanel ========
+                       
+                            titlePanel.setBackground(Color.white);
+                            titlePanel.setPreferredSize(new Dimension(75, 150));
+                            titlePanel.setLayout(new FormLayout(
+                                    "166dlu, $lcgap, 56dlu, 3dlu, 42dlu, default",
+                                    "26dlu, $lgap, fill:20dlu, $lgap, 21dlu"));
 
-				//======== buttonPanel ========
-				{
-					buttonPanel.setBackground(Color.white);
-					buttonPanel.setLayout(null);
-                                        title.setText("Consulter Etudiant");
-                                        title.setFont(MyComponents.h1);
-                                        title.setBounds(10,10,400,60);
-                                        buttonPanel.add(title);
-					//---- toggleAjouterPanelBtn ----
-					toggleAjouterPanelBtn.setText("Ajouter");
-					buttonPanel.add(toggleAjouterPanelBtn);
-					toggleAjouterPanelBtn.setBounds(new Rectangle(new Point(1100, 55), toggleAjouterPanelBtn.getPreferredSize()));
-                                        toggleAjouterPanelBtn.addActionListener(l->{
-                                            estVisible = !estVisible;
-                                            panel1.setVisible(estVisible);
-                                        });
-					{
-						// compute preferred size
-						Dimension preferredSize = new Dimension();
-						for(int i = 0; i < buttonPanel.getComponentCount(); i++) {
-							Rectangle bounds = buttonPanel.getComponent(i).getBounds();
-							preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-							preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-						}
-						Insets insets = buttonPanel.getInsets();
-						preferredSize.width += insets.right;
-						preferredSize.height += insets.bottom;
-						buttonPanel.setMinimumSize(preferredSize);
-						buttonPanel.setPreferredSize(preferredSize);
-					}
-				}
-				lpane.add(buttonPanel, JLayeredPane.DEFAULT_LAYER);
-				buttonPanel.setBounds(new Rectangle(new Point(0, 0), buttonPanel.getPreferredSize()));
+                            //---- title ----
+                            title.setText("Consulter Etudiant");
+                            title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
+                            title.setHorizontalAlignment(SwingConstants.LEFT);
+                            titlePanel.add(title, CC.xywh(1, 1, 3, 1));
+                            titlePanel.add(searchBar, CC.xy(1, 3));
+                            titlePanel.add(critereCB, CC.xy(3, 3));
 
+                            //---- searchBtn ----
+                            searchBtn.setText("chercher");
+                            titlePanel.add(searchBtn, CC.xy(5, 3));
+
+                            //---- ajouterBtn ----
+                            ajouterBtn.setText("Ajouter");
+                            ajouterBtn.addActionListener(e->{
+                                estVisible = !estVisible;
+                                panel1.setVisible(estVisible);
+                            });
+                            titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                            
+                            eastBorder.setPreferredSize(new Dimension(10,0));
+                            
+                            
 				//======== scrollPane1 ========
 				{
 					scrollPane1.setBackground(Color.orange);
@@ -212,18 +228,18 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 					//---- table1 ----
 					table1.setModel(new DefaultTableModel(
 						new Object[][] {
-							{null, null, null, null, null, "Binome", "Interne",modifyBtn, deleteBtn},
-							{null, null, null, null, null, "Monome", "Externe", modifyBtn, deleteBtn},
+							{null, null, null, null, null,modifyBtn, deleteBtn},
+							{null, null, null, null, null, modifyBtn, deleteBtn},
 						},
 						new String[] {
-							"Prenom", "Nom", "CIN", "Photo", "Groupe et Sp\u00e9cialit\u00e9", "Projet/Stage trait\u00e9 en:", "Nature du projet", "Modifier", "Supprimer"
+							"CIN","Prenom", "Nom",  "Photo", "Fillière", "", ""
 						}
 					) {
 						Class<?>[] columnTypes = new Class<?>[] {
-							String.class, String.class, String.class, Object.class, Object.class, String.class, Object.class, JButton.class, JButton.class
+							String.class, String.class, String.class, Object.class, Object.class, JButton.class, JButton.class
 						};
 						boolean[] columnEditable = new boolean[] {
-							false, false, false, false, false, false, false, false, false
+							false, false, false, false, false, false, false
 						};
 						@Override
 						public Class<?> getColumnClass(int columnIndex) {
@@ -239,22 +255,26 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 					{
 						TableColumnModel cm = table1.getColumnModel();
 						cm.getColumn(1).setPreferredWidth(125);
+                                                cm.getColumn(6).setPreferredWidth(5);
+                                                cm.getColumn(5).setPreferredWidth(5);
 					}
 					table1.setShowGrid(true);
-					table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+					table1.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 					table1.setBorder(null);
                                         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					table1.setFillsViewportHeight(true);
 					table1.setRowHeight(40);
-					table1.setPreferredSize(new Dimension(900, 80));
+					//table1.setPreferredSize(new Dimension(700, 80));
                                         table1.getTableHeader().setDefaultRenderer( new MyComponents.MyHeaderRenderer());
 					table1.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 					scrollPane1.setViewportView(table1);
 				}
 				lpane.add(scrollPane1, JLayeredPane.DEFAULT_LAYER);
-				scrollPane1.setBounds(0, 79, 1200, 525);
+				scrollPane1.setBounds(0,0, 900, 525);
 			}
 			this2.add(lpane, BorderLayout.CENTER);
+                        this2.add(titlePanel, BorderLayout.NORTH);
+                        add(eastBorder, BorderLayout.EAST);
 		}
 		add(this2, BorderLayout.CENTER);
 		// JFormDesigner - End of component initialization                                         

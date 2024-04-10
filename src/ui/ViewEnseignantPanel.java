@@ -4,8 +4,12 @@
  */
 package ui;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -13,6 +17,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -20,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -31,10 +37,10 @@ import net.miginfocom.swing.MigLayout;
  * @author yassine
  */
 public class ViewEnseignantPanel extends javax.swing.JPanel {
-    private JTabbedPane addtionalInfo;
-    private JLabel title = new JLabel("Consulter enseignant");
-    private JButton modifyBtn=new JButton("Modifier");
-    private JButton deleteBtn = new JButton("Delete");
+    private JTabbedPane additionalInfo;
+    private JPanel titlePanel = new JPanel();
+    private JButton modifyBtn=new JButton();
+    private JButton deleteBtn = new JButton();
     private JPanel pfeEncadre;
     private JPanel pfeRapporte;
     private JPanel this2;
@@ -54,17 +60,17 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
     private JCheckBox presidentCheckBox;
     private JButton AjouterBtn;
     private JLayeredPane lpane;
-    private JPanel buttonPanel;
     private JButton toggleAjouterPanelBtn;
     private JScrollPane scrollPane1;
     private JTable table1;
     private boolean estVisible = false;
+    
     public ViewEnseignantPanel() {
         init();
     }
     public void init(){
         // JFormDesigner - Component initialization - DO NOT MODIFY                                            
-        addtionalInfo = new JTabbedPane();
+        additionalInfo = new JTabbedPane();
         pfeEncadre = new JPanel();
         pfeRapporte = new JPanel();
         panel1 = new JPanel();
@@ -84,32 +90,40 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
         presidentCheckBox = new JCheckBox();
         AjouterBtn = new JButton();
         lpane = new JLayeredPane();
-        buttonPanel = new JPanel();
         toggleAjouterPanelBtn = new JButton();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
+        JLabel title= new JLabel();
+        JButton searchBtn= new JButton(),ajouterBtn=new JButton();
+        JTextField searchBar= new JTextField();
+        JComboBox critereCB= new JComboBox<>();
+        JPanel eastBorder = new JPanel();
         
+        deleteBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+        //deleteBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        modifyBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
+        //modifyBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         //======== this ========
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(0,10));
 
-        //======== addtionalInfo ========
+        //======== additionalInfo ========
         {
-                addtionalInfo.setPreferredSize(new Dimension(224, 500));
+                additionalInfo.setPreferredSize(new Dimension(224, 400));
 
                 //======== pfeEncadre ========
                 {
                         pfeEncadre.setLayout(new BorderLayout());
                 }
-                addtionalInfo.addTab("PFE encadr\u00e9 (n)", pfeEncadre);
+                additionalInfo.addTab("PFE encadr\u00e9 (n)", pfeEncadre);
 
                 //======== pfeRapporte ========
                 {
                         pfeRapporte.setLayout(new BorderLayout());
                 }
-                addtionalInfo.addTab("PFE rapport\u00e9 (n)", pfeRapporte);
+                additionalInfo.addTab("PFE rapport\u00e9 (n)", pfeRapporte);
         }
-        add(addtionalInfo, BorderLayout.SOUTH);
+        add(additionalInfo, BorderLayout.SOUTH);
 
         //======== this2 ========
         {
@@ -124,7 +138,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         panel1.setBorder(LineBorder.createBlackLineBorder());
                         panel1.setVisible(estVisible);
                         panel1.setLayout(new MigLayout(
-                                "insets 50 4 50 0,hidemode 3,alignx center",
+                                "insets 0 4 50 0,hidemode 3,alignx center",
                                 // columns
                                 "[80,fill]" +
                                 "[97,fill]",
@@ -191,39 +205,34 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                 //======== lpane ========
                 {
 
-                        //======== buttonPanel ========
+                        //======== titlePanel ========
                         {
-                                title.setFont(MyComponents.h1);
-                                title.setBounds(10,10,400,60);
-                                buttonPanel.setBackground(Color.white);
-                                buttonPanel.setLayout(null);
-                                buttonPanel.add(title);
-                                //---- toggleAjouterPanelBtn ----
-                                toggleAjouterPanelBtn.setText("Ajouter");
-                                buttonPanel.add(toggleAjouterPanelBtn);
-                                toggleAjouterPanelBtn.setBounds(new Rectangle(new Point(1100, 55), toggleAjouterPanelBtn.getPreferredSize()));
-                                toggleAjouterPanelBtn.addActionListener(l->{
+                                titlePanel.setBackground(Color.white);
+                                titlePanel.setPreferredSize(new Dimension(75, 150));
+                                titlePanel.setLayout(new FormLayout(
+                                        "166dlu, $lcgap, 56dlu, 3dlu, 42dlu, default",
+                                        "26dlu, $lgap, fill:20dlu, $lgap, 21dlu"));
+
+                                //---- title ----
+                                title.setText("Consulter Enseignant");
+                                title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
+                                title.setHorizontalAlignment(SwingConstants.LEFT);
+                                titlePanel.add(title, CC.xywh(1, 1, 3, 1));
+                                titlePanel.add(searchBar, CC.xy(1, 3));
+                                titlePanel.add(critereCB, CC.xy(3, 3));
+
+                                //---- searchBtn ----
+                                searchBtn.setText("chercher");
+                                titlePanel.add(searchBtn, CC.xy(5, 3));
+
+                                //---- ajouterBtn ----
+                                ajouterBtn.setText("Ajouter");
+                                titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                                ajouterBtn.addActionListener(l->{
                                     estVisible = !estVisible;
                                     panel1.setVisible(estVisible);
                                 });
-
-                                {
-                                        // compute preferred size
-                                        Dimension preferredSize = new Dimension();
-                                        for(int i = 0; i < buttonPanel.getComponentCount(); i++) {
-                                                Rectangle bounds = buttonPanel.getComponent(i).getBounds();
-                                                preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
-                                                preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
-                                        }
-                                        Insets insets = buttonPanel.getInsets();
-                                        preferredSize.width += insets.right;
-                                        preferredSize.height += insets.bottom;
-                                        buttonPanel.setMinimumSize(preferredSize);
-                                        buttonPanel.setPreferredSize(preferredSize);
-                                }
                         }
-                        lpane.add(buttonPanel, JLayeredPane.DEFAULT_LAYER);
-                        buttonPanel.setBounds(new Rectangle(new Point(0, 0), buttonPanel.getPreferredSize()));
 
                         //======== scrollPane1 ========
                         {
@@ -239,7 +248,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                                 {null, null, null,null, null, null, null,modifyBtn, deleteBtn},
                                         },
                                         new String[] {
-                                                "Prenom", "Nom", "cin", "Photo","grad", "theme", "peutEtrePresident", "Modifier", "Supprimer"
+                                                "cin" ,"Prenom", "Nom", "Photo","grad", "theme", "peutEtrePresident", "", ""
                                         }
                                 ) {
                                         Class<?>[] columnTypes = new Class<?>[] {
@@ -265,24 +274,30 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                         cm.getColumn(3).setPreferredWidth(65);
                                         cm.getColumn(4).setPreferredWidth(175);
                                         cm.getColumn(5).setPreferredWidth(110);
+                                        cm.getColumn(6).setPreferredWidth(200);
+                                        cm.getColumn(8).setPreferredWidth(2);
+                                        cm.getColumn(7).setPreferredWidth(2);
                                 }
                                 
                                 
                                 table1.setShowGrid(true);
-                                table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                                table1.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
                                 table1.setBorder(null);
                                 table1.setFillsViewportHeight(true);
                                 table1.getTableHeader().setDefaultRenderer( new MyComponents.MyHeaderRenderer());
                                 table1.setRowHeight(40);
-                                table1.setPreferredSize(new Dimension(900, 80));
+                                table1.setPreferredSize(new Dimension(1000, 80));
                                 scrollPane1.setViewportView(table1);
                         }
                         lpane.add(scrollPane1, JLayeredPane.DEFAULT_LAYER);
-                        scrollPane1.setBounds(0, 79, 1200, 525);
+                        scrollPane1.setBounds(0, 0, 1300, scrollPane1.getPreferredSize().height+90);
                 }
                 this2.add(lpane, BorderLayout.CENTER);
         }
+        this2.add(titlePanel,BorderLayout.NORTH);
         add(this2, BorderLayout.CENTER);
+        eastBorder.setPreferredSize(new Dimension(10,0));
+        add(eastBorder, BorderLayout.WEST);
     }
 
     /**
