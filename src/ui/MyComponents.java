@@ -1,8 +1,9 @@
-    package ui;
+package ui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JButton;
@@ -102,8 +103,8 @@ public class MyComponents {
                 spTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 spTable.setRowHeight(40);
                 TableColumnModel cm = spTable.getColumnModel();
-                cm.getColumn(2).setPreferredWidth(5);
-                cm.getColumn(3).setPreferredWidth(5);
+                cm.getColumn(2).setMaxWidth(80);
+                cm.getColumn(3).setMaxWidth(80);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
@@ -127,18 +128,18 @@ public class MyComponents {
                 //---- pfeTable ----
                 pfeTable.setModel(new DefaultTableModel(
                     new Object[][] {
-                        {null, null, null, null, null, "", "", null, null, null, null, null, null, null,modifyBtn,deleteBtn},
-                        {null, null, null, null, null, null, null, null, null, null, null, null, null, null,modifyBtn,deleteBtn},
+                        {null, null, null, null, null, "", "", null, null, null, null, null,modifyBtn,deleteBtn},
+                        {null, null, null, null, null, null, null, null, null, null, null,  null,modifyBtn,deleteBtn},
                     },
                     new String[] {
-                        "ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", "Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage", "Modifier", "Supprimer","",""
+                        "ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", "Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage","",""
                     }
                 ) {
                     Class<?>[] columnTypes = new Class<?>[] {
-                        String.class, Object.class, String.class, String.class, String.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class,JButton.class,JButton.class
+                        String.class, Object.class, String.class, String.class, String.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class,JButton.class,JButton.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false, false, false, false, false, false, false, false, false, false, false, false,false,false
+                        false, false, false, false, false, false, false, false, false, false, false, false, false, false,
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -162,12 +163,14 @@ public class MyComponents {
                     cm.getColumn(9).setPreferredWidth(150);
                     cm.getColumn(10).setPreferredWidth(70);
                     cm.getColumn(11).setPreferredWidth(90);
+                    cm.getColumn(12).setMaxWidth(80);
+                    cm.getColumn(13).setMaxWidth(80);
                     TableCellRenderer tableRenderer = pfeTable.getDefaultRenderer(JButton.class);
                     pfeTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
                     pfeTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 }
                 pfeTable.setGridColor(Color.black);
-                pfeTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                pfeTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 pfeTable.setBorder(null);
                 pfeTable.setFillsViewportHeight(true);
                 pfeTable.setRowHeight(40);
@@ -225,6 +228,9 @@ public class MyComponents {
                 soutTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 soutTable.setRowHeight(40);
                 this.setViewportView(soutTable);
+                TableColumnModel cm = soutTable.getColumnModel();
+                cm.getColumn(4).setMaxWidth(80);
+                cm.getColumn(5).setMaxWidth(80);        
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
@@ -279,6 +285,8 @@ public class MyComponents {
                     cm.getColumn(0).setPreferredWidth(75);
                     cm.getColumn(1).setPreferredWidth(105);
                     cm.getColumn(2).setPreferredWidth(140);
+                    cm.getColumn(3).setMaxWidth(80);
+                    cm.getColumn(4).setMaxWidth(80);
                     TableCellRenderer tableRenderer = orgTable.getDefaultRenderer(JButton.class);
                     orgTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
                     orgTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
@@ -336,8 +344,8 @@ public class MyComponents {
                 {
                     TableColumnModel cm = groupeTable.getColumnModel();
                     cm.getColumn(3).setPreferredWidth(200);
-                    cm.getColumn(4).setPreferredWidth(5);
-                    cm.getColumn(5).setPreferredWidth(5);
+                    cm.getColumn(4).setMaxWidth(80);
+                    cm.getColumn(5).setMaxWidth(80);
                 
                 }
                 TableCellRenderer tableRenderer = groupeTable.getDefaultRenderer(JButton.class);
@@ -410,6 +418,8 @@ public class MyComponents {
                     cm.getColumn(0).setPreferredWidth(70);
                     cm.getColumn(1).setPreferredWidth(130);
                     cm.getColumn(2).setPreferredWidth(95);
+                    cm.getColumn(3).setMaxWidth(80);
+                    cm.getColumn(4).setMaxWidth(80);
                     locTable.setRowHeight(40);
                 }
                 this.setViewportView(locTable);
@@ -465,6 +475,9 @@ public class MyComponents {
                 encExtTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
                 encExtTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 encExtTable.setRowHeight(40);
+                TableColumnModel cm = encExtTable.getColumnModel();
+                cm.getColumn(6).setMaxWidth(80);
+                cm.getColumn(7).setMaxWidth(80);
                 this.setViewportView(encExtTable);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on

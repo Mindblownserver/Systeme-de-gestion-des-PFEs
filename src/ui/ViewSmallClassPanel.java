@@ -33,7 +33,7 @@ public class ViewSmallClassPanel extends JPanel {
                         leftComp=new AjouterPage.AjouterLocal();
                         tableComp = new MyComponents.LocalTable();
                         break;
-                    case "EncadExt":
+                    case "Encadreur Exterieure":
                         leftComp= new AjouterPage.AjouterEncadreurExt();
                         tableComp = new MyComponents.EncadreurExterieurTable();
                         break;
@@ -82,10 +82,7 @@ public class ViewSmallClassPanel extends JPanel {
                 title.setFont(MyComponents.h1);
                 title.setPreferredSize(new Dimension(300,100));
 //                ajouterBtn.setBounds(new Rectangle(new Point(500, 80), new Dimension(100,30)));
-                ajouterBtn.addActionListener(ee->{
-                        estVisible = !estVisible;
-                        leftAddition.setVisible(estVisible);
-                });
+                
                 centerContent.add(table);
                 table.setBounds(0,0,1000,500);
 
@@ -122,13 +119,19 @@ public class ViewSmallClassPanel extends JPanel {
 
                 //---- ajouterBtn ----
                 ajouterBtn.setText("Ajouter");
-                titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                if(!nomDuClasse.equalsIgnoreCase("Soutenance")){
+                    titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                    ajouterBtn.addActionListener(ee->{
+                        estVisible = !estVisible;
+                        leftAddition.setVisible(estVisible);
+                    });
+                }
                 eastBorder.setPreferredSize(new Dimension(10,0));
                 
                 
                 this.add(titlePanel,BorderLayout.NORTH);
 		this.add(border2, BorderLayout.SOUTH);
-                this.add(eastBorder, BorderLayout.WEST);
+                this.add(eastBorder, BorderLayout.EAST);
                 
 
 	}

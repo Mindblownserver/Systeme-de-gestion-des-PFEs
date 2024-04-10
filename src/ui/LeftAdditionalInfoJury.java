@@ -20,15 +20,19 @@ public class LeftAdditionalInfoJury extends JPanel {
         label1 = new JLabel();
         GRID = new JPanel();
         soutPanel = new JPanel();
-        label2 = new JLabel();
         soutScroll = new JScrollPane();
         soutTable = new JTable();
+        panel1 = new JPanel();
+        label2 = new JLabel();
+        button1 = new JButton();
         pfePanel = new JPanel();
-        label3 = new JLabel();
         pfeScroll = new JScrollPane();
         pfeTable = new JTable();
+        panel2 = new JPanel();
+        label3 = new JLabel();
 
         //======== this ========
+        setPreferredSize(new Dimension(452, 600));
         setLayout(new BorderLayout(10, 10));
 
         //---- label1 ----
@@ -43,11 +47,6 @@ public class LeftAdditionalInfoJury extends JPanel {
             //======== soutPanel ========
             {
                 soutPanel.setLayout(new BorderLayout());
-
-                //---- label2 ----
-                label2.setText("Soutenance");
-                label2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-                soutPanel.add(label2, BorderLayout.NORTH);
 
                 //======== soutScroll ========
                 {
@@ -73,17 +72,27 @@ public class LeftAdditionalInfoJury extends JPanel {
                     soutScroll.setViewportView(soutTable);
                 }
                 soutPanel.add(soutScroll, BorderLayout.CENTER);
+
+                //======== panel1 ========
+                {
+                    panel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                    //---- label2 ----
+                    label2.setText("Soutenance");
+                    label2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+                    panel1.add(label2);
+
+                    //---- button1 ----
+                    button1.setText("+");
+                    panel1.add(button1);
+                }
+                soutPanel.add(panel1, BorderLayout.NORTH);
             }
             GRID.add(soutPanel);
 
             //======== pfePanel ========
             {
                 pfePanel.setLayout(new BorderLayout());
-
-                //---- label3 ----
-                label3.setText("PFE");
-                label3.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
-                pfePanel.add(label3, BorderLayout.NORTH);
 
                 //======== pfeScroll ========
                 {
@@ -134,6 +143,17 @@ public class LeftAdditionalInfoJury extends JPanel {
                     pfeScroll.setViewportView(pfeTable);
                 }
                 pfePanel.add(pfeScroll, BorderLayout.CENTER);
+
+                //======== panel2 ========
+                {
+                    panel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                    //---- label3 ----
+                    label3.setText("PFE");
+                    label3.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 16));
+                    panel2.add(label3);
+                }
+                pfePanel.add(panel2, BorderLayout.NORTH);
             }
             GRID.add(pfePanel);
         }
@@ -145,12 +165,15 @@ public class LeftAdditionalInfoJury extends JPanel {
     private JLabel label1;
     private JPanel GRID;
     private JPanel soutPanel;
-    private JLabel label2;
     private JScrollPane soutScroll;
     private JTable soutTable;
+    private JPanel panel1;
+    private JLabel label2;
+    private JButton button1;
     private JPanel pfePanel;
-    private JLabel label3;
     private JScrollPane pfeScroll;
     private JTable pfeTable;
+    private JPanel panel2;
+    private JLabel label3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

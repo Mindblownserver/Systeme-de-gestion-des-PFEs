@@ -20,9 +20,13 @@ public class MainWindow extends JFrame {
 	private JMenuBar mb;
 	private JMenu file;
         private JMenu pfe;
+        private JMenuItem pfeConsult;
 	private JMenu jury;
+        private JMenuItem juryConsult;
 	private JMenu etudiant;
+        private JMenuItem etudConsult;
 	private JMenu enseignant;
+        private JMenuItem ensConsult;
 	private JMenu param;
         private JMenuItem paramSoutenance;
 	private JMenuItem paramGroupe;
@@ -38,7 +42,7 @@ public class MainWindow extends JFrame {
         private HomePage homePage;
         private ViewEnseignantPanel enseignantP;
         private ViewEtudiantPanel etudiantP;
-        private ViewPfePanel pfeP;
+        private viewPfePanel pfeP;
         private ViewSmallClassPanel specialiteP;
         private ViewSmallClassPanel groupeP;
         private ViewSmallClassPanel soutenanceP;
@@ -72,16 +76,21 @@ public class MainWindow extends JFrame {
             paramSpecialite = new JMenuItem("Specialité");
             paramLocal = new JMenuItem("Locale");
             fileExit = new JMenuItem("exit");
+            etudConsult= new JMenuItem("Consulter etudiant");
+            ensConsult = new JMenuItem("Consulter enseignant");
+            pfeConsult = new JMenuItem("Consulter PFE");
+            
+            
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel();
             etudiantP = new ViewEtudiantPanel();
-            pfeP = new ViewPfePanel();
+            pfeP = new viewPfePanel();
             specialiteP = new ViewSmallClassPanel("Specialité",null);
             groupeP = new ViewSmallClassPanel("Groupe", null);
             soutenanceP = new ViewSmallClassPanel("Soutenance", null);
-            encadreurExtP = new ViewSmallClassPanel("EncadExt",null);
+            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",null);
             organismeP = new ViewSmallClassPanel("Organisme", null);
             localeP =new ViewSmallClassPanel("Local", null);
             
@@ -91,6 +100,9 @@ public class MainWindow extends JFrame {
                 mb.setBackground(Color.white);
                 mb.setOpaque(true);
                 
+                etudiant.add(etudConsult);
+                enseignant.add(ensConsult);
+                pfe.add(pfeConsult);
                 file.add(fileExit);
                 param.add(paramSoutenance); // sa propre façon de lecture
                 param.addSeparator();
@@ -116,7 +128,7 @@ public class MainWindow extends JFrame {
             cardContainer.add(soutenanceP,"Soutenance");
             cardContainer.add(localeP,"Local");
             cardContainer.add(organismeP,"Organisme");
-            cardContainer.add(encadreurExtP,"EncadExt");
+            cardContainer.add(encadreurExtP,"Encadreur Exterieure");
             cardContainer.add(enseignantP,"Enseignant");
             cardContainer.add(etudiantP,"Etudiant");
             cardContainer.add(pfeP, "PFE");
@@ -141,7 +153,7 @@ public class MainWindow extends JFrame {
                 cl.show(cardContainer,"Groupe");
             });
             paramEncadreurExt.addActionListener(l->{
-                cl.show(cardContainer,"EncadExt");
+                cl.show(cardContainer,"Encadreur Exterieure");
             });
             paramLocal.addActionListener(l->{
                 cl.show(cardContainer,"Local"); 
@@ -152,10 +164,19 @@ public class MainWindow extends JFrame {
             paramSoutenance.addActionListener(l->{
                 cl.show(cardContainer,"Soutenance"); 
             });
+            etudConsult.addActionListener(l->{
+                cl.show(cardContainer,"Etudiant");
+            });
+            ensConsult.addActionListener(l->{
+                cl.show(cardContainer,"Enseignant");
+            });
+            pfeConsult.addActionListener(l->{
+                cl.show(cardContainer,"PFE");
+            });
             
             // to be replaced soon
             homePage.getPfeBtn().addActionListener(l->{
-                cl.show(cardContainer, "Properties");
+                cl.show(cardContainer, "PFE");
             });
             
             
