@@ -119,13 +119,12 @@ public class ViewSmallClassPanel extends JPanel {
 
                 //---- ajouterBtn ----
                 ajouterBtn.setText("Ajouter");
-                if(!nomDuClasse.equalsIgnoreCase("Soutenance")){
-                    titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
-                    ajouterBtn.addActionListener(ee->{
-                        estVisible = !estVisible;
-                        leftAddition.setVisible(estVisible);
-                    });
-                }
+                titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                ajouterBtn.addActionListener(ee->{
+                    estVisible = !estVisible;
+                    leftAddition.setVisible(estVisible);
+                });
+                
                 eastBorder.setPreferredSize(new Dimension(10,0));
                 
                 

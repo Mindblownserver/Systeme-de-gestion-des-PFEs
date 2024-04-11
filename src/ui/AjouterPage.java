@@ -503,7 +503,7 @@ public class AjouterPage {
             setTitle("Ajouter PFE");
             Container contentPane = getContentPane();
             contentPane.setLayout(new MigLayout(
-                "insets 0,hidemode 3",
+                "insets 20 20 0 0,hidemode 3",
                 // columns
                 "[fill]" +
                 "[127,fill]" +
@@ -520,7 +520,7 @@ public class AjouterPage {
                 "[32]" +
                 "[32]" +
                 "[32]" +
-                "[]" +
+                "[32]" +
                 "[32]" +
                 "[49,grow,shrink 0]" +
                 "[110,grow,fill]" +
@@ -590,32 +590,31 @@ public class AjouterPage {
             //---- label32 ----
             label32.setText("Date Rendu 1");
             contentPane.add(label32, "cell 1 4");
-            contentPane.add(formattedTextField1, "cell 2 4");
+            contentPane.add(formattedTextField1, "cell 2 4,growy");
 
             //---- label35 ----
             label35.setText("Date Rendu 2");
             contentPane.add(label35, "cell 3 4");
-            contentPane.add(formattedTextField2, "cell 4 4");
-
-            //---- label18 ----
-            label18.setText("Sujet");
-            contentPane.add(label18, "cell 1 5");
-            contentPane.add(sujetField, "cell 2 5 3 1");
-
+            contentPane.add(formattedTextField2, "cell 4 4,growy");
+            
             //---- label17 ----
             label17.setText("Th\u00e8me");
-            contentPane.add(label17, "cell 1 6");
-            contentPane.add(themeField, "cell 2 6 3 1,growy");
+            contentPane.add(label17, "cell 1 5");
+            contentPane.add(themeField, "cell 2 5 3 1,growy,width 490px");
+            
+            label18.setText("Sujet");
+            contentPane.add(label18, "cell 1 6");
+            contentPane.add(sujetField, "cell 2 6 3 1,growy, width 490px");
 
             //---- label19 ----
             label19.setText("Description");
-            contentPane.add(label19, "cell 1 7,aligny top,growy 0");
+            contentPane.add(label19, "cell 1 7,aligny top,growy ");
 
             //======== descScroll ========
             {
                 descScroll.setViewportView(descArea);
             }
-            contentPane.add(descScroll, "cell 2 7 3 1,growy");
+            contentPane.add(descScroll, "cell 2 7 3 1,growy,width 490px");
 
             //---- label11 ----
             label11.setText("Encadreur ISIMM");
@@ -722,7 +721,7 @@ public class AjouterPage {
 
             //---- label22 ----
             label22.setText("Rapporteur");
-            contentPane.add(label22, "cell 5 8,aligny top,growy 0");
+            contentPane.add(label22, "cell 5 8,aligny top,growy ");
 
             //---- label25 ----
             label25.setText("Etudiant (1)");

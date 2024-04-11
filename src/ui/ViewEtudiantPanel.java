@@ -270,7 +270,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 					scrollPane1.setViewportView(table1);
 				}
 				lpane.add(scrollPane1, JLayeredPane.DEFAULT_LAYER);
-				scrollPane1.setBounds(0,0, 900, 525);
+				scrollPane1.setBounds(0,0, 1300, 480);
 			}
 			this2.add(lpane, BorderLayout.CENTER);
                         this2.add(titlePanel, BorderLayout.NORTH);

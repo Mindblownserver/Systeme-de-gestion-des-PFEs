@@ -109,7 +109,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
 
         //======== additionalInfo ========
         {
-                additionalInfo.setPreferredSize(new Dimension(224, 400));
+                additionalInfo.setPreferredSize(new Dimension(224, 380));
 
                 //======== pfeEncadre ========
                 {
@@ -290,7 +290,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 scrollPane1.setViewportView(table1);
                         }
                         lpane.add(scrollPane1, JLayeredPane.DEFAULT_LAYER);
-                        scrollPane1.setBounds(0, 0, 1300, scrollPane1.getPreferredSize().height+90);
+                        scrollPane1.setBounds(0, 0, 1300, 480);
                 }
                 this2.add(lpane, BorderLayout.CENTER);
         }
