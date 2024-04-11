@@ -26,13 +26,21 @@ public class AjouterSoutenance extends JDialog {
         label5 = new JLabel();
         heureSField = new JTextField();
         label4 = new JLabel();
-        ensScroll = new JScrollPane();
-        ensTable = new JTable();
+        LoVExam = new JPanel();
+        choisirPanel = new JPanel();
+        cinField = new JTextField();
+        label26 = new JLabel();
+        nomField = new JTextField();
+        label27 = new JLabel();
+        choisirBtn = new JButton();
+        panel7 = new JPanel();
+        searchField = new JTextField();
+        listScroll = new JScrollPane();
+        list = new JList();
         label6 = new JLabel();
-        juryScroll = new JScrollPane();
-        juryTable = new JTable();
+        textField1 = new JTextField();
         estValidChB = new JCheckBox();
-        button1 = new JButton();
+        ajBtn = new JButton();
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -49,7 +57,7 @@ public class AjouterSoutenance extends JDialog {
             "[32]" +
             "[32]" +
             "[32,grow]" +
-            "[32,grow]" +
+            "[32,shrink 0,top]" +
             "[32]" +
             "[]" +
             "[32]" +
@@ -79,79 +87,71 @@ public class AjouterSoutenance extends JDialog {
         label4.setText("Examinateur");
         contentPane.add(label4, "cell 0 4,aligny top,growy 0");
 
-        //======== ensScroll ========
+        //======== LoVExam ========
         {
+            LoVExam.setLayout(new BorderLayout(0, 10));
 
-            //---- ensTable ----
-            ensTable.setModel(new DefaultTableModel(
-                new Object[][] {
-                    {null, null, null, null, "", null, null, null},
-                    {null, null, null, null, null, null, null, null},
-                },
-                new String[] {
-                    "cin", "Prenom", "Nom", "grad", "theme", "peutEtrePresident", "Modifier", "Supprimer"
-                }
-            ) {
-                Class<?>[] columnTypes = new Class<?>[] {
-                    String.class, String.class, String.class, String.class, Object.class, Object.class, Object.class, Object.class
-                };
-                boolean[] columnEditable = new boolean[] {
-                    false, false, false, false, false, false, false, false
-                };
-                @Override
-                public Class<?> getColumnClass(int columnIndex) {
-                    return columnTypes[columnIndex];
-                }
-                @Override
-                public boolean isCellEditable(int rowIndex, int columnIndex) {
-                    return columnEditable[columnIndex];
-                }
-            });
+            //======== choisirPanel ========
             {
-                TableColumnModel cm = ensTable.getColumnModel();
-                cm.getColumn(2).setPreferredWidth(125);
-                cm.getColumn(3).setPreferredWidth(65);
-                cm.getColumn(4).setPreferredWidth(175);
-                cm.getColumn(5).setPreferredWidth(110);
+                choisirPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+
+                //---- cinField ----
+                cinField.setPreferredSize(new Dimension(75, 24));
+                cinField.setText("cin");
+                cinField.setEditable(false);
+                choisirPanel.add(cinField);
+
+                //---- label26 ----
+                label26.setPreferredSize(new Dimension(5, 0));
+                choisirPanel.add(label26);
+
+                //---- nomField ----
+                nomField.setPreferredSize(new Dimension(220, 24));
+                nomField.setText("Nom et Prenom");
+                nomField.setEditable(false);
+                choisirPanel.add(nomField);
+
+                //---- label27 ----
+                label27.setPreferredSize(new Dimension(5, 0));
+                choisirPanel.add(label27);
+
+                //---- choisirBtn ----
+                choisirBtn.setText("Choisir");
+                choisirPanel.add(choisirBtn);
             }
-            ensTable.setGridColor(Color.black);
-            ensTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            ensTable.setBorder(null);
-            ensTable.setFillsViewportHeight(true);
-            ensTable.setRowHeight(40);
-            ensTable.setPreferredSize(new Dimension(775, 80));
-            ensScroll.setViewportView(ensTable);
+            LoVExam.add(choisirPanel, BorderLayout.NORTH);
+
+            //======== panel7 ========
+            {
+                panel7.setLayout(new BorderLayout(0, 10));
+                panel7.add(searchField, BorderLayout.NORTH);
+
+                //======== listScroll ========
+                {
+                    listScroll.setViewportView(list);
+                }
+                panel7.add(listScroll, BorderLayout.CENTER);
+            }
+            LoVExam.add(panel7, BorderLayout.CENTER);
         }
-        contentPane.add(ensScroll, "cell 1 4 3 1");
+        contentPane.add(LoVExam, "cell 1 4 2 1");
 
         //---- label6 ----
         label6.setText("Jury");
         contentPane.add(label6, "cell 0 5,aligny top,growy 0");
 
-        //======== juryScroll ========
-        {
-
-            //---- juryTable ----
-            juryTable.setModel(new DefaultTableModel(
-                new Object[][] {
-                    {null, null, null},
-                    {null, null, null},
-                },
-                new String[] {
-                    "ID", "Local", "Filli\u00e8re"
-                }
-            ));
-            juryScroll.setViewportView(juryTable);
-        }
-        contentPane.add(juryScroll, "cell 1 5 3 1");
+        //---- textField1 ----
+        textField1.setText("courant");
+        textField1.setEditable(false);
+        contentPane.add(textField1, "cell 1 5,aligny top,growy 0");
 
         //---- estValidChB ----
         estValidChB.setText("Est Valide");
         contentPane.add(estValidChB, "cell 0 6");
 
-        //---- button1 ----
-        button1.setText("Ajouter");
-        contentPane.add(button1, "cell 0 8,growy");
+        //---- ajBtn ----
+        ajBtn.setText("Ajouter");
+        contentPane.add(ajBtn, "cell 0 8,growy");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -166,12 +166,20 @@ public class AjouterSoutenance extends JDialog {
     private JLabel label5;
     private JTextField heureSField;
     private JLabel label4;
-    private JScrollPane ensScroll;
-    private JTable ensTable;
+    private JPanel LoVExam;
+    private JPanel choisirPanel;
+    private JTextField cinField;
+    private JLabel label26;
+    private JTextField nomField;
+    private JLabel label27;
+    private JButton choisirBtn;
+    private JPanel panel7;
+    private JTextField searchField;
+    private JScrollPane listScroll;
+    private JList list;
     private JLabel label6;
-    private JScrollPane juryScroll;
-    private JTable juryTable;
+    private JTextField textField1;
     private JCheckBox estValidChB;
-    private JButton button1;
+    private JButton ajBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

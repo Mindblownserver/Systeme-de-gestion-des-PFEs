@@ -42,7 +42,7 @@ public class ViewSmallClassPanel extends JPanel {
                         tableComp = new MyComponents.OrganismeTable();
                         break;
                     case "Soutenance":
-                        tableComp = new MyComponents.SoutenanceTable();
+                        tableComp = new MyComponents.SoutenanceTableSansModSupp();
                         leftComp=new JPanel();
                         leftComp.setVisible(false);
                         break;

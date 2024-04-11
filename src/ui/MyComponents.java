@@ -175,6 +175,7 @@ public class MyComponents {
                 pfeTable.setFillsViewportHeight(true);
                 pfeTable.setRowHeight(40);
                 this.setViewportView(pfeTable);
+                this.setVisible(true);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
@@ -201,22 +202,22 @@ public class MyComponents {
                 //---- soutTable ----
                 soutTable.setModel(new DefaultTableModel(
                     new Object[][] {
-                        {null, null, null, null,modifyBtn,deleteBtn},
-                        {null, null, null, null,modifyBtn,deleteBtn},
+                        {null, null, null, null,"","",modifyBtn,deleteBtn},
+                        {null, null, null, null,"","",modifyBtn,deleteBtn},
                     },
                     new String[] {
-                        "ID", "Date", "Heure", "Est Valide","",""
+                        "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur","",""
                     }
                 ) {
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false, false,false,false
+                        false, false, false, false,false,false,false,false
                     };
                     @Override
                     public boolean isCellEditable(int rowIndex, int columnIndex) {
                         return columnEditable[columnIndex];
                     }
                     Class<?>[] columnTypes = new Class<?>[] {
-                        String.class, String.class, String.class, String.class,JButton.class, JButton.class
+                        String.class, String.class, String.class, String.class,String.class,String.class,JButton.class, JButton.class
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -229,8 +230,13 @@ public class MyComponents {
                 soutTable.setRowHeight(40);
                 this.setViewportView(soutTable);
                 TableColumnModel cm = soutTable.getColumnModel();
-                cm.getColumn(4).setMaxWidth(80);
-                cm.getColumn(5).setMaxWidth(80);        
+                cm.getColumn(0).setMaxWidth(80);
+                cm.getColumn(1).setMaxWidth(100);
+                cm.getColumn(2).setMaxWidth(100);
+                cm.getColumn(3).setMinWidth(150);
+                cm.getColumn(3).setMaxWidth(150);
+                cm.getColumn(6).setMaxWidth(80);
+                cm.getColumn(7).setMaxWidth(80);        
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
@@ -238,6 +244,60 @@ public class MyComponents {
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable soutTable;
         private JButton deleteBtn,modifyBtn;
+        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    }
+    public static class SoutenanceTableSansModSupp extends JScrollPane{
+        public SoutenanceTableSansModSupp() {
+            initComponents();
+        }
+
+        private void initComponents() {
+            // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+            soutTable = new JTable();
+            //======== soutScroll ========
+            {
+
+                //---- soutTable ----
+                soutTable.setModel(new DefaultTableModel(
+                    new Object[][] {
+                        {null, null, null, null,"",""},
+                        {null, null, null, null,"",""},
+                    },
+                    new String[] {
+                        "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur"
+                    }
+                ) {
+                    boolean[] columnEditable = new boolean[] {
+                        false, false, false, false,false,false
+                    };
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return columnEditable[columnIndex];
+                    }
+                    Class<?>[] columnTypes = new Class<?>[] {
+                        String.class, String.class, String.class, String.class,String.class,String.class
+                    };
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        return columnTypes[columnIndex];
+                    }
+                });
+                soutTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
+                TableColumnModel cm = soutTable.getColumnModel();
+                cm.getColumn(0).setMaxWidth(80);
+                cm.getColumn(1).setMaxWidth(100);
+                cm.getColumn(2).setMaxWidth(100);
+                cm.getColumn(3).setMinWidth(150);
+                cm.getColumn(3).setMaxWidth(150);
+                soutTable.setRowHeight(40);
+                this.setViewportView(soutTable);
+      
+            }
+            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        }
+
+        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+        private JTable soutTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class OrganismeTable extends JScrollPane{
@@ -330,7 +390,7 @@ public class MyComponents {
                         String.class, String.class, String.class, String.class, JButton.class, JButton.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, true, true, false, true, true
+                        false, false, false, false, false, false
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -398,7 +458,7 @@ public class MyComponents {
                             String.class, String.class, String.class, JButton.class, JButton.class
                         };
                         boolean[] columnEditable = new boolean[] {
-                            false, true, true,  true, true
+                            false, false, false,  false, false
                         };
                         @Override
                         public Class<?> getColumnClass(int columnIndex) {
@@ -460,7 +520,7 @@ public class MyComponents {
                             String.class, String.class, String.class,String.class,String.class,String.class, JButton.class, JButton.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, true, true,  true, true
+                        false, false, false,  false, false
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -485,6 +545,64 @@ public class MyComponents {
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable encExtTable;
+        private JButton deleteBtn;
+        private JButton modifyBtn;
+        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    }
+    public static class JuryTable extends JScrollPane{
+        public JuryTable(){
+            initComponents();
+        }
+        private void initComponents() {
+            // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+            juryTable = new JTable();
+            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
+            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+
+            //======== encExtScroll ========
+            {
+
+                //---- encExtTable ----
+                juryTable.setModel(new DefaultTableModel(
+                    new Object[][] {
+                        {null, null, null, "", null,modifyBtn, deleteBtn},
+                        {null, null, null, null, null,modifyBtn, deleteBtn},
+                    },
+                    new String[] {
+                        "ID", "Local", "Fillière", "CIN de president", "nom & prenom president", "",""
+                    }
+                ){
+                    Class<?>[] columnTypes = new Class<?>[] {
+                            String.class, String.class, String.class,String.class,String.class, JButton.class, JButton.class
+                    };
+                    boolean[] columnEditable = new boolean[] {
+                        false, false, false,  false, false,false,false
+                    };
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        return columnTypes[columnIndex];
+                    }
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return columnEditable[columnIndex];
+                    }
+                });
+                TableCellRenderer tableRenderer = juryTable.getDefaultRenderer(JButton.class);
+                juryTable.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
+                juryTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
+                juryTable.setRowHeight(40);
+                TableColumnModel cm = juryTable.getColumnModel();
+                cm.getColumn(0).setMaxWidth(80);
+                cm.getColumn(1).setMaxWidth(120);
+                cm.getColumn(6).setMaxWidth(80);
+                cm.getColumn(5).setMaxWidth(80);
+                this.setViewportView(juryTable);
+            }
+            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        }
+
+        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+        private JTable juryTable;
         private JButton deleteBtn;
         private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

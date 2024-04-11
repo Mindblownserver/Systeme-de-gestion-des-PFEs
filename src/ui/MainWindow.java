@@ -28,7 +28,7 @@ public class MainWindow extends JFrame {
 	private JMenu enseignant;
         private JMenuItem ensConsult;
 	private JMenu param;
-        private JMenuItem paramSoutenance;
+        private JMenuItem jurySoutenance;
 	private JMenuItem paramGroupe;
 	private JMenuItem paramOrganismeExt;
 	private JMenuItem paramSpecialite;
@@ -43,6 +43,7 @@ public class MainWindow extends JFrame {
         private ViewEnseignantPanel enseignantP;
         private ViewEtudiantPanel etudiantP;
         private viewPfePanel pfeP;
+        private ViewJuryPanel juryP;
         private ViewSmallClassPanel specialiteP;
         private ViewSmallClassPanel groupeP;
         private ViewSmallClassPanel soutenanceP;
@@ -69,7 +70,8 @@ public class MainWindow extends JFrame {
             param = new JMenu("Paramètres");
             param.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("param.svg")));
             param.setFont(MyComponents.h3);
-            paramSoutenance = new JMenuItem("Soutenance");
+            jurySoutenance = new JMenuItem("Soutenance");
+            juryConsult = new JMenuItem("Consulter jury");
             paramEncadreurExt = new JMenuItem("Encadreur Exterieure");
             paramOrganismeExt = new JMenuItem("Organisme Exterieure");
             paramGroupe = new JMenuItem("Groupe");
@@ -79,6 +81,7 @@ public class MainWindow extends JFrame {
             etudConsult= new JMenuItem("Consulter etudiant");
             ensConsult = new JMenuItem("Consulter enseignant");
             pfeConsult = new JMenuItem("Consulter PFE");
+            juryP = new ViewJuryPanel();
             
             
             cardContainer = new JPanel();
@@ -104,7 +107,8 @@ public class MainWindow extends JFrame {
                 enseignant.add(ensConsult);
                 pfe.add(pfeConsult);
                 file.add(fileExit);
-                param.add(paramSoutenance); // sa propre façon de lecture
+                jury.add(juryConsult); // sa propre façon de lecture
+                jury.add(jurySoutenance);
                 param.addSeparator();
                 param.add(paramGroupe);
                 param.add(paramSpecialite);
@@ -132,7 +136,8 @@ public class MainWindow extends JFrame {
             cardContainer.add(enseignantP,"Enseignant");
             cardContainer.add(etudiantP,"Etudiant");
             cardContainer.add(pfeP, "PFE");
-            cl.show(cardContainer,"1");
+            cardContainer.add(juryP,"Jury");
+            cl.show(cardContainer,"PFE");
             // setup button events
             loginPanel.getAuthBtn().addActionListener(e->{
                 this.setJMenuBar(mb);
@@ -161,7 +166,7 @@ public class MainWindow extends JFrame {
             paramOrganismeExt.addActionListener(l->{
                 cl.show(cardContainer,"Organisme"); 
             });
-            paramSoutenance.addActionListener(l->{
+            jurySoutenance.addActionListener(l->{
                 cl.show(cardContainer,"Soutenance"); 
             });
             etudConsult.addActionListener(l->{
@@ -173,8 +178,12 @@ public class MainWindow extends JFrame {
             pfeConsult.addActionListener(l->{
                 cl.show(cardContainer,"PFE");
             });
-            
-            // to be replaced soon
+            juryConsult.addActionListener(l->{
+                cl.show(cardContainer,"Jury");
+            });
+            homePage.getJuryBtn().addActionListener(l->{
+                cl.show(cardContainer,"Jury");
+            });
             homePage.getPfeBtn().addActionListener(l->{
                 cl.show(cardContainer, "PFE");
             });
