@@ -9,7 +9,7 @@ import java.util.List;
 
 /**Store Information in this class to display it 
  * and fetch info about column names and their data
- * to allow for flexibilty and genericitt in terms of UI
+ * to allow for flexibilty and genericity in terms of UI
  *
  * @author yassine
  */

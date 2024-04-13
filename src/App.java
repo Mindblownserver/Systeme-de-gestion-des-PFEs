@@ -1,7 +1,6 @@
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.extras.FlatInspector;
-import java.awt.Color;
 import java.awt.Insets;
 import javax.swing.UIManager;
 import ui.MainWindow;
@@ -17,7 +16,7 @@ import ui.MyComponents;
  * @author yassine
  */
 public class App { 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         try {
             UIManager.setLookAndFeel( new FlatLightLaf() );
             UIManager.put( "TextComponent.arc", 15 );
@@ -41,6 +40,9 @@ public class App {
             System.err.println( "Failed to initialize LaF" );
         }
         FlatInspector.install("ctrl shift X");
+        
+        
+        
         new MainWindow();
     }
 }

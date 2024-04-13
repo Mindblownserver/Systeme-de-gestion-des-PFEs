@@ -5,7 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-
+import java.util.List;
+import model.*;
 public class ViewSmallClassPanel extends JPanel {
 	private JLabel title;
 	private JPanel border2;
@@ -17,7 +18,7 @@ public class ViewSmallClassPanel extends JPanel {
         
 	private Boolean estVisible=false;
 
-	public ViewSmallClassPanel(String nomDuClasse,Object [][] info) {
+	public ViewSmallClassPanel(String nomDuClasse, List<? extends Object> info) {
                 JComponent leftComp = null;
                 JComponent tableComp=null;
                 switch(nomDuClasse){
@@ -47,10 +48,10 @@ public class ViewSmallClassPanel extends JPanel {
                         leftComp.setVisible(false);
                         break;
                 }
-		initComponents(nomDuClasse,info,tableComp,leftComp);
+		initComponents(nomDuClasse,tableComp,leftComp);
 	}
 
-	private void initComponents(String nomDuClasse, Object [][] info, JComponent table,JComponent leftAddition) {
+	private void initComponents(String nomDuClasse, JComponent table ,JComponent leftAddition) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		border2 = new JPanel();
 		centerContent = new JPanel();

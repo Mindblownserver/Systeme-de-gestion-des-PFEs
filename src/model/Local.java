@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.util.List;
 
@@ -7,14 +7,9 @@ import java.util.List;
 public class Local {
     private int NumSalle;
     private String salle;
-    private static List<String> ids;
-    public Local(String salle, int NumSalle) throws Exception{
+    public Local(String salle, int NumSalle){
         this.NumSalle = NumSalle;
         this.salle = salle;
-        if (ids.contains(salle+ " "+NumSalle))
-            throw new Exception();
-        else
-            ids.add(salle+ " "+NumSalle);
     }
     public int getNumSalle() {
         return NumSalle;

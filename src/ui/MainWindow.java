@@ -1,12 +1,13 @@
 package ui;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.formdev.flatlaf.extras.FlatSVGUtils;
 import java.awt.*;
-import java.util.concurrent.Flow;
-
-import javax.management.JMException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.border.*;
+import model.*;
+import repo.MyDataBaseConnector;
+import java.util.List;
+import java.sql.ResultSet;
 /*
  * Created by JFormDesigner on Fri Mar 29 13:45:27 WAT 2024
  */
@@ -35,6 +36,7 @@ public class MainWindow extends JFrame {
 	private JMenuItem paramEncadreurExt;
         private JMenuItem paramLocal;
 	private JMenuItem fileExit;
+        private JMenuItem fileSave;
         private JPanel cardContainer;
 	private CardLayout cl=new CardLayout();
         // declare pages
@@ -50,10 +52,18 @@ public class MainWindow extends JFrame {
         private ViewSmallClassPanel encadreurExtP;
         private ViewSmallClassPanel organismeP;
         private ViewSmallClassPanel localeP;
+        // declaring list of Models
+        private MyDataBaseConnector dbc;
+        private List<Specialite> spList;
+        private List<Groupe> grList;
+        private List<Local> locList;
+        private List<OrganismeExt> orgList;
+        private List<EncadreurExt> encExtList;
+        
         
 	public MainWindow(){
             // remplissage des SD relatifs au info
-            // inits
+            // inits components
             System.out.println();
             mb=new JMenuBar();
             mb.setFont(MyComponents.h3);
@@ -78,24 +88,30 @@ public class MainWindow extends JFrame {
             paramSpecialite = new JMenuItem("Specialité");
             paramLocal = new JMenuItem("Locale");
             fileExit = new JMenuItem("exit");
+            fileSave = new JMenuItem("save data");
             etudConsult= new JMenuItem("Consulter etudiant");
             ensConsult = new JMenuItem("Consulter enseignant");
             pfeConsult = new JMenuItem("Consulter PFE");
             juryP = new ViewJuryPanel();
-            
-            
+            // inits pages
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel();
             etudiantP = new ViewEtudiantPanel();
             pfeP = new viewPfePanel();
-            specialiteP = new ViewSmallClassPanel("Specialité",null);
+            specialiteP = new ViewSmallClassPanel("Specialité",locList);
             groupeP = new ViewSmallClassPanel("Groupe", null);
             soutenanceP = new ViewSmallClassPanel("Soutenance", null);
             encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",null);
             organismeP = new ViewSmallClassPanel("Organisme", null);
-            localeP =new ViewSmallClassPanel("Local", null);
+            localeP =new ViewSmallClassPanel("Local", locList);
+            // inits models
+            spList = new ArrayList<>();
+            grList = new ArrayList<>();
+            locList = new ArrayList<>();
+            orgList = new ArrayList<>();
+            encExtList= new ArrayList<>();
             
             this.setUndecorated(true);
             // Setup menu bar
@@ -107,6 +123,7 @@ public class MainWindow extends JFrame {
                 enseignant.add(ensConsult);
                 pfe.add(pfeConsult);
                 file.add(fileExit);
+                file.add(fileSave);
                 jury.add(juryConsult); // sa propre façon de lecture
                 jury.add(jurySoutenance);
                 param.addSeparator();
@@ -123,75 +140,78 @@ public class MainWindow extends JFrame {
                 mb.add(enseignant);
                 mb.add(param);
             }
-            // setup this cardContainer
-            cardContainer.setLayout(cl);
-            cardContainer.add(loginPanel,"1");
-            cardContainer.add(homePage,"2");
-            cardContainer.add(specialiteP,"Specialité");
-            cardContainer.add(groupeP,"Groupe");
-            cardContainer.add(soutenanceP,"Soutenance");
-            cardContainer.add(localeP,"Local");
-            cardContainer.add(organismeP,"Organisme");
-            cardContainer.add(encadreurExtP,"Encadreur Exterieure");
-            cardContainer.add(enseignantP,"Enseignant");
-            cardContainer.add(etudiantP,"Etudiant");
-            cardContainer.add(pfeP, "PFE");
-            cardContainer.add(juryP,"Jury");
-            cl.show(cardContainer,"1");
-            // setup button events
-            loginPanel.getAuthBtn().addActionListener(e->{
-                this.setJMenuBar(mb);
-                cl.show(cardContainer,"2");
-            });
-            
-            homePage.getEnseignantBtn().addActionListener(l->{
-                cl.show(cardContainer, "Enseignant");
-            });
-            homePage.getEtudiantBtn().addActionListener(l->{
-                cl.show(cardContainer, "Etudiant");
-            });
-            // paramètres page
-            paramSpecialite.addActionListener(l->{
-                cl.show(cardContainer,"Specialité");
-            });
-            paramGroupe.addActionListener(l->{
-                cl.show(cardContainer,"Groupe");
-            });
-            paramEncadreurExt.addActionListener(l->{
-                cl.show(cardContainer,"Encadreur Exterieure");
-            });
-            paramLocal.addActionListener(l->{
-                cl.show(cardContainer,"Local"); 
-            });
-            paramOrganismeExt.addActionListener(l->{
-                cl.show(cardContainer,"Organisme"); 
-            });
-            jurySoutenance.addActionListener(l->{
-                cl.show(cardContainer,"Soutenance"); 
-            });
-            etudConsult.addActionListener(l->{
-                cl.show(cardContainer,"Etudiant");
-            });
-            ensConsult.addActionListener(l->{
-                cl.show(cardContainer,"Enseignant");
-            });
-            pfeConsult.addActionListener(l->{
-                cl.show(cardContainer,"PFE");
-            });
-            juryConsult.addActionListener(l->{
-                cl.show(cardContainer,"Jury");
-            });
-            homePage.getJuryBtn().addActionListener(l->{
-                cl.show(cardContainer,"Jury");
-            });
-            homePage.getPfeBtn().addActionListener(l->{
-                cl.show(cardContainer, "PFE");
-            });
-            
-            
-            fileExit.addActionListener(l->{
-                System.exit(0);
-            });
+            // setup this cardContainer & ActionListeners
+            {
+                cardContainer.setLayout(cl);
+                cardContainer.add(loginPanel,"1");
+                cardContainer.add(homePage,"2");
+                cardContainer.add(specialiteP,"Specialité");
+                cardContainer.add(groupeP,"Groupe");
+                cardContainer.add(soutenanceP,"Soutenance");
+                cardContainer.add(localeP,"Local");
+                cardContainer.add(organismeP,"Organisme");
+                cardContainer.add(encadreurExtP,"Encadreur Exterieure");
+                cardContainer.add(enseignantP,"Enseignant");
+                cardContainer.add(etudiantP,"Etudiant");
+                cardContainer.add(pfeP, "PFE");
+                cardContainer.add(juryP,"Jury");
+                cl.show(cardContainer,"1");
+                // setup button events
+                loginPanel.getAuthBtn().addActionListener(e->{
+                    this.setJMenuBar(mb);
+                    cl.show(cardContainer,"2");
+                });
+
+                homePage.getEnseignantBtn().addActionListener(l->{
+                    cl.show(cardContainer, "Enseignant");
+                });
+                homePage.getEtudiantBtn().addActionListener(l->{
+                    cl.show(cardContainer, "Etudiant");
+                });
+                // paramètres page
+                paramSpecialite.addActionListener(l->{
+                    cl.show(cardContainer,"Specialité");
+                });
+                paramGroupe.addActionListener(l->{
+                    cl.show(cardContainer,"Groupe");
+                });
+                paramEncadreurExt.addActionListener(l->{
+                    cl.show(cardContainer,"Encadreur Exterieure");
+                });
+                paramLocal.addActionListener(l->{
+                    cl.show(cardContainer,"Local"); 
+                });
+                paramOrganismeExt.addActionListener(l->{
+                    cl.show(cardContainer,"Organisme"); 
+                });
+                jurySoutenance.addActionListener(l->{
+                    cl.show(cardContainer,"Soutenance"); 
+                });
+                etudConsult.addActionListener(l->{
+                    cl.show(cardContainer,"Etudiant");
+                });
+                ensConsult.addActionListener(l->{
+                    cl.show(cardContainer,"Enseignant");
+                });
+                pfeConsult.addActionListener(l->{
+                    cl.show(cardContainer,"PFE");
+                });
+                juryConsult.addActionListener(l->{
+                    cl.show(cardContainer,"Jury");
+                });
+                homePage.getJuryBtn().addActionListener(l->{
+                    cl.show(cardContainer,"Jury");
+                });
+                homePage.getPfeBtn().addActionListener(l->{
+                    cl.show(cardContainer, "PFE");
+                });
+
+
+                fileExit.addActionListener(l->{
+                    System.exit(0);
+                });
+
+            }
             GraphicsEnvironment graphics =GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice device = graphics.getDefaultScreenDevice();
             device.setFullScreenWindow(this);
@@ -202,7 +222,40 @@ public class MainWindow extends JFrame {
             this.setVisible(true);
 
             this.add(cardContainer);
+            setUpDatabaseData();
 	}
+        private void setUpDatabaseData() {
+            try{
+                dbc = new MyDataBaseConnector();
+                loadSp();
+                loadLoc();
+            }catch(Exception e){
+                System.out.println(e);
+            }
+            
+            
+        }
+        private void loadSp()throws ClassNotFoundException,SQLException{
+            dbc.query("Select * from specialite");
+            //System.out.print(dbc.rsMetadata.getColumnName(0)+ " ");
+            int i=1;
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                spList.add(new Specialite(res.getString(1), res.getString(2)));
+                System.out.println("\n"+dbc.rs.getString(i)+" "+ dbc.rs.getString(i+1));
+                
+            }
+        }
+        private void loadLoc()throws ClassNotFoundException,SQLException{
+            dbc.query("Select * from Locale");
+            int i=1;
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                locList.add(new Local(res.getString(2), Integer.parseInt(res.getString(1))));
+                System.out.println("\n"+dbc.rs.getString(i)+" "+ dbc.rs.getString(i+1));
+                
+            }   
+        }
 }
 //        Change SVG color
 //        Function<Color, Color> mapper = null;

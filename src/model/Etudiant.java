@@ -1,4 +1,4 @@
-package models;
+package model;
 
 public class Etudiant extends Personne{
     private String NCE;

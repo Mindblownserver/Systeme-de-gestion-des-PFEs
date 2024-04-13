@@ -1,4 +1,4 @@
-package models;
+package model;
 
 import java.util.Date;
 import java.util.Map;
@@ -25,9 +25,8 @@ public class PFE {
     private int nbEtudiant;
     private Map<Date,Map.Entry<String,String>> JournalEncadreur;
     private Map<Date,Map.Entry<String,String>> Rapport;
-    private Rendu memoire;
-    private Rendu presentation;
-    private Calendrier deadlines;
+//    private Rendu memoire;
+//    private Rendu presentation;
     private Soutenance soutenance;
 
     /**
@@ -35,9 +34,9 @@ public class PFE {
      * @param presentation
      * @return
      */
-    public Boolean deposerRendu(Rendu rendu) {
-        return null;
-    }
+    //public Boolean deposerRendu(Rendu rendu) {
+    //    return null;
+    //}
 
     public Boolean deposerSujet() {
         return null;
@@ -51,17 +50,17 @@ public class PFE {
      * @param fiche À changer
      * @return  À changer
      */
-    public void deposerJournalEncadreur(Rendu fiche) { 
-        return;
-    }
+//    public void deposerJournalEncadreur(Rendu fiche) { 
+//        return;
+//    }
 
     /**
      * @param fiche À changer
      * @return À changer
      */
-    public void deposerFicheRapporteur(Rendu fiche) {
-        return;
-    }
+//    public void deposerFicheRapporteur(Rendu fiche) {
+//        return;
+//    }
 
     /**
      * @param approuve 
@@ -193,21 +192,6 @@ public class PFE {
         Rapport = rapport;
     }
 
-    public Rendu getMemoire() {
-        return memoire;
-    }
-
-    public void setMemoire(Rendu memoire) {
-        this.memoire = memoire;
-    }
-
-    public Rendu getPresentation() {
-        return presentation;
-    }
-
-    public void setPresentation(Rendu presentation) {
-        this.presentation = presentation;
-    }
 
     public Soutenance getSoutenance() {
         return soutenance;
@@ -221,9 +205,5 @@ public class PFE {
         return isApproved;
     }
 
-    public Calendrier getDeadlines() {
-        return deadlines;
-    }
-    
 
 }
