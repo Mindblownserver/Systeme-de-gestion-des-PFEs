@@ -4,24 +4,36 @@ import java.util.List;
 
 // A changer l'exception
 
-public class Local {
-    private int NumSalle;
-    private String salle;
-    public Local(String salle, int NumSalle){
-        this.NumSalle = NumSalle;
-        this.salle = salle;
+public class Local implements ColumnNames{
+    private int numSalle;
+    private String nomSalle;
+    private static int columnCount=2;
+    private String []columnNames = {"Num Salle","Nom Salle"};
+    // implement an interface which has the field column Names!!!!!
+    
+    public Local(String nom, int num){
+        nomSalle = nom;
+        numSalle = num;
     }
     public int getNumSalle() {
-        return NumSalle;
+        return numSalle;
     }
     public void setNumSalle(int numSalle) {
-        NumSalle = numSalle;
+        this.numSalle = numSalle;
     }
-    public String getSalle() {
-        return salle;
+    public String getNomSalle() {
+        return nomSalle;
     }
-    public void setSalle(String salle) {
-        this.salle = salle;
+    public void setNomSalle(String salle) {
+        this.nomSalle = salle;
     }
     
+    public static int getColumnCount(){
+        return columnCount;
+    }
+    @Override
+    public String[] getColumnNames() {
+        String [] res = {"Nom Salle","Num Salle"};
+        return res;
+    }
 }

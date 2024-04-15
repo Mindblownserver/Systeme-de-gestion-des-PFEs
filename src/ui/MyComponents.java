@@ -5,14 +5,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javax.swing.BorderFactory;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -26,7 +29,10 @@ public class MyComponents {
     public static Color secondaryColor= Color.decode("#F2F2F2");
     public static Color accentNormal = Color.decode("#2c67f2");
     public static Color accentLessHue=Color.decode("#2c8ff2");
-
+    
+    private static JButton modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
+    private static JButton deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+    
     
     public static class SubmitBtn extends JButton{
 
@@ -39,14 +45,63 @@ public class MyComponents {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value instanceof Component)
                 return (Component)value;
-                return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
+    }
+    public static Object[][] listToObjects(List<? extends Object> l){
+        Object[][]res=null;
+        System.out.println(l.get(0) instanceof Local);
+        Object o = l.get(0);
+        if(o instanceof Local){
+            res = new Object[l.size()][Local.getColumnCount()+2];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Local)l.get(i)).getNomSalle();
+                res[i][1]= ((Local)l.get(i)).getNumSalle();
+                res[i][2] = modifyBtn;
+                res[i][3]= deleteBtn;
+            }
+        }
+        else if(o instanceof Specialite){
+            res = new Object[l.size()][Specialite.getColumnCount()+2];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Specialite)l.get(i)).getIdFill();
+                res[i][1]= ((Specialite)l.get(i)).getFillier();
+                res[i][2] = modifyBtn;
+                res[i][3]= deleteBtn;
+            }
+        }
+        else if(o instanceof Groupe){
+            res = new Object[l.size()][Groupe.getColumnCount()+2];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Groupe)l.get(i)).getIdGr();
+                res[i][1]= ((Groupe)l.get(i)).getLibelle();
+                res[i][2] = ((Groupe)l.get(i)).getSpecialite().getIdFill();
+                res[i][3] = ((Groupe)l.get(i)).getSpecialite().getFillier();
+                res[i][4] = modifyBtn;
+                res[i][5]= deleteBtn;
+            }
+        }
+        else if(o instanceof OrganismeExt){
+            res = new Object[l.size()][OrganismeExt.getColumnCount()+2];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((OrganismeExt)l.get(i)).getIdSc();
+                res[i][1]= ((OrganismeExt)l.get(i)).getNomSc();
+                res[i][2] = ((OrganismeExt)l.get(i)).getDomAct();
+                res[i][3] = ((OrganismeExt)l.get(i)).getAdress();
+                res[i][4] = modifyBtn;
+                res[i][5]= deleteBtn;
+            }
+        }
+        
+        return res;
     }
     public static class MyHeaderRenderer extends JLabel implements TableCellRenderer {
  
         public MyHeaderRenderer() {
             setFont(new Font("Monosans",1,18));
-            setHorizontalAlignment(CENTER);
+            setHorizontalAlignment(LEFT);
+            setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         }
 
         @Override
@@ -56,30 +111,25 @@ public class MyComponents {
             return this;
         }
     }
-    
-
 // Tables
     public static class SpTable extends JScrollPane {
-        public SpTable(){
-            initComponents();
+        public SpTable(List<? extends ColumnNames>l){
+            initComponents(l);
         }
 
-        private void initComponents() {
+        private void initComponents(List<? extends ColumnNames>l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             spTable = new JTable();
             modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
             deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-
+            Object[][] data = listToObjects(l);
 
             //======== spScroll ========
             {
 
                 //---- spTable ----
                 spTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null,modifyBtn,deleteBtn},
-                        {null, null,modifyBtn,deleteBtn},
-                    },
+                    data,
                     new String[] {
                         "ID", "Filli\u00e8re","",""
                     }
@@ -106,8 +156,12 @@ public class MyComponents {
                 spTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 spTable.setRowHeight(40);
                 TableColumnModel cm = spTable.getColumnModel();
+                cm.getColumn(0).setMaxWidth(80);
                 cm.getColumn(2).setMaxWidth(80);
                 cm.getColumn(3).setMaxWidth(80);
+                spTable.setShowVerticalLines(true);
+                spTable.setShowHorizontalLines(true);
+
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
@@ -196,8 +250,7 @@ public class MyComponents {
         private void initComponents() {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             soutTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+            
 
             //======== soutScroll ========
             {
@@ -246,7 +299,6 @@ public class MyComponents {
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable soutTable;
-        private JButton deleteBtn,modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class SoutenanceTableSansModSupp extends JScrollPane{
@@ -304,39 +356,33 @@ public class MyComponents {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class OrganismeTable extends JScrollPane{
-        public OrganismeTable() {
-            initComponents();
+        public OrganismeTable(List<? extends ColumnNames>l) {
+            initComponents(l);
         }
 
-        private void initComponents() {
+        private void initComponents(List<? extends ColumnNames> l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             orgTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-
-
+            Object[][] data = listToObjects(l);
             //======== orgScroll ========
             {
 
                 //---- orgTable ----
                 orgTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null,modifyBtn,deleteBtn},
-                        {null, null, null,modifyBtn,deleteBtn},
-                    },
+                    data,
                     new String[] {
-                        "ID", "Nom societ\u00e9", "Domaine d'activit\u00e9", "", ""
+                        "ID org", "Nom societ\u00e9", "Domaine d'activit\u00e9","Address", "", ""
                     }
                 ) {
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false,false,false
+                        false, false, false,false,false,false
                     };
                     @Override
                     public boolean isCellEditable(int rowIndex, int columnIndex) {
                         return columnEditable[columnIndex];
                     };
                     Class<?>[] columnTypes = new Class<?>[] {
-                        String.class, String.class, String.class, JButton.class, JButton.class
+                        String.class, String.class, String.class, String.class, JButton.class, JButton.class
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -345,46 +391,41 @@ public class MyComponents {
                 });
                 {
                     TableColumnModel cm = orgTable.getColumnModel();
-                    cm.getColumn(0).setPreferredWidth(75);
+                    cm.getColumn(0).setMaxWidth(100);
+                    cm.getColumn(0).setMinWidth(100);
                     cm.getColumn(1).setPreferredWidth(105);
                     cm.getColumn(2).setPreferredWidth(140);
-                    cm.getColumn(3).setMaxWidth(80);
-                    cm.getColumn(4).setMaxWidth(80);
+                    cm.getColumn(4).setMaxWidth(40);
+                    cm.getColumn(5).setMaxWidth(40);
                     TableCellRenderer tableRenderer = orgTable.getDefaultRenderer(JButton.class);
-                    orgTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
+                    orgTable.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
                     orgTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                     orgTable.setRowHeight(40);
                 }
                 this.setViewportView(orgTable);
+                orgTable.setShowGrid(true);
+
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable orgTable;
-        private JButton deleteBtn;
-        private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class GroupeTable  extends JScrollPane{
-        public GroupeTable(){
-            initComponents();
+        public GroupeTable(List<? extends ColumnNames> l){
+            initComponents(l);
         }
-        private void initComponents() {
+        private void initComponents(List<? extends ColumnNames>l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             groupeTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-
             //======== groupeScroll ========
             {
-
+                Object[][] data = listToObjects(l);
                 //---- groupeTable ----
                 groupeTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, null, modifyBtn, deleteBtn},
-                        {null, null, null, null,  modifyBtn, deleteBtn},
-                    },
+                    data,
                     new String[] {
                         "ID Groupe", "Libelle", "ID Filliere", "Filliere", "", ""
                     }
@@ -406,15 +447,18 @@ public class MyComponents {
                 });
                 {
                     TableColumnModel cm = groupeTable.getColumnModel();
+                    cm.getColumn(0).setMinWidth(120);
+                    cm.getColumn(2).setMinWidth(120);
+                    cm.getColumn(0).setMaxWidth(120);
+                    cm.getColumn(2).setMaxWidth(120);
                     cm.getColumn(3).setPreferredWidth(200);
                     cm.getColumn(4).setMaxWidth(80);
                     cm.getColumn(5).setMaxWidth(80);
-                
                 }
                 TableCellRenderer tableRenderer = groupeTable.getDefaultRenderer(JButton.class);
                 groupeTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
                 groupeTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
-                groupeTable.setGridColor(Color.black);
+                groupeTable.setShowGrid(true);
                 groupeTable.setBorder(null);
                 groupeTable.setFillsViewportHeight(true);
                 
@@ -429,39 +473,33 @@ public class MyComponents {
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable groupeTable;
-        private JButton deleteBtn;
-        private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class LocalTable extends JScrollPane{
-        public LocalTable() {
-            initComponents();
+        public LocalTable(List<? extends ColumnNames> l) {
+            initComponents(l);
         }
 
-        private void initComponents() {
+        private void initComponents(List<? extends ColumnNames> l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             locTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-
+            Object[][] data = listToObjects(l);
+            System.out.println(data);
             //======== locScroll ========
             {
 
                 //---- locTable ----
                 locTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, modifyBtn, deleteBtn},
-                        {null, null, null,  modifyBtn, deleteBtn},
-                    },
+                    data,
                     new String[] {
-                        "ID", "Nom Local", "Num Local", "", ""
+                        "Nom Local", "Num Local", "", ""
                     }
                     ){
                         Class<?>[] columnTypes = new Class<?>[] {
-                            String.class, String.class, String.class, JButton.class, JButton.class
+                            String.class, String.class, JButton.class, JButton.class
                         };
                         boolean[] columnEditable = new boolean[] {
-                            false, false, false,  false, false
+                            false, false,  false, false
                         };
                         @Override
                         public Class<?> getColumnClass(int columnIndex) {
@@ -478,22 +516,21 @@ public class MyComponents {
                     locTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                     TableColumnModel cm = locTable.getColumnModel();
                     
-                    cm.getColumn(0).setPreferredWidth(70);
-                    cm.getColumn(1).setPreferredWidth(130);
-                    cm.getColumn(2).setPreferredWidth(95);
+                    cm.getColumn(0).setMaxWidth(150);
+                    cm.getColumn(0).setMinWidth(150);
+                    cm.getColumn(2).setMaxWidth(80);
                     cm.getColumn(3).setMaxWidth(80);
-                    cm.getColumn(4).setMaxWidth(80);
                     locTable.setRowHeight(40);
                 }
                 this.setViewportView(locTable);
+                locTable.setShowVerticalLines(true);
+                locTable.setShowHorizontalLines(true);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable locTable;
-        private JButton deleteBtn;
-        private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class EncadreurExterieurTable extends JScrollPane{

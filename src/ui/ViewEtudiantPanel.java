@@ -191,29 +191,31 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                        
                             titlePanel.setBackground(Color.white);
                             titlePanel.setPreferredSize(new Dimension(75, 150));
-                            titlePanel.setLayout(new FormLayout(
-                                    "166dlu, $lcgap, 56dlu, 3dlu, 42dlu, default",
-                                    "26dlu, $lgap, fill:20dlu, $lgap, 21dlu"));
+                            titlePanel.setLayout(new MigLayout(
+                                "insets 20 10 0 0, hidemode 3",
+                                // columns
+                                "[169,fill]" +
+                                "[74,fill]" +
+                                "[70,fill]",
+                                // rows
+                                "[30]" +
+                                "[30]" +
+                                "[32]"));
 
                             //---- title ----
-                            title.setText("Consulter Etudiant");
-                            title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
-                            title.setHorizontalAlignment(SwingConstants.LEFT);
-                            titlePanel.add(title, CC.xywh(1, 1, 3, 1));
-                            titlePanel.add(searchBar, CC.xy(1, 3));
-                            titlePanel.add(critereCB, CC.xy(3, 3));
+                            title.setText("Consulter etudiant");
+                            title.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
+                            titlePanel.add(title, "cell 0 0");
+                            titlePanel.add(searchBar, "cell 0 1,grow");
+                            titlePanel.add(critereCB, "cell 1 1,growy");
 
-                            //---- searchBtn ----
-                            searchBtn.setText("chercher");
-                            titlePanel.add(searchBtn, CC.xy(5, 3));
+                            //---- chercherBtn ----
+                            searchBtn.setText("Chercher");
+                            titlePanel.add(searchBtn, "cell 2 1,growy");
 
                             //---- ajouterBtn ----
-                            ajouterBtn.setText("Ajouter");
-                            ajouterBtn.addActionListener(e->{
-                                estVisible = !estVisible;
-                                panel1.setVisible(estVisible);
-                            });
-                            titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                            ajouterBtn.setText("text");
+                            titlePanel.add(ajouterBtn, "cell 2 2,growy");
                             
                             eastBorder.setPreferredSize(new Dimension(10,0));
                             

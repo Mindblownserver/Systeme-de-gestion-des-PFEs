@@ -621,266 +621,45 @@ public class AjouterPage {
             contentPane.add(label11, "cell 1 8,aligny top,growy 0");
 
             //======== LoVFormEncIsimm ========
-            {
-                LoVFormEncIsimm.setLayout(new BorderLayout(0, 10));
-
-                //======== panel2 ========
-                {
-                    panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-                    ((FlowLayout)panel2.getLayout()).setAlignOnBaseline(true);
-
-                    //---- textField4 ----
-                    textField4.setPreferredSize(new Dimension(75, 24));
-                    textField4.setText("cin");
-                    textField4.setEditable(false);
-                    panel2.add(textField4);
-
-                    //---- label20 ----
-                    label20.setPreferredSize(new Dimension(5, 0));
-                    panel2.add(label20);
-
-                    //---- textField5 ----
-                    textField5.setPreferredSize(new Dimension(220, 24));
-                    textField5.setText("Nom et Prenom");
-                    textField5.setEditable(false);
-                    panel2.add(textField5);
-
-                    //---- label21 ----
-                    label21.setPreferredSize(new Dimension(5, 0));
-                    panel2.add(label21);
-
-                    //---- button2 ----
-                    button2.setText("Choisir");
-                    panel2.add(button2);
-                }
-                LoVFormEncIsimm.add(panel2, BorderLayout.NORTH);
-
-                //======== panel3 ========
-                {
-                    panel3.setLayout(new BorderLayout(0, 10));
-                    panel3.add(textField6, BorderLayout.NORTH);
-
-                    //======== scrollPane1 ========
-                    {
-                        scrollPane1.setViewportView(list1);
-                    }
-                    panel3.add(scrollPane1, BorderLayout.CENTER);
-                }
-                LoVFormEncIsimm.add(panel3, BorderLayout.CENTER);
-            }
-            contentPane.add(LoVFormEncIsimm, "cell 2 8 3 1");
+            
+            LoVForm encIsimmForm = new LoVForm();
+            contentPane.add(encIsimmForm, "cell 2 8 3 1,aligny top");
 
             //======== LoVForm2RappIsimm ========
-            {
-                LoVForm2RappIsimm.setLayout(new BorderLayout(0, 10));
-
-                //======== panel4 ========
-                {
-                    panel4.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                    //---- textField7 ----
-                    textField7.setPreferredSize(new Dimension(75, 24));
-                    textField7.setText("cin");
-                    textField7.setEditable(false);
-                    panel4.add(textField7);
-
-                    //---- label23 ----
-                    label23.setPreferredSize(new Dimension(5, 0));
-                    panel4.add(label23);
-
-                    //---- textField8 ----
-                    textField8.setPreferredSize(new Dimension(220, 24));
-                    textField8.setText("Nom et Prenom");
-                    textField8.setEditable(false);
-                    panel4.add(textField8);
-
-                    //---- label24 ----
-                    label24.setPreferredSize(new Dimension(5, 0));
-                    panel4.add(label24);
-
-                    //---- button3 ----
-                    button3.setText("Choisir");
-                    panel4.add(button3);
-                }
-                LoVForm2RappIsimm.add(panel4, BorderLayout.NORTH);
-
-                //======== panel5 ========
-                {
-                    panel5.setLayout(new BorderLayout(0, 10));
-                    panel5.add(textField9, BorderLayout.NORTH);
-
-                    //======== scrollPane2 ========
-                    {
-                        scrollPane2.setViewportView(list2);
-                    }
-                    panel5.add(scrollPane2, BorderLayout.CENTER);
-                }
-                LoVForm2RappIsimm.add(panel5, BorderLayout.CENTER);
-            }
-            contentPane.add(LoVForm2RappIsimm, "cell 6 8 2 1");
+            
+            LoVForm rappIsimmForm = new LoVForm();
+            contentPane.add(rappIsimmForm, "cell 6 8 2 1,aligny top");
 
             //---- label22 ----
             label22.setText("Rapporteur");
-            contentPane.add(label22, "cell 5 8,aligny top,growy ");
+            contentPane.add(label22, "cell 5 8,aligny top,growy 0");
 
             //---- label25 ----
             label25.setText("Etudiant (1)");
             contentPane.add(label25, "cell 1 9,aligny top,growy 0");
 
             //======== LoVForm3Etu1 ========
-            {
-                LoVForm3Etu1.setLayout(new BorderLayout(0, 10));
-
-                //======== panel6 ========
-                {
-                    panel6.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                    //---- textField10 ----
-                    textField10.setPreferredSize(new Dimension(75, 24));
-                    textField10.setText("cin");
-                    textField10.setEditable(false);
-                    panel6.add(textField10);
-
-                    //---- label26 ----
-                    label26.setPreferredSize(new Dimension(5, 0));
-                    panel6.add(label26);
-
-                    //---- textField11 ----
-                    textField11.setPreferredSize(new Dimension(220, 24));
-                    textField11.setText("Nom et Prenom");
-                    textField11.setEditable(false);
-                    panel6.add(textField11);
-
-                    //---- label27 ----
-                    label27.setPreferredSize(new Dimension(5, 0));
-                    panel6.add(label27);
-
-                    //---- button4 ----
-                    button4.setText("Choisir");
-                    panel6.add(button4);
-                }
-                LoVForm3Etu1.add(panel6, BorderLayout.NORTH);
-
-                //======== panel7 ========
-                {
-                    panel7.setLayout(new BorderLayout(0, 10));
-                    panel7.add(textField12, BorderLayout.NORTH);
-
-                    //======== scrollPane3 ========
-                    {
-                        scrollPane3.setViewportView(list3);
-                    }
-                    panel7.add(scrollPane3, BorderLayout.CENTER);
-                }
-                LoVForm3Etu1.add(panel7, BorderLayout.CENTER);
-            }
-            contentPane.add(LoVForm3Etu1, "cell 2 9 3 1");
+            
+            LoVForm etu1Form = new LoVForm();
+            contentPane.add(etu1Form, "cell 2 9 3 1,aligny top");
 
             //---- label28 ----
             label28.setText("Etudiant 2");
             contentPane.add(label28, "cell 5 9,aligny top,growy 0");
 
             //======== LoVForm4Etu2 ========
-            {
-                LoVForm4Etu2.setLayout(new BorderLayout(0, 10));
-
-                //======== panel8 ========
-                {
-                    panel8.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                    //---- textField13 ----
-                    textField13.setPreferredSize(new Dimension(75, 24));
-                    textField13.setText("cin");
-                    textField13.setEditable(false);
-                    panel8.add(textField13);
-
-                    //---- label29 ----
-                    label29.setPreferredSize(new Dimension(5, 0));
-                    panel8.add(label29);
-
-                    //---- textField14 ----
-                    textField14.setPreferredSize(new Dimension(220, 24));
-                    textField14.setText("Nom et Prenom");
-                    textField14.setEditable(false);
-                    panel8.add(textField14);
-
-                    //---- label30 ----
-                    label30.setPreferredSize(new Dimension(5, 0));
-                    panel8.add(label30);
-
-                    //---- button5 ----
-                    button5.setText("Choisir");
-                    panel8.add(button5);
-                }
-                LoVForm4Etu2.add(panel8, BorderLayout.NORTH);
-
-                //======== panel9 ========
-                {
-                    panel9.setLayout(new BorderLayout(0, 10));
-                    panel9.add(textField15, BorderLayout.NORTH);
-
-                    //======== scrollPane4 ========
-                    {
-                        scrollPane4.setViewportView(list4);
-                    }
-                    panel9.add(scrollPane4, BorderLayout.CENTER);
-                }
-                LoVForm4Etu2.add(panel9, BorderLayout.CENTER);
-            }
-            contentPane.add(LoVForm4Etu2, "cell 6 9 2 1");
+            
+            LoVForm etu2Form = new LoVForm();
+            contentPane.add(etu2Form, "cell 6 9 2 1,aligny top");
 
             //---- label31 ----
             label31.setText("Encadreur Ext");
             contentPane.add(label31, "cell 1 10,aligny top,growy 0");
 
             //======== LoVForm5EncExt ========
-            {
-                LoVForm5EncExt.setLayout(new BorderLayout(0, 10));
-
-                //======== panel10 ========
-                {
-                    panel10.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                    //---- textField16 ----
-                    textField16.setPreferredSize(new Dimension(75, 24));
-                    textField16.setText("id enc ext");
-                    textField16.setEditable(false);
-                    panel10.add(textField16);
-
-                    //---- label33 ----
-                    label33.setPreferredSize(new Dimension(5, 0));
-                    panel10.add(label33);
-
-                    //---- textField17 ----
-                    textField17.setPreferredSize(new Dimension(220, 24));
-                    textField17.setText("nom prenom ");
-                    textField17.setEditable(false);
-                    panel10.add(textField17);
-
-                    //---- label34 ----
-                    label34.setPreferredSize(new Dimension(5, 0));
-                    panel10.add(label34);
-
-                    //---- button6 ----
-                    button6.setText("Choisir");
-                    panel10.add(button6);
-                }
-                LoVForm5EncExt.add(panel10, BorderLayout.NORTH);
-
-                //======== panel11 ========
-                {
-                    panel11.setLayout(new BorderLayout(0, 10));
-                    panel11.add(textField18, BorderLayout.NORTH);
-
-                    //======== scrollPane5 ========
-                    {
-                        scrollPane5.setViewportView(list5);
-                    }
-                    panel11.add(scrollPane5, BorderLayout.CENTER);
-                }
-                LoVForm5EncExt.add(panel11, BorderLayout.CENTER);
-            }
-            contentPane.add(LoVForm5EncExt, "cell 2 10 3 1");
+            
+            LoVForm encExtForm = new LoVForm();
+            contentPane.add(encExtForm, "cell 2 10 3 1,aligny top");
 
             //---- approuveChB ----
             approuveChB.setText("Est approuv\u00e9 par la comit\u00e9");
@@ -1185,18 +964,8 @@ public class AjouterPage {
             label4 = new JLabel();
             filliereCB = new JComboBox();
             label5 = new JLabel();
-            this2 = new JPanel();
-            panel6 = new JPanel();
-            textField10 = new JTextField();
-            label26 = new JLabel();
-            textField11 = new JTextField();
-            label27 = new JLabel();
-            button4 = new JButton();
-            panel7 = new JPanel();
-            textField12 = new JTextField();
-            scrollPane3 = new JScrollPane();
-            list3 = new JList();
             button1 = new JButton();
+            form = new LoVForm();
 
             //======== this ========
             Container contentPane = getContentPane();
@@ -1246,58 +1015,8 @@ public class AjouterPage {
                 content.add(label5, "cell 1 4,aligny top,growy 0");
 
                 //======== this2 ========
-                {
-                    this2.setLayout(new BorderLayout(0, 10));
-
-                    //======== panel6 ========
-                    {
-                        panel6.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                        //---- textField10 ----
-                        textField10.setPreferredSize(new Dimension(75, 24));
-                        textField10.setText("cin");
-                        textField10.setEditable(false);
-                        panel6.add(textField10);
-
-                        //---- label26 ----
-                        label26.setPreferredSize(new Dimension(5, 0));
-                        panel6.add(label26);
-
-                        //---- textField11 ----
-                        textField11.setPreferredSize(new Dimension(220, 24));
-                        textField11.setText("Nom et Prenom");
-                        textField11.setEditable(false);
-                        panel6.add(textField11);
-
-                        //---- label27 ----
-                        label27.setPreferredSize(new Dimension(5, 0));
-                        panel6.add(label27);
-
-                        //---- button4 ----
-                        button4.setText("Choisir");
-                        panel6.add(button4);
-                    }
-                    this2.add(panel6, BorderLayout.NORTH);
-
-                    //======== panel7 ========
-                    {
-                        panel7.setLayout(new BorderLayout(0, 10));
-                        panel7.add(textField12, BorderLayout.NORTH);
-
-                        //======== scrollPane3 ========
-                        {
-
-                            //---- list3 ----
-                            list3.setPreferredSize(new Dimension(52, 100));
-                            list3.setMinimumSize(new Dimension(52, 100));
-                            list3.setMaximumSize(new Dimension(52, 100));
-                            scrollPane3.setViewportView(list3);
-                        }
-                        panel7.add(scrollPane3, BorderLayout.CENTER);
-                    }
-                    this2.add(panel7, BorderLayout.CENTER);
-                }
-                content.add(this2, "cell 2 4 3 1,growy");
+                
+                content.add(form, "cell 2 4 3 1,growy");
 
                 //---- button1 ----
                 button1.setText("Ajouter");
@@ -1319,18 +1038,8 @@ public class AjouterPage {
         private JLabel label4;
         private JComboBox filliereCB;
         private JLabel label5;
-        private JPanel this2;
-        private JPanel panel6;
-        private JTextField textField10;
-        private JLabel label26;
-        private JTextField textField11;
-        private JLabel label27;
-        private JButton button4;
-        private JPanel panel7;
-        private JTextField textField12;
-        private JScrollPane scrollPane3;
-        private JList list3;
         private JButton button1;
+        private LoVForm form;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
 }

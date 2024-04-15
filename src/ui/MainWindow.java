@@ -54,11 +54,11 @@ public class MainWindow extends JFrame {
         private ViewSmallClassPanel localeP;
         // declaring list of Models
         private MyDataBaseConnector dbc;
-        private List<Specialite> spList;
-        private List<Groupe> grList;
-        private List<Local> locList;
-        private List<OrganismeExt> orgList;
-        private List<EncadreurExt> encExtList;
+        private List<Specialite> spList = new ArrayList<>();
+        private List<Groupe> grList= new ArrayList<>();
+        private List<Local> locList= new ArrayList<>();
+        private List<OrganismeExt> orgList= new ArrayList<>();
+        private List<EncadreurExt> encExtList= new ArrayList<>();
         
         
 	public MainWindow(){
@@ -93,6 +93,9 @@ public class MainWindow extends JFrame {
             ensConsult = new JMenuItem("Consulter enseignant");
             pfeConsult = new JMenuItem("Consulter PFE");
             juryP = new ViewJuryPanel();
+            // inits data
+            setUpDatabaseData();
+            System.out.println(locList);
             // inits pages
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
@@ -100,11 +103,11 @@ public class MainWindow extends JFrame {
             enseignantP = new ViewEnseignantPanel();
             etudiantP = new ViewEtudiantPanel();
             pfeP = new viewPfePanel();
-            specialiteP = new ViewSmallClassPanel("Specialité",locList);
-            groupeP = new ViewSmallClassPanel("Groupe", null);
-            soutenanceP = new ViewSmallClassPanel("Soutenance", null);
-            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",null);
-            organismeP = new ViewSmallClassPanel("Organisme", null);
+            specialiteP = new ViewSmallClassPanel("Specialité",spList);
+            groupeP = new ViewSmallClassPanel("Groupe", grList);
+            //soutenanceP = new ViewSmallClassPanel("Soutenance", null);
+            //encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",null);
+            organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
             // inits models
             spList = new ArrayList<>();
@@ -126,7 +129,6 @@ public class MainWindow extends JFrame {
                 file.add(fileSave);
                 jury.add(juryConsult); // sa propre façon de lecture
                 jury.add(jurySoutenance);
-                param.addSeparator();
                 param.add(paramGroupe);
                 param.add(paramSpecialite);
                 param.addSeparator();
@@ -147,15 +149,15 @@ public class MainWindow extends JFrame {
                 cardContainer.add(homePage,"2");
                 cardContainer.add(specialiteP,"Specialité");
                 cardContainer.add(groupeP,"Groupe");
-                cardContainer.add(soutenanceP,"Soutenance");
+                //cardContainer.add(soutenanceP,"Soutenance");
                 cardContainer.add(localeP,"Local");
                 cardContainer.add(organismeP,"Organisme");
-                cardContainer.add(encadreurExtP,"Encadreur Exterieure");
+                //cardContainer.add(encadreurExtP,"Encadreur Exterieure");
                 cardContainer.add(enseignantP,"Enseignant");
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"1");
+                cl.show(cardContainer,"Organisme");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -222,37 +224,66 @@ public class MainWindow extends JFrame {
             this.setVisible(true);
 
             this.add(cardContainer);
-            setUpDatabaseData();
 	}
         private void setUpDatabaseData() {
             try{
                 dbc = new MyDataBaseConnector();
                 loadSp();
                 loadLoc();
+                loadGroup();
+                loadOrg();
             }catch(Exception e){
-                System.out.println(e);
+                System.out.println("ERROORRRR "+e);
             }
             
             
         }
         private void loadSp()throws ClassNotFoundException,SQLException{
-            dbc.query("Select * from specialite");
+            dbc.query("select * from specialite");
+            
             //System.out.print(dbc.rsMetadata.getColumnName(0)+ " ");
-            int i=1;
             ResultSet res = dbc.rs;
+            
             while(dbc.rs.next()){
+                System.out.println("\n"+res.getString(1)+" "+ dbc.rs.getString(2));
                 spList.add(new Specialite(res.getString(1), res.getString(2)));
-                System.out.println("\n"+dbc.rs.getString(i)+" "+ dbc.rs.getString(i+1));
+                
                 
             }
         }
         private void loadLoc()throws ClassNotFoundException,SQLException{
             dbc.query("Select * from Locale");
-            int i=1;
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 locList.add(new Local(res.getString(2), Integer.parseInt(res.getString(1))));
-                System.out.println("\n"+dbc.rs.getString(i)+" "+ dbc.rs.getString(i+1));
+                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2));
+                
+            }   
+        }
+        private void loadGroup()throws ClassNotFoundException,SQLException{
+            dbc.query("Select idGr,libelle,idFill,filliere from Groupe join Specialite using (idFill)");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                grList.add(new Groupe(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
+                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                
+            }   
+        }
+        private void loadOrg()throws ClassNotFoundException,SQLException{
+            dbc.query("Select idSc, nomSc, domaineActivite, adresse from OrganismeExt");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                orgList.add(new OrganismeExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
+                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                
+            }   
+        }
+        private void loadEncExt()throws ClassNotFoundException,SQLException{
+            dbc.query("Select cin, nom, prenom, email, tel,poste, idSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                orgList.add(new OrganismeExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
+                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
         }

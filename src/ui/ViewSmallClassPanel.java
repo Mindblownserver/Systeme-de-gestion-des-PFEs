@@ -7,6 +7,7 @@ import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.util.List;
 import model.*;
+import net.miginfocom.swing.MigLayout;
 public class ViewSmallClassPanel extends JPanel {
 	private JLabel title;
 	private JPanel border2;
@@ -18,21 +19,21 @@ public class ViewSmallClassPanel extends JPanel {
         
 	private Boolean estVisible=false;
 
-	public ViewSmallClassPanel(String nomDuClasse, List<? extends Object> info) {
+	public ViewSmallClassPanel(String nomDuClasse, List<? extends ColumnNames> info) {
                 JComponent leftComp = null;
                 JComponent tableComp=null;
                 switch(nomDuClasse){
                     case "Groupe":
                         leftComp = new AjouterPage.AjouterGroupe();
-                        tableComp = new MyComponents.GroupeTable();
+                        tableComp = new MyComponents.GroupeTable(info);
                         break;
                     case "Specialité":
                         leftComp= new AjouterPage.AjouterSp();
-                        tableComp = new MyComponents.SpTable();
+                        tableComp = new MyComponents.SpTable(info);
                         break;
                     case "Local":
                         leftComp=new AjouterPage.AjouterLocal();
-                        tableComp = new MyComponents.LocalTable();
+                        tableComp = new MyComponents.LocalTable(info);
                         break;
                     case "Encadreur Exterieure":
                         leftComp= new AjouterPage.AjouterEncadreurExt();
@@ -40,7 +41,7 @@ public class ViewSmallClassPanel extends JPanel {
                         break;
                     case "Organisme":
                         leftComp = new AjouterPage.AjouterOrganisme();
-                        tableComp = new MyComponents.OrganismeTable();
+                        tableComp = new MyComponents.OrganismeTable(info);
                         break;
                     case "Soutenance":
                         tableComp = new MyComponents.SoutenanceTableSansModSupp();
@@ -48,10 +49,10 @@ public class ViewSmallClassPanel extends JPanel {
                         leftComp.setVisible(false);
                         break;
                 }
-		initComponents(nomDuClasse,tableComp,leftComp);
+		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
 	}
 
-	private void initComponents(String nomDuClasse, JComponent table ,JComponent leftAddition) {
+	private void initComponents(String nomDuClasse, String[] critereTab, JComponent table ,JComponent leftAddition) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		border2 = new JPanel();
 		centerContent = new JPanel();
@@ -59,7 +60,7 @@ public class ViewSmallClassPanel extends JPanel {
 		title = new JLabel("Consulter "+nomDuClasse);
                 JButton searchBtn= new JButton();
                 JTextField searchBar= new JTextField();
-                JComboBox critereCB= new JComboBox<>();
+                JComboBox critereCB= new JComboBox<>(critereTab);
                 JPanel titlePanel = new JPanel();
                 JPanel eastBorder = new JPanel();
                 
@@ -74,19 +75,15 @@ public class ViewSmallClassPanel extends JPanel {
                 centerContent.setBackground(Color.WHITE);
                 //centerContent.setLayout(new BoxLayout(centerContent, BoxLayout.Y_AXIS));
 
-                //======== buttonPanel ========
-
-                buttonPanel.setBackground(Color.white);
-                buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-                buttonPanel.add(title);
-                buttonPanel.add(ajouterBtn);
-                title.setFont(MyComponents.h1);
-                title.setPreferredSize(new Dimension(300,100));
+                
 //                ajouterBtn.setBounds(new Rectangle(new Point(500, 80), new Dimension(100,30)));
                 
                 centerContent.add(table);
-                table.setBounds(0,0,1000,500);
-
+                if(nomDuClasse.equals("Local") || nomDuClasse.equals("Specialité"))
+                    table.setBounds(10,0,1200,500);
+                else if(nomDuClasse.equals("Groupe")||nomDuClasse.equals("Organisme"))
+                    table.setBounds(10,0,1200,500);
+                
              
 		add(centerContent, BorderLayout.CENTER);
                 //====Left ajouter Panel
@@ -103,24 +100,34 @@ public class ViewSmallClassPanel extends JPanel {
                        
                 titlePanel.setBackground(Color.white);
                 titlePanel.setPreferredSize(new Dimension(75, 150));
-                titlePanel.setLayout(new FormLayout(
-                        "166dlu, $lcgap, 56dlu, 3dlu, 42dlu, default",
-                        "26dlu, $lgap, fill:20dlu, $lgap, 21dlu"));
+                titlePanel.setLayout(new MigLayout(
+                    "hidemode 3",
+                    // columns
+                    "10[169,fill]" +
+                    "[74,fill]" +
+                    "[70,fill]",
+                    // rows
+                    "[30]" +
+                    "[30]" +
+                    "[32]"));
 
                 //---- title ----
-                title.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
-                title.setHorizontalAlignment(SwingConstants.LEFT);
-                titlePanel.add(title, CC.xywh(1, 1, 3, 1));
-                titlePanel.add(searchBar, CC.xy(1, 3));
-                titlePanel.add(critereCB, CC.xy(3, 3));
+                title.setText("Consulter "+nomDuClasse);
+                titlePanel.add(title, "cell 0 0");
+                titlePanel.add(searchBar, "cell 0 1,grow");
+                titlePanel.add(critereCB, "cell 1 1,growy");
 
-                //---- searchBtn ----
-                searchBtn.setText("chercher");
-                titlePanel.add(searchBtn, CC.xy(5, 3));
+                //---- chercherBtn ----
+                searchBtn.setText("Chercher");
+                titlePanel.add(searchBtn, "cell 2 1,growy");
 
                 //---- ajouterBtn ----
-                ajouterBtn.setText("Ajouter");
-                titlePanel.add(ajouterBtn, CC.xy(5, 5, CC.DEFAULT, CC.FILL));
+                ajouterBtn.setText("text");
+                titlePanel.add(ajouterBtn, "cell 2 2,growy");
+
+                //---- title ----
+                title.setFont(new Font("SansSerif", Font.BOLD, 24));
+                title.setHorizontalAlignment(SwingConstants.LEFT);
                 ajouterBtn.addActionListener(ee->{
                     estVisible = !estVisible;
                     leftAddition.setVisible(estVisible);

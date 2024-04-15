@@ -50,7 +50,7 @@ public class ViewJuryPanel extends JPanel{
 
             //======== this ========
             setLayout(new MigLayout(
-                "insets 20 20 0 0,hidemode 3",
+                "insets 20 10 0 0,hidemode 3",
                 // columns
                 "[fill]" +
                 "[207,fill]" +
@@ -64,7 +64,7 @@ public class ViewJuryPanel extends JPanel{
 
             //---- label5 ----
             label5.setText("Consulter Jury");
-            label5.setFont(new Font(Font.MONOSPACED, Font.BOLD, 24));
+            label5.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
             label5.setHorizontalAlignment(SwingConstants.LEFT);
             add(label5, "cell 1 1 3 1");
             add(textField3, "cell 1 2,growy");

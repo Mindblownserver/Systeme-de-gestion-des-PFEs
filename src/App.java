@@ -32,6 +32,7 @@ public class App {
             UIManager.put("TableHeader.background", MyComponents.secondaryColor);
             //Menu
             UIManager.put("MenuBar.itemMargins", new Insets(10, 10, 10, 10));
+            UIManager.put("Table.cellMargins", new Insets(0,5,0,0));
             //
             //UIManager.put("ComboBox.buttonArrowColor", Color.green);
 

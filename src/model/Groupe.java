@@ -1,13 +1,10 @@
 package model;
 
-/**
- *
- */
-
-public class Groupe {
+public class Groupe implements ColumnNames{
     private String idGr;
     private String libelle;
     private Specialite specialite;
+    private static int columnCount=4;
     /**
      * Default Constructor
      * @param libelle
@@ -24,7 +21,8 @@ public class Groupe {
      * @param libelle
      * @param fillière
      */
-    public Groupe(String libelle, String idFilliere, String specialite){
+    public Groupe(String id,String libelle, String idFilliere, String specialite){
+        idGr=id;
         this.libelle = libelle;
         this.specialite= new Specialite(idFilliere,specialite);
     }
@@ -47,5 +45,13 @@ public class Groupe {
     public void setSpecialite(Specialite specialite) {
         this.specialite = specialite;
     }
+    public static int getColumnCount(){
+        return columnCount;
+    }
     
+    @Override
+    public String[] getColumnNames() {
+        String [] res = {"Id Group","Libelle", "Id Filliere", "Filliere"};
+        return res;
+    }
 }
