@@ -106,7 +106,7 @@ public class MainWindow extends JFrame {
             specialiteP = new ViewSmallClassPanel("Specialité",spList);
             groupeP = new ViewSmallClassPanel("Groupe", grList);
             //soutenanceP = new ViewSmallClassPanel("Soutenance", null);
-            //encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",null);
+            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
             organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
             // inits models
@@ -152,12 +152,12 @@ public class MainWindow extends JFrame {
                 //cardContainer.add(soutenanceP,"Soutenance");
                 cardContainer.add(localeP,"Local");
                 cardContainer.add(organismeP,"Organisme");
-                //cardContainer.add(encadreurExtP,"Encadreur Exterieure");
+                cardContainer.add(encadreurExtP,"Encadreur Exterieure");
                 cardContainer.add(enseignantP,"Enseignant");
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Organisme");
+                cl.show(cardContainer,"Encadreur Exterieure");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -232,6 +232,7 @@ public class MainWindow extends JFrame {
                 loadLoc();
                 loadGroup();
                 loadOrg();
+                loadEncExt();
             }catch(Exception e){
                 System.out.println("ERROORRRR "+e);
             }
@@ -252,7 +253,7 @@ public class MainWindow extends JFrame {
             }
         }
         private void loadLoc()throws ClassNotFoundException,SQLException{
-            dbc.query("Select * from Locale");
+            dbc.query("Select * from Loc");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 locList.add(new Local(res.getString(2), Integer.parseInt(res.getString(1))));
@@ -279,11 +280,11 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadEncExt()throws ClassNotFoundException,SQLException{
-            dbc.query("Select cin, nom, prenom, email, tel,poste, idSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
+            dbc.query("Select nom, prenom, cin, email, tel,poste, idSc,nomSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
-                orgList.add(new OrganismeExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
-                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                encExtList.add(new EncadreurExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getString(9),res.getString(10)));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
         }

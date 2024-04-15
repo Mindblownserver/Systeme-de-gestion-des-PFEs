@@ -93,6 +93,20 @@ public class MyComponents {
                 res[i][5]= deleteBtn;
             }
         }
+        else if(o instanceof EncadreurExt){
+            res = new Object[l.size()][9];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((EncadreurExt)l.get(i)).getCin();
+                res[i][1]= ((EncadreurExt)l.get(i)).getPrenom();
+                res[i][2] = ((EncadreurExt)l.get(i)).getNom();
+                res[i][3] = ((EncadreurExt)l.get(i)).getEmail();
+                res[i][4]= ((EncadreurExt)l.get(i)).getTel();
+                res[i][5] = ((EncadreurExt)l.get(i)).getPoste();
+                res[i][6]= ((EncadreurExt)l.get(i)).getSociete().getIdSc();
+                res[i][7] = modifyBtn;
+                res[i][8]= deleteBtn;
+            }
+        }
         
         return res;
     }
@@ -534,30 +548,27 @@ public class MyComponents {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class EncadreurExterieurTable extends JScrollPane{
-        public EncadreurExterieurTable(){
-            initComponents();
+        public EncadreurExterieurTable(List<? extends ColumnNames> info){
+            initComponents(info);
         }
-        private void initComponents() {
+        private void initComponents(List<? extends ColumnNames> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             encExtTable = new JTable();
             modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
             deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-
+            
             //======== encExtScroll ========
             {
 
                 //---- encExtTable ----
                 encExtTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, "", null, null,modifyBtn, deleteBtn},
-                        {null, null, null, null, null, null,modifyBtn, deleteBtn},
-                    },
+                    listToObjects(info),
                     new String[] {
-                        "CIN", "Prenom", "Nom", "Email", "Tel", "Post","",""
+                        "CIN", "Prenom", "Nom", "Email", "Tel", "Post","Id Organisme","",""
                     }
                 ){
                     Class<?>[] columnTypes = new Class<?>[] {
-                            String.class, String.class, String.class,String.class,String.class,String.class, JButton.class, JButton.class
+                            String.class, String.class, String.class,String.class,String.class,String.class,String.class, JButton.class, JButton.class
                     };
                     boolean[] columnEditable = new boolean[] {
                         false, false, false,  false, false
@@ -576,7 +587,7 @@ public class MyComponents {
                 encExtTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 encExtTable.setRowHeight(40);
                 TableColumnModel cm = encExtTable.getColumnModel();
-                cm.getColumn(6).setMaxWidth(80);
+                cm.getColumn(8).setMaxWidth(80);
                 cm.getColumn(7).setMaxWidth(80);
                 this.setViewportView(encExtTable);
             }

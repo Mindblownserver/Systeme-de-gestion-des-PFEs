@@ -37,7 +37,7 @@ public class ViewSmallClassPanel extends JPanel {
                         break;
                     case "Encadreur Exterieure":
                         leftComp= new AjouterPage.AjouterEncadreurExt();
-                        tableComp = new MyComponents.EncadreurExterieurTable();
+                        tableComp = new MyComponents.EncadreurExterieurTable(info);
                         break;
                     case "Organisme":
                         leftComp = new AjouterPage.AjouterOrganisme();
@@ -79,10 +79,7 @@ public class ViewSmallClassPanel extends JPanel {
 //                ajouterBtn.setBounds(new Rectangle(new Point(500, 80), new Dimension(100,30)));
                 
                 centerContent.add(table);
-                if(nomDuClasse.equals("Local") || nomDuClasse.equals("Specialité"))
-                    table.setBounds(10,0,1200,500);
-                else if(nomDuClasse.equals("Groupe")||nomDuClasse.equals("Organisme"))
-                    table.setBounds(10,0,1200,500);
+                table.setBounds(10,0,1200,500);
                 
              
 		add(centerContent, BorderLayout.CENTER);
@@ -101,9 +98,9 @@ public class ViewSmallClassPanel extends JPanel {
                 titlePanel.setBackground(Color.white);
                 titlePanel.setPreferredSize(new Dimension(75, 150));
                 titlePanel.setLayout(new MigLayout(
-                    "hidemode 3",
+                    "insets 20 10 0 0, hidemode 3",
                     // columns
-                    "10[169,fill]" +
+                    "[169,fill]" +
                     "[74,fill]" +
                     "[70,fill]",
                     // rows
@@ -122,7 +119,7 @@ public class ViewSmallClassPanel extends JPanel {
                 titlePanel.add(searchBtn, "cell 2 1,growy");
 
                 //---- ajouterBtn ----
-                ajouterBtn.setText("text");
+                ajouterBtn.setText("Ajouter");
                 titlePanel.add(ajouterBtn, "cell 2 2,growy");
 
                 //---- title ----
@@ -138,7 +135,7 @@ public class ViewSmallClassPanel extends JPanel {
                 
                 this.add(titlePanel,BorderLayout.NORTH);
 		this.add(border2, BorderLayout.SOUTH);
-                this.add(eastBorder, BorderLayout.EAST);
+                this.add(leftAddition, BorderLayout.EAST);
                 
 
 	}

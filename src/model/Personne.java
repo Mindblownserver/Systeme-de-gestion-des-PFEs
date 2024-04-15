@@ -4,9 +4,10 @@ public class Personne {
     private String nom;
     private String prenom;
     private String cin;
+    private String email,tel;
 
-    public Personne(String n, String p, String c){
-        nom=n;prenom=p;cin=c;
+    public Personne(String n, String p, String c, String e, String t){
+        nom=n;prenom=p;cin=c;email=e;tel=t;
     }
 
     public String getNom() {
@@ -26,6 +27,22 @@ public class Personne {
     }
     public void setCin(String cin) {
         this.cin = cin;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
     
 }
