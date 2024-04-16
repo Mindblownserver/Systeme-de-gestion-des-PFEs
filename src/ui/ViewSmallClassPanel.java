@@ -6,6 +6,9 @@ import javax.swing.*;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import model.*;
 import net.miginfocom.swing.MigLayout;
 public class ViewSmallClassPanel extends JPanel {
@@ -21,7 +24,7 @@ public class ViewSmallClassPanel extends JPanel {
 
 	public ViewSmallClassPanel(String nomDuClasse, List<? extends ColumnNames> info) {
                 JComponent leftComp = null;
-                JComponent tableComp=null;
+                ComponentWithTable tableComp=null;
                 switch(nomDuClasse){
                     case "Groupe":
                         leftComp = new AjouterPage.AjouterGroupe();
@@ -52,7 +55,7 @@ public class ViewSmallClassPanel extends JPanel {
 		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
 	}
 
-	private void initComponents(String nomDuClasse, String[] critereTab, JComponent table ,JComponent leftAddition) {
+	private void initComponents(String nomDuClasse, String[] critereTab, ComponentWithTable table ,JComponent leftAddition) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		border2 = new JPanel();
 		centerContent = new JPanel();
@@ -78,8 +81,8 @@ public class ViewSmallClassPanel extends JPanel {
                 
 //                ajouterBtn.setBounds(new Rectangle(new Point(500, 80), new Dimension(100,30)));
                 
-                centerContent.add(table);
-                table.setBounds(10,0,1200,500);
+                centerContent.add((JComponent)table);
+                ((JComponent)table).setBounds(10,0,1200,500);
                 
              
 		add(centerContent, BorderLayout.CENTER);
@@ -129,9 +132,14 @@ public class ViewSmallClassPanel extends JPanel {
                     estVisible = !estVisible;
                     leftAddition.setVisible(estVisible);
                 });
-                
-                eastBorder.setPreferredSize(new Dimension(10,0));
-                
+                searchBtn.addActionListener(l->{
+                    DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
+                    TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
+                    table.getTable().setRowSorter(obj);
+                    TableColumnModel searchedColumn = table.getTable().getColumnModel();
+                    System.out.println(critereCB.getSelectedIndex());
+                    obj.setRowFilter(RowFilter.regexFilter(searchBar.getText(),critereCB.getSelectedIndex()));
+                });
                 
                 this.add(titlePanel,BorderLayout.NORTH);
 		this.add(border2, BorderLayout.SOUTH);

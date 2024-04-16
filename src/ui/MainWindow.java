@@ -29,7 +29,6 @@ public class MainWindow extends JFrame {
 	private JMenu enseignant;
         private JMenuItem ensConsult;
 	private JMenu param;
-        private JMenuItem jurySoutenance;
 	private JMenuItem paramGroupe;
 	private JMenuItem paramOrganismeExt;
 	private JMenuItem paramSpecialite;
@@ -48,7 +47,6 @@ public class MainWindow extends JFrame {
         private ViewJuryPanel juryP;
         private ViewSmallClassPanel specialiteP;
         private ViewSmallClassPanel groupeP;
-        private ViewSmallClassPanel soutenanceP;
         private ViewSmallClassPanel encadreurExtP;
         private ViewSmallClassPanel organismeP;
         private ViewSmallClassPanel localeP;
@@ -80,7 +78,6 @@ public class MainWindow extends JFrame {
             param = new JMenu("Paramètres");
             param.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("param.svg")));
             param.setFont(MyComponents.h3);
-            jurySoutenance = new JMenuItem("Soutenance");
             juryConsult = new JMenuItem("Consulter jury");
             paramEncadreurExt = new JMenuItem("Encadreur Exterieure");
             paramOrganismeExt = new JMenuItem("Organisme Exterieure");
@@ -95,7 +92,6 @@ public class MainWindow extends JFrame {
             juryP = new ViewJuryPanel();
             // inits data
             setUpDatabaseData();
-            System.out.println(locList);
             // inits pages
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
@@ -105,7 +101,6 @@ public class MainWindow extends JFrame {
             pfeP = new viewPfePanel();
             specialiteP = new ViewSmallClassPanel("Specialité",spList);
             groupeP = new ViewSmallClassPanel("Groupe", grList);
-            //soutenanceP = new ViewSmallClassPanel("Soutenance", null);
             encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
             organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
@@ -128,7 +123,6 @@ public class MainWindow extends JFrame {
                 file.add(fileExit);
                 file.add(fileSave);
                 jury.add(juryConsult); // sa propre façon de lecture
-                jury.add(jurySoutenance);
                 param.add(paramGroupe);
                 param.add(paramSpecialite);
                 param.addSeparator();
@@ -149,7 +143,6 @@ public class MainWindow extends JFrame {
                 cardContainer.add(homePage,"2");
                 cardContainer.add(specialiteP,"Specialité");
                 cardContainer.add(groupeP,"Groupe");
-                //cardContainer.add(soutenanceP,"Soutenance");
                 cardContainer.add(localeP,"Local");
                 cardContainer.add(organismeP,"Organisme");
                 cardContainer.add(encadreurExtP,"Encadreur Exterieure");
@@ -157,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Encadreur Exterieure");
+                cl.show(cardContainer,"1");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -185,9 +178,6 @@ public class MainWindow extends JFrame {
                 });
                 paramOrganismeExt.addActionListener(l->{
                     cl.show(cardContainer,"Organisme"); 
-                });
-                jurySoutenance.addActionListener(l->{
-                    cl.show(cardContainer,"Soutenance"); 
                 });
                 etudConsult.addActionListener(l->{
                     cl.show(cardContainer,"Etudiant");

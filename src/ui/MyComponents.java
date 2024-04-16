@@ -126,16 +126,23 @@ public class MyComponents {
         }
     }
 // Tables
-    public static class SpTable extends JScrollPane {
+    public static class SpTable extends JScrollPane implements ComponentWithTable{
         public SpTable(List<? extends ColumnNames>l){
             initComponents(l);
         }
 
+        public JTable getTable() {
+            return spTable;
+        }
+
+        public void setTable(JTable spTable) {
+            this.spTable = spTable;
+        }
+        
+
         private void initComponents(List<? extends ColumnNames>l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             spTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
             Object[][] data = listToObjects(l);
 
             //======== spScroll ========
@@ -173,15 +180,13 @@ public class MyComponents {
                 cm.getColumn(0).setMaxWidth(80);
                 cm.getColumn(2).setMaxWidth(80);
                 cm.getColumn(3).setMaxWidth(80);
-                spTable.setShowVerticalLines(true);
-                spTable.setShowHorizontalLines(true);
+                spTable.setShowGrid(true);
 
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         private JTable spTable;
-        private JButton modifyBtn,deleteBtn;
     }
     public static class PFETable  extends JScrollPane{
         public PFETable(){
@@ -315,11 +320,19 @@ public class MyComponents {
         private JTable soutTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class SoutenanceTableSansModSupp extends JScrollPane{
+    public static class SoutenanceTableSansModSupp extends JScrollPane implements ComponentWithTable{
         public SoutenanceTableSansModSupp() {
             initComponents();
         }
 
+        public JTable getTable() {
+            return soutTable;
+        }
+
+        public void setTable(JTable soutTable) {
+            this.soutTable = soutTable;
+        }
+        
         private void initComponents() {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             soutTable = new JTable();
@@ -369,11 +382,19 @@ public class MyComponents {
         private JTable soutTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class OrganismeTable extends JScrollPane{
+    public static class OrganismeTable extends JScrollPane implements ComponentWithTable{
         public OrganismeTable(List<? extends ColumnNames>l) {
             initComponents(l);
         }
 
+        public JTable getTable() {
+            return orgTable;
+        }
+
+        public void setTable(JTable orgTable) {
+            this.orgTable = orgTable;
+        }
+        
         private void initComponents(List<? extends ColumnNames> l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             orgTable = new JTable();
@@ -427,10 +448,19 @@ public class MyComponents {
         private JTable orgTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class GroupeTable  extends JScrollPane{
+    public static class GroupeTable  extends JScrollPane implements ComponentWithTable{
         public GroupeTable(List<? extends ColumnNames> l){
             initComponents(l);
         }
+
+        public JTable getTable() {
+            return groupeTable;
+        }
+
+        public void setTable(JTable groupeTable) {
+            this.groupeTable = groupeTable;
+        }
+        
         private void initComponents(List<? extends ColumnNames>l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             groupeTable = new JTable();
@@ -489,7 +519,7 @@ public class MyComponents {
         private JTable groupeTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class LocalTable extends JScrollPane{
+    public static class LocalTable extends JScrollPane implements ComponentWithTable{
         public LocalTable(List<? extends ColumnNames> l) {
             initComponents(l);
         }
@@ -537,25 +567,39 @@ public class MyComponents {
                     locTable.setRowHeight(40);
                 }
                 this.setViewportView(locTable);
-                locTable.setShowVerticalLines(true);
-                locTable.setShowHorizontalLines(true);
+                locTable.setShowGrid(true);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
+        public JTable getTable() {
+            return locTable;
+        }
+
+        public void setTable(JTable locTable) {
+            this.locTable = locTable;
+        }
+        
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable locTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class EncadreurExterieurTable extends JScrollPane{
+    public static class EncadreurExterieurTable extends JScrollPane implements ComponentWithTable{
         public EncadreurExterieurTable(List<? extends ColumnNames> info){
             initComponents(info);
         }
+
+        public JTable getTable() {
+            return encExtTable;
+        }
+
+        public void setTable(JTable encExtTable) {
+            this.encExtTable = encExtTable;
+        }
+        
         private void initComponents(List<? extends ColumnNames> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             encExtTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
             
             //======== encExtScroll ========
             {
@@ -571,7 +615,7 @@ public class MyComponents {
                             String.class, String.class, String.class,String.class,String.class,String.class,String.class, JButton.class, JButton.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false,  false, false
+                        false, false, false,  false, false,false,false,false,false
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -590,14 +634,14 @@ public class MyComponents {
                 cm.getColumn(8).setMaxWidth(80);
                 cm.getColumn(7).setMaxWidth(80);
                 this.setViewportView(encExtTable);
+                encExtTable.setShowGrid(true);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable encExtTable;
-        private JButton deleteBtn;
-        private JButton modifyBtn;
+        
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class JuryTable extends JScrollPane{
