@@ -272,8 +272,8 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                                 return columnEditable[columnIndex];
                                         }
                                 });
-                                TableCellRenderer tableRenderer = table1.getDefaultRenderer(JButton.class);
-                                table1.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
+//                                TableCellRenderer tableRenderer = table1.getDefaultRenderer(JButton.class);
+//                                table1.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
                                 {
                                         TableColumnModel cm = table1.getColumnModel();
                                         cm.getColumn(1).setPreferredWidth(125);

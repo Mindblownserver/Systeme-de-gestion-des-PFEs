@@ -132,11 +132,18 @@ public class ViewSmallClassPanel extends JPanel {
                     estVisible = !estVisible;
                     leftAddition.setVisible(estVisible);
                 });
+                // Modify Row
+                
+                table.getEditBtn().addActionListener(l->{
+                    System.out.println("1");
+                });
+                
+                
+                // Search functionality
                 searchBtn.addActionListener(l->{
                     DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
                     TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
                     table.getTable().setRowSorter(obj);
-                    TableColumnModel searchedColumn = table.getTable().getColumnModel();
                     System.out.println(critereCB.getSelectedIndex());
                     obj.setRowFilter(RowFilter.regexFilter(searchBar.getText(),critereCB.getSelectedIndex()));
                 });

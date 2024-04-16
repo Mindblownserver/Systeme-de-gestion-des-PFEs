@@ -7,8 +7,8 @@ public class Enseignant extends Personne{
     private String poste;
     private List<String> theme;
 
-    public Enseignant(String n, String p, String c, String poste, String ...theme) {
-        super(n, p, c);
+    public Enseignant(String n, String p, String c, String e,String t, String poste, String ...theme) {
+        super(n, p, c,e,t);
         this.poste = poste;
         this.theme= Arrays.asList(theme);
     }

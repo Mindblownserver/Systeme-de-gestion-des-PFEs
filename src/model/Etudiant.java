@@ -2,8 +2,8 @@ package model;
 
 public class Etudiant extends Personne{
     private String NCE;
-    public Etudiant(String n, String p, String c, String nce) {
-        super(n, p, c);
+    public Etudiant(String n, String p, String c, String e,String t,String nce) {
+        super(n, p, c,e,t);
         this.NCE = nce;
     }
     public String getNCE() {

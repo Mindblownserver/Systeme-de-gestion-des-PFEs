@@ -4,6 +4,7 @@
  */
 package model;
 
+import javax.swing.JButton;
 import javax.swing.JTable;
 
 /**
@@ -13,4 +14,6 @@ import javax.swing.JTable;
 public interface ComponentWithTable {
     public JTable getTable();
     public void setTable(JTable t);
+    public JButton getEditBtn();
+    public JButton getDeleteBtn();
 }
