@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -960,7 +962,8 @@ public class MyComponents {
         private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class EnseignantTable extends JScrollPane{
+    
+    public static class EnseignantTable extends JScrollPane implements ComponentWithTable{
         public EnseignantTable(List<Enseignant> info) {
             initComponents(info);
         }
@@ -1028,10 +1031,12 @@ public class MyComponents {
                     cm.getColumn(8).setCellEditor(new TableActionCellEditor(event));
                     
                 }
+                
                 ensTable.setBorder(null);
                 ensTable.setFillsViewportHeight(true);
                 ensTable.setRowHeight(40);
                 ensTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
+                
             }
             this.setViewportView(ensTable);
             this.setViewportBorder(null);
@@ -1042,6 +1047,13 @@ public class MyComponents {
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable ensTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+
+        @Override
+        public JTable getTable() {
+            return ensTable;
+        }
+
+        
     }
 
 }

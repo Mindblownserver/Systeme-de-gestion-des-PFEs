@@ -15,7 +15,13 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -27,7 +33,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -40,7 +48,6 @@ import net.miginfocom.swing.MigLayout;
  * @author yassine
  */
 public class ViewEnseignantPanel extends javax.swing.JPanel {
-    private JTabbedPane additionalInfo;
     private JPanel titlePanel = new JPanel();
     private JPanel pfeEncadre;
     private JPanel pfeRapporte;
@@ -69,7 +76,6 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
     }
     public void init(String[] criteriaTab, List<Enseignant> info){
         // JFormDesigner - Component initialization - DO NOT MODIFY                                            
-        additionalInfo = new JTabbedPane();
         pfeEncadre = new JPanel();
         pfeRapporte = new JPanel();
         panel1 = new JPanel();
@@ -95,27 +101,11 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
         JTextField searchBar= new JTextField();
         JComboBox critereCB= new JComboBox<>(criteriaTab);
         JPanel eastBorder = new JPanel();
+        JLabel img = new JLabel();
         //======== this ========
         setLayout(new BorderLayout(0,10));
 
-        //======== additionalInfo ========
-        {
-                additionalInfo.setPreferredSize(new Dimension(224, 380));
-
-                //======== pfeEncadre ========
-                {
-                        pfeEncadre.setLayout(new BorderLayout());
-                }
-                additionalInfo.addTab("PFE encadr\u00e9 (n)", pfeEncadre);
-
-                //======== pfeRapporte ========
-                {
-                        pfeRapporte.setLayout(new BorderLayout());
-                }
-                additionalInfo.addTab("PFE rapport\u00e9 (n)", pfeRapporte);
-        }
-        add(additionalInfo, BorderLayout.SOUTH);
-
+        
         //======== this2 ========
         {
         
@@ -232,8 +222,56 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         }
 
                         //========Table Component========
-                        
-                        lpane.add(table, JLayeredPane.DEFAULT_LAYER);
+                        table.getTable().addMouseMotionListener(new MouseInputAdapter(){
+                            private int lastRow = -1;
+                            private int lastColumn = -1;
+
+                            @Override
+                            public void mouseMoved(MouseEvent e) {
+                                Point point = e.getPoint();
+                                int row = table.getTable().rowAtPoint(point);
+                                int column = table.getTable().columnAtPoint(point);
+
+                                // Check if mouse has moved to a different cell
+                                if (row != lastRow || column != lastColumn) {
+                                    System.out.println("Mouse moved from cell: " + lastRow + ", " + lastColumn +
+                                                       " to cell: " + row + ", " + column);
+                                    // start display images
+                                    Thread queries = new Thread(){
+                                        public void run(){
+                                            try {
+                                                String path = "https://media.licdn.com/dms/image/C4D03AQGV7rctgkPKBA/profile-displayphoto-shrink_200_200/0/1616277770902?e=1717632000&v=beta&t=QE8d9DWMgELvYWktuqKKdwfNKGqD_lIdKQcVteTq9KU"; // Replace with your image URL
+                                                URL url = new URL(path);
+                                                BufferedImage image = ImageIO.read(url);
+                                                img.setIcon(new ImageIcon(image));
+                                                img.setBounds(e.getPoint().x,e.getPoint().y,100,100);
+                                                System.out.println("Image loaded and displayed.");
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    };
+                                    // end-display image
+                                    /*Threading*/
+                                    // instead of processing images on-the-go, try pre-processing it
+                                    // and use it when its index corresponds with your row.
+                                    // Might need to play with threading for a bit...
+                                    // Perform actions based on mouse movement
+                                    lastRow = row;
+                                    lastColumn = column;
+                                    if(row==-1||column==-1){
+                                        queries.interrupt();
+                                        img.setVisible(false);
+                                    }    
+                                    else{
+                                        queries.start();
+                                        img.setVisible(true);
+                                    }
+                                }
+                            }
+                        });
+                        lpane.add(table,1);
+                        lpane.add(img,0);
                         table.setBounds(10, 0, 1300, 480);
                 }
                 this2.add(lpane, BorderLayout.CENTER);
@@ -243,7 +281,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
         eastBorder.setPreferredSize(new Dimension(10,0));
         add(eastBorder, BorderLayout.WEST);
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

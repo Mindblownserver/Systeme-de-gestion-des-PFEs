@@ -133,13 +133,7 @@ public class ViewSmallClassPanel extends JPanel {
                     leftAddition.setVisible(estVisible);
                 });
                 // Modify Row
-                
-                table.getEditBtn().addActionListener(l->{
-                    System.out.println("1");
-                });
-                
-                
-                // Search functionality
+                 // Search functionality
                 searchBtn.addActionListener(l->{
                     DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
                     TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
