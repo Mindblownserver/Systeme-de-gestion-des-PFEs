@@ -6,15 +6,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.util.List;
+import java.util.Stack;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -23,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import static javax.swing.SwingConstants.LEFT;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -39,7 +34,9 @@ public class MyComponents {
     public static Color secondaryColor= Color.decode("#F2F2F2");
     public static Color accentNormal = Color.decode("#2c67f2");
     public static Color accentLessHue=Color.decode("#2c8ff2");
-    
+    public static Stack<String> modifyStack = new Stack<>();
+    public static Stack<String> deleteStack = new Stack<>();
+
     private static JButton modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
     private static JButton deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
     
@@ -48,21 +45,20 @@ public class MyComponents {
         System.out.println(l.get(0) instanceof Local);
         Object o = l.get(0);
         if(o instanceof Local){
-            res = new Object[l.size()][Local.getColumnCount()+2];
+            res = new Object[l.size()][Local.getColumnCount()+1];
             for(int i=0;i<l.size();i++){
                 res[i][0]= ((Local)l.get(i)).getNomSalle();
                 res[i][1]= ((Local)l.get(i)).getNumSalle();
-                res[i][2] = modifyBtn;
-                res[i][3]= deleteBtn;
+                res[i][2] = null;
+                
             }
         }
         else if(o instanceof Specialite){
-            res = new Object[l.size()][Specialite.getColumnCount()+2];
+            res = new Object[l.size()][Specialite.getColumnCount()+1];
             for(int i=0;i<l.size();i++){
                 res[i][0]= ((Specialite)l.get(i)).getIdFill();
                 res[i][1]= ((Specialite)l.get(i)).getFillier();
-                res[i][2] = modifyBtn;
-                res[i][3]= deleteBtn;
+                res[i][2] = null;
             }
         }
         else if(o instanceof Groupe){
@@ -77,18 +73,17 @@ public class MyComponents {
             }
         }
         else if(o instanceof OrganismeExt){
-            res = new Object[l.size()][OrganismeExt.getColumnCount()+2];
+            res = new Object[l.size()][OrganismeExt.getColumnCount()+1];
             for(int i=0;i<l.size();i++){
                 res[i][0]= ((OrganismeExt)l.get(i)).getIdSc();
                 res[i][1]= ((OrganismeExt)l.get(i)).getNomSc();
                 res[i][2] = ((OrganismeExt)l.get(i)).getDomAct();
                 res[i][3] = ((OrganismeExt)l.get(i)).getAdress();
-                res[i][4] = modifyBtn;
-                res[i][5]= deleteBtn;
+                res[i][4] = null;
             }
         }
         else if(o instanceof EncadreurExt){
-            res = new Object[l.size()][9];
+            res = new Object[l.size()][8];
             for(int i=0;i<l.size();i++){
                 res[i][0]= ((EncadreurExt)l.get(i)).getCin();
                 res[i][1]= ((EncadreurExt)l.get(i)).getPrenom();
@@ -97,8 +92,21 @@ public class MyComponents {
                 res[i][4]= ((EncadreurExt)l.get(i)).getTel();
                 res[i][5] = ((EncadreurExt)l.get(i)).getPoste();
                 res[i][6]= ((EncadreurExt)l.get(i)).getSociete().getIdSc();
-                res[i][7] = modifyBtn;
-                res[i][8]= deleteBtn;
+                res[i][7] = null;
+            }
+        }// "Cin", "Prenom", "Nom", "Photo", "Grad","Email","Tel", "peutEtrePresident", ""
+        else if(o instanceof Enseignant){
+            res = new Object[l.size()][9];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Enseignant)l.get(i)).getCin();
+                res[i][1]= ((Enseignant)l.get(i)).getPrenom();
+                res[i][2] = ((Enseignant)l.get(i)).getNom();
+                res[i][3] = ((Enseignant)l.get(i)).getPhoto();
+                res[i][4]= ((Enseignant)l.get(i)).getGrad();
+                res[i][5] = ((Enseignant)l.get(i)).getEmail();
+                res[i][6]= ((Enseignant)l.get(i)).getTel();
+                res[i][7] = ((Enseignant)l.get(i)).isCanBePresident();
+                res[i][8] = null;
             }
         }
         
@@ -120,23 +128,6 @@ public class MyComponents {
         }
     }
     
-    public static class SubmitBtn extends JButton{
-
-    }
-//    public static class JTableButtonRenderer implements TableCellRenderer {
-//        private TableCellRenderer defaultRenderer;
-//        public JTableButtonRenderer(TableCellRenderer renderer) {
-//            defaultRenderer = renderer;
-//        }
-//        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//            Component rowRenderer = defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-//            if(value instanceof Component)
-//                return (Component)value;
-//            
-//            return null;
-//        }
-//    }
-//    
     // Buttons & other Components Ra Ven
     public static class ActionButton extends JButton {
         private boolean mousePress;
@@ -232,7 +223,6 @@ public class MyComponents {
         }
     }
 
-    
     // Tables
     
     public static class SpTable extends JScrollPane implements ComponentWithTable{
@@ -294,7 +284,17 @@ public class MyComponents {
 
                     @Override
                     public void onDelete(int row) {
-                        System.out.println("Delete row : " + row);
+                        Object idFill=spTable.getModel().getValueAt(row, 2);
+                        deleteStack.add("delete from Specialite where idFill ='"+idFill+"';");
+                        deleteStack.add("delete from Groupe where idFill='"+idFill+"';");
+                        deleteStack.add("delete from Jury where idFill='"+idFill+"';");
+                        deleteStack.add("delete from Soutenance where idJury =(select idJury from Jury where idFill='"+idFill+"');");
+                        deleteStack.add("delete from PFE where idFill='"+idFill+"';");
+                        if (spTable.isEditing()) {
+                            spTable.getCellEditor().stopCellEditing();
+                        }
+                        DefaultTableModel model = (DefaultTableModel) spTable.getModel();
+                        model.removeRow(row);
                     }
 
                     @Override
@@ -654,8 +654,21 @@ public class MyComponents {
                     }
 
                     @Override
+                    // add dialogue to verify if user really wants to delete rows
                     public void onDelete(int row) {
-                        System.out.println("Delete row : " + row);
+                        Object idGr=groupeTable.getModel().getValueAt(row, 0);
+                        Object idFill=groupeTable.getModel().getValueAt(row, 2);
+                        deleteStack.add("delete from Groupe where idGr='"+idGr+"' and idFill='"+idFill+"';");
+                        deleteStack.add("delete from Jury where idGr='"+idGr+"' and idFill='"+idFill+"';");
+                        deleteStack.add("delete from Soutenance where idJury =(select idJury from Jury where idGr='"+idGr+"' and idFill='"+idFill+"');");
+                        deleteStack.add("delete from PFE where idGr='"+idGr+"' and idFill='"+idFill+"';");
+                        
+                        System.out.println(deleteStack.peek());
+                        if (groupeTable.isEditing()) {
+                            groupeTable.getCellEditor().stopCellEditing();
+                        }
+                        DefaultTableModel model = (DefaultTableModel) groupeTable.getModel();
+                        model.removeRow(row);
                     }
 
                     @Override
@@ -759,6 +772,14 @@ public class MyComponents {
 
                         @Override
                         public void onDelete(int row) {
+                            // See which attributes in which tables can be nullable so
+                            // that you can give null to an attribute instead of deleting
+                            // the row;
+                            if (locTable.isEditing()) {
+                                locTable.getCellEditor().stopCellEditing();
+                            }
+                            DefaultTableModel model = (DefaultTableModel) locTable.getModel();
+                            model.removeRow(row);
                             System.out.println("Delete row : " + row);
                         }
 
@@ -939,6 +960,90 @@ public class MyComponents {
         private JButton modifyBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
+    public static class EnseignantTable extends JScrollPane{
+        public EnseignantTable(List<Enseignant> info) {
+            initComponents(info);
+        }
+
+        private void initComponents(List<Enseignant> info) {
+            // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+            ensTable = new JTable();
+
+            //======== ensScroll ========
+            {
+
+                //---- ensTable ----
+                ensTable.setModel(new DefaultTableModel(
+                    listToObjects(info),
+                    new String[] {
+                        "Cin", "Prenom", "Nom", "Photo", "Grad","Email","Tel", "peutEtrePresident", ""
+                    }
+                ) {
+                    Class<?>[] columnTypes = new Class<?>[] {
+                        String.class, String.class, String.class, String.class,String.class, String.class, String.class, String.class, Object.class
+                    };
+                    boolean[] columnEditable = new boolean[] {
+                        false, false, false, false, false, false, false, false,true
+                    };
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        return columnTypes[columnIndex];
+                    }
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return columnEditable[columnIndex];
+                    }
+                });
+                TableActionEvent event = new TableActionEvent() {
+                    @Override
+                    public void onEdit(int row) {
+                        System.out.println("Edit row : " + row);
+                    }
+
+                    @Override
+                    public void onDelete(int row) {
+                        
+                        if (ensTable.isEditing()) {
+                            ensTable.getCellEditor().stopCellEditing();
+                        }
+                        DefaultTableModel model = (DefaultTableModel) ensTable.getModel();
+                        model.removeRow(row);
+                    }
+
+                    @Override
+                    public void onView(int row) {
+                        System.out.println("View row : " + row);
+                    }
+                };
+                {
+                    TableColumnModel cm = ensTable.getColumnModel();
+                    cm.getColumn(1).setPreferredWidth(125);
+                    cm.getColumn(3).setPreferredWidth(65);
+                    cm.getColumn(4).setPreferredWidth(175);
+                    cm.getColumn(5).setPreferredWidth(110);
+                    cm.getColumn(6).setPreferredWidth(200);
+                    cm.getColumn(8).setMaxWidth(100);
+                    cm.getColumn(8).setMinWidth(100);
+                    cm.getColumn(8).setCellRenderer(new TableActionCellRender());
+                    cm.getColumn(8).setCellEditor(new TableActionCellEditor(event));
+                    
+                }
+                ensTable.setBorder(null);
+                ensTable.setFillsViewportHeight(true);
+                ensTable.setRowHeight(40);
+                ensTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
+            }
+            this.setViewportView(ensTable);
+            this.setViewportBorder(null);
+            this.setDoubleBuffered(true);
+            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        }
+
+        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+        private JTable ensTable;
+        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+    }
+
 }
 
 //

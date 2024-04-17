@@ -57,6 +57,8 @@ public class MainWindow extends JFrame {
         private List<Local> locList= new ArrayList<>();
         private List<OrganismeExt> orgList= new ArrayList<>();
         private List<EncadreurExt> encExtList= new ArrayList<>();
+        private List<Enseignant> ensList = new ArrayList<>();
+        private List<Etudiant> etuList = new ArrayList<>();
         
         
 	public MainWindow(){
@@ -96,8 +98,8 @@ public class MainWindow extends JFrame {
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
             homePage = new HomePage();
-            enseignantP = new ViewEnseignantPanel();
-            etudiantP = new ViewEtudiantPanel();
+            enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
+            etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
             pfeP = new viewPfePanel();
             specialiteP = new ViewSmallClassPanel("Specialité",spList);
             groupeP = new ViewSmallClassPanel("Groupe", grList);
@@ -223,6 +225,9 @@ public class MainWindow extends JFrame {
                 loadGroup();
                 loadOrg();
                 loadEncExt();
+                loadEns();
+                dbc.conn.close();
+                
             }catch(Exception e){
                 System.out.println("ERROORRRR "+e);
             }
@@ -270,6 +275,24 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadEncExt()throws ClassNotFoundException,SQLException{
+            dbc.query("Select nom, prenom, cin, email, tel,poste, idSc,nomSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                encExtList.add(new EncadreurExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getString(9),res.getString(10)));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                
+            }   
+        }
+        private void loadEns()throws ClassNotFoundException,SQLException{
+            dbc.query("Select cin, nom, prenom, photo, email, tel, grad,canBePres from Enseignant");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                ensList.add(new Enseignant(res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getBoolean(8)));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                
+            }   
+        }
+        private void loadEtu()throws ClassNotFoundException,SQLException{
             dbc.query("Select nom, prenom, cin, email, tel,poste, idSc,nomSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){

@@ -1,50 +1,43 @@
 package model;
 
-import java.util.List;
-import java.util.Arrays;
-
 public class Enseignant extends Personne{
-    private String poste;
-    private List<String> theme;
+    private String grad;
+    private boolean canBePresident;
+    private String photo;
 
-    public Enseignant(String n, String p, String c, String e,String t, String poste, String ...theme) {
-        super(n, p, c,e,t);
-        this.poste = poste;
-        this.theme= Arrays.asList(theme);
+    public Enseignant(String c, String n, String p, String photo,String e,String t, String grad, boolean cBePrez) {
+        super(c,n, p,e,t);
+        this.photo = photo;
+        this.grad = grad;
+        canBePresident =cBePrez;
     }
 
-    public String getPoste() {
-        return poste;
+    public String getGrad() {
+        return grad;
     }
 
-    public void setPoste(String poste) {
-        this.poste = poste;
+    public void setGrad(String grad) {
+        this.grad = grad;
     }
 
-    public List<String> getTheme() {
-        return theme;
+    public boolean isCanBePresident() {
+        return canBePresident;
     }
 
-    public void setTheme(List<String> theme) {
-        this.theme = theme;
+    public void setCanBePresident(boolean canBePresident) {
+        this.canBePresident = canBePresident;
     }
-    /**
-     * Un enseignant d'un PFE doit le faire
-     * relié au PFE auquel il est un encadreur
-     */
-    public void deposerJournalEncadeur(){
 
+    public String getPhoto() {
+        return photo;
     }
-    /**
-     * Un enseignant d'un PFE doit le faire
-     * relié au PFE auquel il est un rapporteur
-     */
-    public void deposerRapport(){
 
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+    
+    
+    public static String[] getColumnNames() {
+        return new String[]{"Cin","Prenom","Nom","Photo","Grad","Email","Tel", "Peut être president"};
     }
 }
-
-/* public Fiche getJournal(){return null;}
-
-public void modifierJournal(Fiche nouveauJournal){journal=nouveauJournal;}
- */

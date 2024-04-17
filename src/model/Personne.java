@@ -5,8 +5,9 @@ public class Personne {
     private String prenom;
     private String cin;
     private String email,tel;
+    
 
-    public Personne(String n, String p, String c, String e, String t){
+    public Personne(String c,String n, String p,  String e, String t){
         nom=n;prenom=p;cin=c;email=e;tel=t;
     }
 
@@ -44,5 +45,6 @@ public class Personne {
     public void setTel(String tel) {
         this.tel = tel;
     }
+    
     
 }

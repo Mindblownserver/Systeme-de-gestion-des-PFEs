@@ -145,7 +145,7 @@ public class ViewSmallClassPanel extends JPanel {
                     TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
                     table.getTable().setRowSorter(obj);
                     System.out.println(critereCB.getSelectedIndex());
-                    obj.setRowFilter(RowFilter.regexFilter(searchBar.getText(),critereCB.getSelectedIndex()));
+                    obj.setRowFilter(RowFilter.regexFilter(searchBar.getText().toUpperCase(),critereCB.getSelectedIndex()));
                 });
                 
                 this.add(titlePanel,BorderLayout.NORTH);

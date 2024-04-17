@@ -1,10 +1,15 @@
 package model;
 
-public class Etudiant extends Personne{
+public class Etudiant extends Personne {
     private String NCE;
-    public Etudiant(String n, String p, String c, String e,String t,String nce) {
-        super(n, p, c,e,t);
+    private String photo;
+    private boolean hasBinome;
+    private static int columnCount = 6;
+    public Etudiant(String c,String n, String p, String ph, String e,String t,String nce, boolean hasBinome) {
+        super(c,n, p,e,t);
         this.NCE = nce;
+        photo = ph;
+        this.hasBinome = hasBinome;
     }
     public String getNCE() {
         return NCE;
@@ -12,18 +17,26 @@ public class Etudiant extends Personne{
     public void setNCE(String nCE) {
         NCE = nCE;
     }
-    /**
-     * Deposer le sujet du PFE
-     */
-    public void deposerSujet(){
 
+    public String getPhoto() {
+        return photo;
     }
-    /**
-     * Le rendu deposé peut être Rendu 1, 2 (memoire) ou la presentation
-     */
-    public void deposerRendu(){
 
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
+
+    public boolean isHasBinome() {
+        return hasBinome;
+    }
+
+    public void setHasBinome(boolean hasBinome) {
+        this.hasBinome = hasBinome;
+    }
+
+    public static String[] getColumnNames() {
+        return new String[]{"Cin","Prenom","Nom","Photo","Nce","Email","Tel","A un binôme"};
+    }
+   
     
-
 }

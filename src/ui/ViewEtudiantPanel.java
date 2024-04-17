@@ -5,13 +5,13 @@
 package ui;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,11 +22,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import model.Etudiant;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -56,7 +55,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
     private JTable table1;
     private boolean estVisible = false;
     private JButton modifyBtn= new JButton(), deleteBtn= new JButton();
-    public ViewEtudiantPanel() {
+    public ViewEtudiantPanel(String[] criteriaTab, List<Etudiant> info) {
 		init();
 	}
 
