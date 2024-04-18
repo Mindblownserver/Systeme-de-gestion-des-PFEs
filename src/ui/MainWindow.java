@@ -59,6 +59,7 @@ public class MainWindow extends JFrame {
         private List<EncadreurExt> encExtList= new ArrayList<>();
         private List<Enseignant> ensList = new ArrayList<>();
         private List<Etudiant> etuList = new ArrayList<>();
+        private List<Jury> juryList = new ArrayList<>();
         
         
 	public MainWindow(){
@@ -91,9 +92,10 @@ public class MainWindow extends JFrame {
             etudConsult= new JMenuItem("Consulter etudiant");
             ensConsult = new JMenuItem("Consulter enseignant");
             pfeConsult = new JMenuItem("Consulter PFE");
-            juryP = new ViewJuryPanel();
-            // inits data
+            // inits models
+
             setUpDatabaseData();
+
             // inits pages
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
@@ -106,12 +108,8 @@ public class MainWindow extends JFrame {
             encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
             organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
-            // inits models
-            spList = new ArrayList<>();
-            grList = new ArrayList<>();
-            locList = new ArrayList<>();
-            orgList = new ArrayList<>();
-            encExtList= new ArrayList<>();
+            System.out.println("JuryList: "+juryList);
+            juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList);
             
             this.setUndecorated(true);
             // Setup menu bar
@@ -152,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Etudiant");
+                cl.show(cardContainer,"1");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -227,6 +225,7 @@ public class MainWindow extends JFrame {
                 loadEncExt();
                 loadEns();
                 loadEtu();
+                loadJury();
                 dbc.conn.close();
                 
             }catch(Exception e){
@@ -253,7 +252,7 @@ public class MainWindow extends JFrame {
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 locList.add(new Local(res.getString(2), Integer.parseInt(res.getString(1))));
-                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2));
                 
             }   
         }
@@ -262,7 +261,7 @@ public class MainWindow extends JFrame {
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 grList.add(new Groupe(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
-                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
         }
@@ -271,7 +270,7 @@ public class MainWindow extends JFrame {
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 orgList.add(new OrganismeExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
-                System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
         }
@@ -294,11 +293,41 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadEtu()throws ClassNotFoundException,SQLException{
-            dbc.query("Select cin, nom, prenom, email, tel, photo,nce,hasBinome from Etudiant");
+            dbc.query("Select cin, nom, prenom, email, tel, photo,nce,hasBinome from Etudiant ");// add groupe(?)
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 etuList.add(new Etudiant(res.getString(1),res.getString(2),res.getString(3),res.getString(6),res.getString(4),res.getString(5),res.getString(7),res.getBoolean(8)));
                 //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                
+            }   
+        }
+        private void loadJury()throws ClassNotFoundException,SQLException{
+            dbc.query("Select idJury, president, nom, prenom, grad,idGr, idFill,nomSalle, numSalle from Jury j join Enseignant e on j.president = e.cin order by idJury");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
+                juryList.add(new Jury(res.getInt(1), res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getInt(9)));
+                
+                
+            }   
+        }
+        private void loadSout()throws ClassNotFoundException,SQLException{
+            dbc.query("Select idJury, president, nom, prenom, grad,idGr, idFill,nomSalle, numSalle from Jury j join Enseignant e on j.president = e.cin order by idJury");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
+                juryList.add(new Jury(res.getInt(1), res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getInt(9)));
+                
+                
+            }   
+        }
+        private void loadPfe()throws ClassNotFoundException,SQLException{
+            dbc.query("Select idJury, president, nom, prenom, grad,idGr, idFill,nomSalle, numSalle from Jury j join Enseignant e on j.president = e.cin order by idJury");
+            ResultSet res = dbc.rs;
+            while(dbc.rs.next()){
+                //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
+                juryList.add(new Jury(res.getInt(1), res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getInt(9)));
+                
                 
             }   
         }

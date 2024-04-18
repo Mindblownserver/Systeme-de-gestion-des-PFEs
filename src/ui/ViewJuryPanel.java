@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,8 +20,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import model.Enseignant;
+import model.Jury;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -30,21 +36,19 @@ import net.miginfocom.swing.MigLayout;
 public class ViewJuryPanel extends JPanel{
     public class upperContent extends JPanel{
         private JLabel label5;
-        private JTextField textField3;
-        private JComboBox criterCB;
-        private JButton chercherBtn;
-        private JButton ajBtn;
+        public JTextField searchBar;
+        public JComboBox criterCB;
+        public JButton chercherBtn;
+        public JButton ajBtn;
         
-        public upperContent() {
-        initComponents();
+        public upperContent(String[] critereCB) {
+        initComponents(critereCB); 
         }
-        public JButton getAjBtn(){
-            return ajBtn;
-        }
-        private void initComponents() {
+
+        private void initComponents(String[] critereCB) {
             label5 = new JLabel();
-            textField3 = new JTextField();
-            criterCB = new JComboBox();
+            searchBar = new JTextField();
+            criterCB = new JComboBox<>(critereCB);
             chercherBtn = new JButton("Chercher");
             ajBtn = new JButton("Ajouter");
 
@@ -67,7 +71,7 @@ public class ViewJuryPanel extends JPanel{
             label5.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
             label5.setHorizontalAlignment(SwingConstants.LEFT);
             add(label5, "cell 1 1 3 1");
-            add(textField3, "cell 1 2,growy");
+            add(searchBar, "cell 1 2,growy");
             add(criterCB, "cell 2 2,growy");
 
             //---- button4 ----
@@ -502,10 +506,12 @@ public class ViewJuryPanel extends JPanel{
     private JButton ajSoutBtn;
     private LeftAdditionalInfoJury plusInfoJury;
     private AjouterPage.AjouterSoutenance ajSoutD;
-    public ViewJuryPanel(){
+    
+    public ViewJuryPanel(String[] critereCB, List<Jury> info){
+        System.out.println(info.get(0).getPresident().getNom());
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        jTable = new MyComponents.JuryTable();
-        uContent = new upperContent();
+        jTable = new MyComponents.JuryTable(info);
+        uContent = new upperContent(critereCB);
         ajJury = new AjouterPage.AjouterJuryDialogue(topFrame);
         sTable = new MyComponents.SoutenanceTable();
         plusInfoJury = new LeftAdditionalInfoJury();
@@ -522,18 +528,26 @@ public class ViewJuryPanel extends JPanel{
         centerPanel.setLayout(null);
         centerPanel.setBackground(Color.WHITE);
         soutBtnPanel.setBackground(Color.WHITE);
-        //plusInfoJury.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //plusInfoJury.setBorder(BorderFactory.createLineBorder(Color.BLACK));  
         jTable.setBounds(15,0,1200,300);
         soutBtnPanel.setBounds(15,320,300,30);
         plusInfoJury.setBounds(1250,0,700,800);
         sTable.setBounds(15,350,1200,300);
         
         uContent.setBackground(Color.WHITE);
-        uContent.getAjBtn().addActionListener(l->{
+        uContent.ajBtn.addActionListener(l->{
             ajJury.setVisible(true);
         });
         ajSoutBtn.addActionListener(l->{
             ajSoutD.setVisible(true);
+        });
+        
+        uContent.chercherBtn.addActionListener(l->{
+            DefaultTableModel myTableModel = (DefaultTableModel) jTable.getTable().getModel();
+            TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
+            jTable.getTable().setRowSorter(obj);
+            System.out.println(uContent.criterCB.getSelectedIndex());
+            obj.setRowFilter(RowFilter.regexFilter(uContent.searchBar.getText().toUpperCase(),uContent.criterCB.getSelectedIndex()));
         });
         
         centerPanel.add(jTable);

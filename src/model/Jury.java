@@ -1,20 +1,30 @@
 package model;
 
 public class Jury {
+    private int idJury;
     private Enseignant president;
-    private Enseignant rapporteur;
-    private Enseignant encadreur;
-    private Enseignant examinateur;
     private Groupe type;
+    private Local loc;
 
-    /** Plannifier le Jury
-     * @param president 
-     * @param encadreur 
-     * @param rapporteur 
-     * @param examinateur 
-     * @return
-     */
-    public Jury(Enseignant president, Enseignant encadreur, Enseignant rapporteur, Enseignant examinateur) {
+    public Jury(int idJury, Enseignant president, Groupe type, Local loc) {
+        this.idJury = idJury;
+        this.president = president;
+        this.type = type;
+        this.loc = loc;
+    }
+    public Jury(int idJury, String cinPrez, String nomPrez, String prenomPrez, String gradPrez, String idGr, String idFill, String nomLoc,int numLoc) {
+        this.idJury = idJury;
+        this.president = new Enseignant(cinPrez, nomPrez, prenomPrez,null,null,null, gradPrez, true);
+        this.type = new Groupe(idGr,null,idFill,null);
+        this.loc = new Local(nomLoc, numLoc);
+    }
+    
+    public int getIdJury() {
+        return idJury;
+    }
+
+    public void setIdJury(int idJury) {
+        this.idJury = idJury;
     }
 
     public Enseignant getPresident() {
@@ -25,30 +35,6 @@ public class Jury {
         this.president = president;
     }
 
-    public Enseignant getRapporteur() {
-        return rapporteur;
-    }
-
-    public void setRapporteur(Enseignant rapporteur) {
-        this.rapporteur = rapporteur;
-    }
-
-    public Enseignant getEncadreur() {
-        return encadreur;
-    }
-
-    public void setEncadreur(Enseignant encadreur) {
-        this.encadreur = encadreur;
-    }
-
-    public Enseignant getExaminateur() {
-        return examinateur;
-    }
-
-    public void setExaminateur(Enseignant examinateur) {
-        this.examinateur = examinateur;
-    }
-
     public Groupe getType() {
         return type;
     }
@@ -57,4 +43,16 @@ public class Jury {
         this.type = type;
     }
 
+    public Local getLoc() {
+        return loc;
+    }
+
+    public void setLoc(Local loc) {
+        this.loc = loc;
+    }
+    public static String[] getColumnNames(){
+        return new String[] {"IdJury", "nom & prenom president",  "CIN de president", "grad","Fillière","Local"};
+    }
+    
+    
 }

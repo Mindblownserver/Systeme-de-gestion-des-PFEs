@@ -38,6 +38,7 @@ public class MyComponents {
     public static Color secondaryColor= Color.decode("#F2F2F2");
     public static Color accentNormal = Color.decode("#2c67f2");
     public static Color accentLessHue=Color.decode("#2c8ff2");
+    // when modify, make the changes on the spot
     public static Stack<String> modifyStack = new Stack<>();
     public static Stack<String> deleteStack = new Stack<>();
 
@@ -46,7 +47,7 @@ public class MyComponents {
     
     public static Object[][] listToObjects(List<? extends Object> l){
         Object[][]res=null;
-        System.out.println(l.get(0) instanceof Local);
+        System.out.println(l);
         Object o = l.get(0);
         if(o instanceof Local){
             res = new Object[l.size()][Local.getColumnCount()+1];
@@ -129,13 +130,28 @@ public class MyComponents {
                 res[i][8] = null;
             }
         }
+        else if(o instanceof Jury){
+            res = new Object[l.size()][7];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Jury)l.get(i)).getIdJury();
+                String np = ((Jury)l.get(i)).getPresident().getPrenom() +" "+((Jury)l.get(i)).getPresident().getNom();
+                res[i][1]= np;
+                res[i][2] = ((Jury)l.get(i)).getPresident().getCin();
+                res[i][3] = ((Jury)l.get(i)).getPresident().getGrad();
+                String grFill = ((Jury)l.get(i)).getType().getIdGr()+ "_"+((Jury)l.get(i)).getType().getSpecialite().getIdFill();
+                res[i][4]= grFill;
+                String loc =((Jury)l.get(i)).getLoc().getNomSalle() + " "+((Jury)l.get(i)).getLoc().getNumSalle(); 
+                res[i][5] = loc;
+                res[i][6] = null;
+            }
+        }
         
         return res;
     }
     public static class MyHeaderRenderer extends JLabel implements TableCellRenderer {
  
         public MyHeaderRenderer() {
-            setFont(new Font("Monosans",1,18));
+            setFont(new Font("SansSerif",1,18));
             setHorizontalAlignment(LEFT);
             setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         }
@@ -923,34 +939,31 @@ public class MyComponents {
         
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class JuryTable extends JScrollPane{
-        public JuryTable(){
-            initComponents();
+    public static class JuryTable extends JScrollPane implements ComponentWithTable{
+        public JuryTable(List<Jury> info){
+            initComponents(info);
         }
-        private void initComponents() {
+        
+        private void initComponents(List<Jury> inf) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             juryTable = new JTable();
-            modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-            deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+
 
             //======== encExtScroll ========
             {
 
                 //---- encExtTable ----
                 juryTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, "", null,modifyBtn, deleteBtn},
-                        {null, null, null, null, null,modifyBtn, deleteBtn},
-                    },
+                    listToObjects(inf),
                     new String[] {
-                        "ID", "Local", "Fillière", "CIN de president", "nom & prenom president", "",""
+                        "IdJury", "nom & prenom president",  "CIN de president", "grad","Fillière","Local",""
                     }
                 ){
                     Class<?>[] columnTypes = new Class<?>[] {
-                            String.class, String.class, String.class,String.class,String.class, JButton.class, JButton.class
+                            String.class, String.class, String.class,String.class,String.class, String.class, Object.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false,  false, false,false,false
+                        false, false, false,  false, false,false,true
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -961,15 +974,31 @@ public class MyComponents {
                         return columnEditable[columnIndex];
                     }
                 });
-//                TableCellRenderer tableRenderer = juryTable.getDefaultRenderer(JButton.class);
-//                juryTable.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
+                TableActionEvent event = new TableActionEvent() {
+                    @Override
+                    public void onEdit(int row) {
+                        System.out.println("Edit row : " + row);
+                    }
+
+                    @Override
+                    public void onDelete(int row) {
+                        System.out.println("Delete row : " + row);
+                    }
+
+                    @Override
+                    public void onView(int row) {
+                        System.out.println("View row : " + row);
+                    }
+                };
                 juryTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 juryTable.setRowHeight(40);
                 TableColumnModel cm = juryTable.getColumnModel();
                 cm.getColumn(0).setMaxWidth(80);
-                cm.getColumn(1).setMaxWidth(120);
-                cm.getColumn(6).setMaxWidth(80);
-                cm.getColumn(5).setMaxWidth(80);
+                
+                cm.getColumn(6).setMaxWidth(100);
+                cm.getColumn(6).setMinWidth(100);
+                cm.getColumn(6).setCellRenderer(new TableActionCellRender());
+                cm.getColumn(6).setCellEditor(new TableActionCellEditor(event));
                 this.setViewportView(juryTable);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -977,9 +1006,11 @@ public class MyComponents {
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JTable juryTable;
-        private JButton deleteBtn;
-        private JButton modifyBtn;
-        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+
+        @Override
+        public JTable getTable() {
+            return juryTable;
+        }
     }
     
     public static class EnseignantTable extends JScrollPane implements ComponentWithTable{
