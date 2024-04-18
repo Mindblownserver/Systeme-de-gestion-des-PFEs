@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
@@ -39,6 +40,7 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import model.ColumnNames;
 import model.Enseignant;
 import net.miginfocom.swing.MigLayout;
@@ -211,9 +213,17 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 //---- chercherBtn ----
                                 searchBtn.setText("Chercher");
                                 titlePanel.add(searchBtn, "cell 2 1,growy");
+                                
+                                searchBtn.addActionListener(l->{
+                                    DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
+                                    TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
+                                    table.getTable().setRowSorter(obj);
+                                    System.out.println(critereCB.getSelectedIndex());
+                                    obj.setRowFilter(RowFilter.regexFilter(searchBar.getText().toUpperCase(),critereCB.getSelectedIndex()));
+                                });
 
                                 //---- ajouterBtn ----
-                                ajouterBtn.setText("text");
+                                ajouterBtn.setText("Ajouter");
                                 titlePanel.add(ajouterBtn, "cell 2 2,growy");
                                 ajouterBtn.addActionListener(l->{
                                     estVisible = !estVisible;
@@ -240,13 +250,13 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                     Thread queries = new Thread(){
                                         public void run(){
                                             try {
-                                                String path = "https://media.licdn.com/dms/image/C4D03AQGV7rctgkPKBA/profile-displayphoto-shrink_200_200/0/1616277770902?e=1717632000&v=beta&t=QE8d9DWMgELvYWktuqKKdwfNKGqD_lIdKQcVteTq9KU"; // Replace with your image URL
+                                                String path = "https://drive.google.com/file/d/1ymQT_hfus6BtAbP_LXhILijiz_mPk4Hz/view?usp=drive_link";
                                                 URL url = new URL(path);
                                                 BufferedImage image = ImageIO.read(url);
                                                 img.setIcon(new ImageIcon(image));
                                                 img.setBounds(e.getPoint().x,e.getPoint().y,100,100);
                                                 System.out.println("Image loaded and displayed.");
-                                            } catch (IOException e) {
+                                            } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
                                         }
@@ -264,8 +274,8 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                         img.setVisible(false);
                                     }    
                                     else{
-                                        queries.start();
-                                        img.setVisible(true);
+                                        //queries.start();
+                                        //img.setVisible(true);
                                     }
                                 }
                             }

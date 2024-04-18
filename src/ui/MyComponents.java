@@ -21,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -108,6 +110,22 @@ public class MyComponents {
                 res[i][5] = ((Enseignant)l.get(i)).getEmail();
                 res[i][6]= ((Enseignant)l.get(i)).getTel();
                 res[i][7] = ((Enseignant)l.get(i)).isCanBePresident();
+                res[i][8] = null;
+            }
+        }
+        else if(o instanceof Etudiant){
+            // Etudiant add champ groupe to him
+            //"Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""
+            res = new Object[l.size()][9];
+            for(int i=0;i<l.size();i++){
+                res[i][0]= ((Etudiant)l.get(i)).getCin();
+                res[i][1]= ((Etudiant)l.get(i)).getPrenom();
+                res[i][2] = ((Etudiant)l.get(i)).getNom();
+                res[i][3] = ((Etudiant)l.get(i)).getPhoto();
+                res[i][4]= ((Etudiant)l.get(i)).getNCE();
+                res[i][5] = ((Etudiant)l.get(i)).getEmail();
+                res[i][6]= ((Etudiant)l.get(i)).getTel();
+                res[i][7] = ((Etudiant)l.get(i)).isHasBinome();
                 res[i][8] = null;
             }
         }
@@ -893,6 +911,7 @@ public class MyComponents {
                 cm.getColumn(7).setCellRenderer(new TableActionCellRender());
                 cm.getColumn(7).setCellEditor(new TableActionCellEditor(event));
                 
+                
                 this.setViewportView(encExtTable);
                 encExtTable.setShowGrid(true);
             }
@@ -1029,7 +1048,6 @@ public class MyComponents {
                     cm.getColumn(8).setMinWidth(100);
                     cm.getColumn(8).setCellRenderer(new TableActionCellRender());
                     cm.getColumn(8).setCellEditor(new TableActionCellEditor(event));
-                    
                 }
                 
                 ensTable.setBorder(null);
@@ -1037,10 +1055,12 @@ public class MyComponents {
                 ensTable.setRowHeight(40);
                 ensTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 
+                
             }
             this.setViewportView(ensTable);
             this.setViewportBorder(null);
             this.setDoubleBuffered(true);
+            ensTable.setCellSelectionEnabled(true);
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
@@ -1054,6 +1074,95 @@ public class MyComponents {
         }
 
         
+    }
+    public static class EtudiantTable extends JScrollPane implements ComponentWithTable{
+        private JTable etudiantTable;
+
+        public EtudiantTable(List<Etudiant> info) {
+            initComponents(info);
+        }
+        @Override
+        public JTable getTable() {
+            return etudiantTable;
+        }
+
+        private void initComponents(List<Etudiant> info) {
+            
+            etudiantTable = new JTable();
+
+
+            //======== etudiantScroll ========
+            {
+
+                //---- etudiantTable ----
+                etudiantTable.setModel(new DefaultTableModel(
+                        listToObjects(info),
+                    new String[] {
+                        "Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""
+                        //"Cin","Prenom","Nom","Groupe et Sp\u00e9cialit\u00e9","Nce","Email","Tel","A un binôme","Projet/Stage trait\u00e9 en:","Nature du projet",""
+                    }
+                ) {
+                    Class<?>[] columnTypes = new Class<?>[] {
+                        String.class, String.class, String.class, Object.class, Object.class, String.class, Object.class, Object.class, String.class,String.class,Object.class
+                    };
+                    boolean[] columnEditable = new boolean[] {
+                        false, false, false, false, false, false, false, false, true//,false,true
+                    };
+                    @Override
+                    public Class<?> getColumnClass(int columnIndex) {
+                        return columnTypes[columnIndex];
+                    }
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int columnIndex) {
+                        return columnEditable[columnIndex];
+                    }
+                });
+
+
+                {
+
+                    TableActionEvent event = new TableActionEvent() {
+                        @Override
+                        public void onEdit(int row) {
+                            System.out.println("Edit row : " + row);
+                        }
+
+                        @Override
+                        public void onDelete(int row) {
+
+                            if (etudiantTable.isEditing()) {
+                                etudiantTable.getCellEditor().stopCellEditing();
+                            }
+                            DefaultTableModel model = (DefaultTableModel) etudiantTable.getModel();
+                            model.removeRow(row);
+                        }
+
+                        @Override
+                        public void onView(int row) {
+                            System.out.println("View row : " + row);
+                        }
+                    };
+
+                    TableColumnModel cm = etudiantTable.getColumnModel();
+                    cm.getColumn(1).setPreferredWidth(100);
+                    cm.getColumn(2).setPreferredWidth(100);
+                    cm.getColumn(8).setMinWidth(100);
+                    cm.getColumn(8).setMaxWidth(100);
+                    cm.getColumn(8).setCellRenderer(new TableActionCellRender());
+                    cm.getColumn(8).setCellEditor(new TableActionCellEditor(event));
+
+                }
+
+                etudiantTable.setBorder(null);
+                etudiantTable.setFillsViewportHeight(true);
+                etudiantTable.setRowHeight(40);
+                etudiantTable.setCellSelectionEnabled(true);
+                etudiantTable.setShowHorizontalLines(true);
+                this.setViewportView(etudiantTable);
+            }
+
+        }
+
     }
 
 }

@@ -22,9 +22,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import model.Etudiant;
 import net.miginfocom.swing.MigLayout;
 
@@ -56,10 +58,10 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
     private boolean estVisible = false;
     private JButton modifyBtn= new JButton(), deleteBtn= new JButton();
     public ViewEtudiantPanel(String[] criteriaTab, List<Etudiant> info) {
-		init();
+		init(criteriaTab,info);
 	}
 
-	private void init() {
+	private void init(String[] criteriaTab, List<Etudiant> info) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY                                            
 		addtionalInfo = new JTabbedPane();
 		pfeEncadre = new JPanel();
@@ -84,11 +86,12 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                 JLabel title = new JLabel();
                 JButton searchBtn= new JButton(),ajouterBtn=new JButton();
                 JTextField searchBar= new JTextField();
-                JComboBox critereCB= new JComboBox<>();
+                JComboBox critereCB= new JComboBox<>(criteriaTab);
                 JPanel eastBorder = new JPanel();
                 JPanel titlePanel = new JPanel();
                 JLabel grp = new JLabel();
                 JComboBox<String> grpCB = new JComboBox<>();
+                MyComponents.EtudiantTable table = new MyComponents.EtudiantTable(info);
 
                 deleteBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
                 
@@ -211,67 +214,23 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                             //---- chercherBtn ----
                             searchBtn.setText("Chercher");
                             titlePanel.add(searchBtn, "cell 2 1,growy");
+                            
+                            searchBtn.addActionListener(l->{
+                                DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
+                                TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
+                                table.getTable().setRowSorter(obj);
+                                System.out.println(critereCB.getSelectedIndex());
+                                obj.setRowFilter(RowFilter.regexFilter(searchBar.getText().toUpperCase(),critereCB.getSelectedIndex()));
+                            });
 
                             //---- ajouterBtn ----
-                            ajouterBtn.setText("text");
+                            ajouterBtn.setText("Ajouter");
                             titlePanel.add(ajouterBtn, "cell 2 2,growy");
                             
                             eastBorder.setPreferredSize(new Dimension(10,0));
-                            
-                            
-				//======== scrollPane1 ========
-				{
-					scrollPane1.setBackground(Color.orange);
-					scrollPane1.setViewportBorder(null);
-					scrollPane1.setDoubleBuffered(true);
-					scrollPane1.setBorder(null);
-
-					//---- table1 ----
-					table1.setModel(new DefaultTableModel(
-						new Object[][] {
-							{null, null, null, null, null,modifyBtn, deleteBtn},
-							{null, null, null, null, null, modifyBtn, deleteBtn},
-						},
-						new String[] {
-							"CIN","Prenom", "Nom",  "Photo", "Fillière", "", ""
-						}
-					) {
-						Class<?>[] columnTypes = new Class<?>[] {
-							String.class, String.class, String.class, Object.class, Object.class, JButton.class, JButton.class
-						};
-						boolean[] columnEditable = new boolean[] {
-							false, false, false, false, false, false, false
-						};
-						@Override
-						public Class<?> getColumnClass(int columnIndex) {
-							return columnTypes[columnIndex];
-						}
-						@Override
-						public boolean isCellEditable(int rowIndex, int columnIndex) {
-							return columnEditable[columnIndex];
-						}
-					});
-//                                        TableCellRenderer tableRenderer = table1.getDefaultRenderer(JButton.class);
-//                                        table1.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
-					{
-						TableColumnModel cm = table1.getColumnModel();
-						cm.getColumn(1).setPreferredWidth(125);
-                                                cm.getColumn(6).setPreferredWidth(5);
-                                                cm.getColumn(5).setPreferredWidth(5);
-					}
-					table1.setShowGrid(true);
-					table1.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
-					table1.setBorder(null);
-                                        table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-					table1.setFillsViewportHeight(true);
-					table1.setRowHeight(40);
-					//table1.setPreferredSize(new Dimension(700, 80));
-                                        table1.getTableHeader().setDefaultRenderer( new MyComponents.MyHeaderRenderer());
-					table1.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-					scrollPane1.setViewportView(table1);
-				}
-				lpane.add(scrollPane1, JLayeredPane.DEFAULT_LAYER);
-				scrollPane1.setBounds(0,0, 1300, 480);
+                            //----- Table -------
+                            lpane.add(table, JLayeredPane.DEFAULT_LAYER);
+                            table.setBounds(0,0, 1300, 480);
 			}
 			this2.add(lpane, BorderLayout.CENTER);
                         this2.add(titlePanel, BorderLayout.NORTH);

@@ -152,7 +152,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Enseignant");
+                cl.show(cardContainer,"Etudiant");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -226,6 +226,7 @@ public class MainWindow extends JFrame {
                 loadOrg();
                 loadEncExt();
                 loadEns();
+                loadEtu();
                 dbc.conn.close();
                 
             }catch(Exception e){
@@ -293,10 +294,10 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadEtu()throws ClassNotFoundException,SQLException{
-            dbc.query("Select nom, prenom, cin, email, tel,poste, idSc,nomSc,domaineActivite, adresse from EncadreurExt join OrganismeExt using(idSc)");
+            dbc.query("Select cin, nom, prenom, email, tel, photo,nce,hasBinome from Etudiant");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
-                encExtList.add(new EncadreurExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getString(9),res.getString(10)));
+                etuList.add(new Etudiant(res.getString(1),res.getString(2),res.getString(3),res.getString(6),res.getString(4),res.getString(5),res.getString(7),res.getBoolean(8)));
                 //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
