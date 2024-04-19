@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.MouseInputAdapter;
@@ -434,9 +435,15 @@ public class MyComponents {
         private JTable pfeTable;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class SoutenanceTable extends JScrollPane{
+    public static class SoutenanceTable extends JScrollPane implements ComponentWithTable{
+        private JTable soutTable;
         public SoutenanceTable() {
             initComponents();
+        }
+        
+        @Override
+        public JTable getTable() {
+            return soutTable;
         }
 
         private void initComponents() {
@@ -450,30 +457,28 @@ public class MyComponents {
                 //---- soutTable ----
                 soutTable.setModel(new DefaultTableModel(
                     new Object[][] {
-                        {null, null, null, null,"","",modifyBtn,deleteBtn},
-                        {null, null, null, null,"","",modifyBtn,deleteBtn},
+                        {null, null, null, null,"","",""},
+                        {null, null, null, null,"","",""},
                     },
                     new String[] {
-                        "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur","",""
+                        "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
                     }
                 ) {
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false, false,false,false,false,false
+                        false, false, false, false,false,false,true
                     };
                     @Override
                     public boolean isCellEditable(int rowIndex, int columnIndex) {
                         return columnEditable[columnIndex];
                     }
                     Class<?>[] columnTypes = new Class<?>[] {
-                        String.class, String.class, String.class, String.class,String.class,String.class,JButton.class, JButton.class
+                        String.class, String.class, String.class, String.class,String.class,String.class,Object.class
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
                         return columnTypes[columnIndex];
                     }
                 });
-//                TableCellRenderer tableRenderer = soutTable.getDefaultRenderer(JButton.class);
-//                soutTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
                 soutTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 soutTable.setRowHeight(40);
                 this.setViewportView(soutTable);
@@ -483,15 +488,53 @@ public class MyComponents {
                 cm.getColumn(2).setMaxWidth(100);
                 cm.getColumn(3).setMinWidth(150);
                 cm.getColumn(3).setMaxWidth(150);
-                cm.getColumn(6).setMaxWidth(80);
-                cm.getColumn(7).setMaxWidth(80);        
+                
             }
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        }
+        public void clearTable(){
+            DefaultTableModel dtm = (DefaultTableModel) soutTable.getModel();
+            int taille = dtm.getRowCount();
+            System.out.println(taille);
+            for(int i=0;i<taille;i++)
+                dtm.removeRow(0);
+        }
+        public void populateTable(Object[][] data){
+             TableActionEvent event = new TableActionEvent() {
+                @Override
+                public void onEdit(int row) {
+                    System.out.println("Edit row : " + row);
+                }
+
+                @Override
+                public void onDelete(int row) {
+                    if (soutTable.isEditing()) {
+                        soutTable.getCellEditor().stopCellEditing();
+                    }
+                    DefaultTableModel model = (DefaultTableModel) soutTable.getModel();
+                    model.removeRow(row);
+                }
+
+                @Override
+                public void onView(int row) {
+                    System.out.println("View row : " + row);
+                }
+            };
+            ((DefaultTableModel)soutTable.getModel()).setDataVector(data, new String[]{"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""});
+            TableColumnModel cm = soutTable.getColumnModel();
+            cm.getColumn(0).setMaxWidth(50);
+            cm.getColumn(1).setMaxWidth(150);
+            cm.getColumn(1).setMinWidth(200);
+            cm.getColumn(2).setMaxWidth(100);
+            cm.getColumn(3).setMinWidth(150);
+            cm.getColumn(3).setMaxWidth(150);
+            cm.getColumn(6).setMaxWidth(100);
+            cm.getColumn(6).setMinWidth(100);
+            cm.getColumn(6).setCellRenderer(new TableActionCellRender());
+            cm.getColumn(6).setCellEditor(new TableActionCellEditor(event));
         }
 
-        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-        private JTable soutTable;
-        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+        
+
     }
     public static class SoutenanceTableSansModSupp extends JScrollPane implements ComponentWithTable{
         public SoutenanceTableSansModSupp() {
@@ -1001,6 +1044,7 @@ public class MyComponents {
                 cm.getColumn(6).setCellEditor(new TableActionCellEditor(event));
                 this.setViewportView(juryTable);
             }
+            
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 

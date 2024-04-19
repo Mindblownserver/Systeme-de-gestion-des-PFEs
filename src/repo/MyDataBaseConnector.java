@@ -37,6 +37,7 @@ public class MyDataBaseConnector {
      */
     public void query(String sqlQuery)throws SQLException{
         rs = stmt.executeQuery(sqlQuery);
+        
         rsMetadata = rs.getMetaData();
         columnCount= rsMetadata.getColumnCount();
     }

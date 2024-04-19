@@ -150,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"1");
+                cl.show(cardContainer,"Jury");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -312,11 +312,10 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadSout()throws ClassNotFoundException,SQLException{
-            dbc.query("Select idJury, president, nom, prenom, grad,idGr, idFill,nomSalle, numSalle from Jury j join Enseignant e on j.president = e.cin order by idJury");
+            dbc.query("Select * from Soutenance");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
-                juryList.add(new Jury(res.getInt(1), res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getInt(9)));
                 
                 
             }   

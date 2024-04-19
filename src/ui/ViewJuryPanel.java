@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
+import java.util.concurrent.Callable;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -18,16 +19,24 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import model.Enseignant;
 import model.Jury;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
+import java.util.concurrent.Future;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 /**
  *
@@ -521,7 +530,7 @@ public class ViewJuryPanel extends JPanel{
         
         JPanel centerPanel = new JPanel();
         JPanel soutBtnPanel = new JPanel();
-        JLabel titleSoutPanel = new JLabel("Soutenance");
+        JLabel titleSoutPanel = new JLabel("Soutenance (0)");
         titleSoutPanel.setFont(new Font("SansSerif",0,16));
         soutBtnPanel.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));       
         
@@ -549,6 +558,33 @@ public class ViewJuryPanel extends JPanel{
             System.out.println(uContent.criterCB.getSelectedIndex());
             obj.setRowFilter(RowFilter.regexFilter(uContent.searchBar.getText().toUpperCase(),uContent.criterCB.getSelectedIndex()));
         });
+        //======Table=======
+        ListSelectionModel selectionModel = jTable.getTable().getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = jTable.getTable().getSelectedRow();
+                    if (selectedRow != -1) {
+                        Object value = jTable.getTable().getValueAt(selectedRow, 0); 
+                        System.out.println("Selected row value: " + value);
+                        sTable.clearTable();
+                        // Start Future thread
+                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        Callable<Object[][]> populateThread = () -> populateSoutenanceTable(value.toString(), titleSoutPanel);
+                        Future<Object[][]> future = executor.submit(populateThread);
+                        
+                        // end Thread
+                        try{
+                           sTable.populateTable(future.get());
+                        }catch(Exception exception){
+                            exception.printStackTrace();
+                        }
+                        
+                    }
+                }
+            }
+        });
         
         centerPanel.add(jTable);
         centerPanel.add(sTable);
@@ -563,4 +599,38 @@ public class ViewJuryPanel extends JPanel{
         this.setVisible(true);
         this.setBackground(Color.WHITE);
     }
+    public static Object[][] populateSoutenanceTable(String idJury, JLabel titleOfTable){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select count(*) from Soutenance where IDJury="+idJury);
+            int size =0;
+            if(dbc.rs.next())
+                size = dbc.rs.getInt(1);
+            
+            dbc.query("select IDSOU, DATESOUT, HEURE, ISVALID, e.nom, e.prenom, e.cin from Soutenance join Enseignant e on e.cin=examinateur where IDJury="+idJury);
+            Object[][] res = new Object[size][7];
+            int i=0;
+            while(dbc.rs.next()){
+                //"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
+                res[i][0] = dbc.rs.getString(1);
+                res[i][1] = dbc.rs.getDate(2);
+                res[i][2] = dbc.rs.getString(3);
+                res[i][3] = dbc.rs.getBoolean(4);
+                res[i][4] = dbc.rs.getString(7);
+                String np = dbc.rs.getString(6)+ " "+dbc.rs.getString(5);
+                res[i][5]=np;
+                res[i][6]=null;
+                i++;
+            }
+            dbc.conn.close();
+            return res;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+//select count(IDSou) as nbrSout, president from Soutenance
+//    join Jury using (idJury)
+//    group by president;
