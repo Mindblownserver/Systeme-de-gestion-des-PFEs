@@ -590,7 +590,6 @@ public class ViewJuryPanel extends JPanel{
         centerPanel.add(jTable);
         centerPanel.add(sTable);
         centerPanel.add(soutBtnPanel);
-        centerPanel.add(plusInfoJury);
         soutBtnPanel.add(titleSoutPanel);
         soutBtnPanel.add(new JLabel("  "));
         soutBtnPanel.add(ajSoutBtn);
@@ -625,37 +624,6 @@ public class ViewJuryPanel extends JPanel{
                 i++;
             }
             titleOfTable.setText("Soutenance ("+size+")");
-            dbc.conn.close();
-            return res;
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-    public Object[][] fillPfeData(String idJury){ // À changer
-        try{
-            MyDataBaseConnector dbc = new MyDataBaseConnector();
-            
-            dbc.query("select count(*) from Soutenance where IDJury="+idJury);
-            int size =0;
-            if(dbc.rs.next())
-                size = dbc.rs.getInt(1);
-            
-            dbc.query("select IDSOU, DATESOUT, HEURE, ISVALID, e.nom, e.prenom, e.cin from Soutenance join Enseignant e on e.cin=examinateur where IDJury="+idJury);
-            Object[][] res = new Object[size][7];
-            int i=0;
-            while(dbc.rs.next()){
-                //"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
-                res[i][0] = dbc.rs.getString(1);
-                res[i][1] = dbc.rs.getDate(2);
-                res[i][2] = dbc.rs.getString(3);
-                res[i][3] = dbc.rs.getBoolean(4);
-                res[i][4] = dbc.rs.getString(7);
-                String np = dbc.rs.getString(6)+ " "+dbc.rs.getString(5);
-                res[i][5]=np;
-                res[i][6]=null;
-                i++;
-            }
             dbc.conn.close();
             return res;
         }catch(Exception e){
