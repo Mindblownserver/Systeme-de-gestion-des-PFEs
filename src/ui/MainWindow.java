@@ -60,6 +60,7 @@ public class MainWindow extends JFrame {
         private List<Enseignant> ensList = new ArrayList<>();
         private List<Etudiant> etuList = new ArrayList<>();
         private List<Jury> juryList = new ArrayList<>();
+        private List<PFE> pfeList = new ArrayList<>();
         
         
 	public MainWindow(){
@@ -102,13 +103,12 @@ public class MainWindow extends JFrame {
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
             etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
-            pfeP = new viewPfePanel();
+            pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList);
             specialiteP = new ViewSmallClassPanel("Specialité",spList);
             groupeP = new ViewSmallClassPanel("Groupe", grList);
             encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
             organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
-            System.out.println("JuryList: "+juryList);
             juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList);
             
             this.setUndecorated(true);
@@ -150,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Jury");
+                cl.show(cardContainer,"1");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -226,6 +226,7 @@ public class MainWindow extends JFrame {
                 loadEns();
                 loadEtu();
                 loadJury();
+                loadPfe();
                 dbc.conn.close();
                 
             }catch(Exception e){
@@ -288,7 +289,7 @@ public class MainWindow extends JFrame {
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 ensList.add(new Enseignant(res.getString(1),res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getBoolean(8)));
-                //System.out.println("\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
+                System.out.println("Ens:\n"+dbc.rs.getString(1)+" "+ dbc.rs.getString(2)+dbc.rs.getString(3)+" "+ dbc.rs.getString(4));
                 
             }   
         }
@@ -321,11 +322,17 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadPfe()throws ClassNotFoundException,SQLException{
-            dbc.query("Select idJury, president, nom, prenom, grad,idGr, idFill,nomSalle, numSalle from Jury j join Enseignant e on j.president = e.cin order by idJury");
+            dbc.query("select IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, "
+                    + "ISMONOME, HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, "
+                    + "FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU from PFE");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
-                //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
-                juryList.add(new Jury(res.getInt(1), res.getString(2),res.getString(3),res.getString(4),res.getString(5),res.getString(6),res.getString(7),res.getString(8),res.getInt(9)));
+                pfeList.add(new PFE(res.getInt(1), res.getString(2), res.getString(3), res.getString(5), res.getString("IDGR"),
+                        res.getString("IDFILL"),res.getInt("ANNEE"), res.getDate("DateDebut"), res.getInt("DUREESTAGE"), res.getDate("DATEFIN"), 
+                        res.getDate("DATER1"), res.getDate("DATER2"), res.getString("ENCADEUREXT"), res.getString("FIRSTETU"), res.getString("SECONDETU"),
+                        res.getString("ENCADREUR"),res.getString("RAPPORTEUR"), res.getString("IDSOU"), res.getBoolean("ISAPPROVED"), 
+                        res.getBoolean("ISSCHEDULED"), res.getBoolean("ISVALIDBYRAPP"),res.getBoolean("ISMONOME"),res.getBoolean("HASINTERNSHIP"),
+                        res.getBoolean("ISINTERNSHIPLOCAL")));
                 
                 
             }   

@@ -556,7 +556,7 @@ public class ViewJuryPanel extends JPanel{
             TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
             jTable.getTable().setRowSorter(obj);
             System.out.println(uContent.criterCB.getSelectedIndex());
-            obj.setRowFilter(RowFilter.regexFilter(uContent.searchBar.getText().toUpperCase(),uContent.criterCB.getSelectedIndex()));
+            obj.setRowFilter(RowFilter.regexFilter(uContent.searchBar.getText(),uContent.criterCB.getSelectedIndex()));
         });
         //======Table=======
         ListSelectionModel selectionModel = jTable.getTable().getSelectionModel();
@@ -570,18 +570,19 @@ public class ViewJuryPanel extends JPanel{
                         System.out.println("Selected row value: " + value);
                         sTable.clearTable();
                         // Start Future thread
-                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        ExecutorService executorJ = Executors.newSingleThreadExecutor();
                         Callable<Object[][]> populateThread = () -> populateSoutenanceTable(value.toString(), titleSoutPanel);
-                        Future<Object[][]> future = executor.submit(populateThread);
-                        
+                        Future<Object[][]> future = executorJ.submit(populateThread);
                         // end Thread
+                        
                         try{
                            sTable.populateTable(future.get());
                         }catch(Exception exception){
                             exception.printStackTrace();
                         }
-                        
+                        //executor.shutdown();
                     }
+                    
                 }
             }
         });
@@ -599,7 +600,39 @@ public class ViewJuryPanel extends JPanel{
         this.setVisible(true);
         this.setBackground(Color.WHITE);
     }
-    public static Object[][] populateSoutenanceTable(String idJury, JLabel titleOfTable){
+    public Object[][] populateSoutenanceTable(String idJury, JLabel titleOfTable){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select count(*) from Soutenance where IDJury="+idJury);
+            int size =0;
+            if(dbc.rs.next())
+                size = dbc.rs.getInt(1);
+            
+            dbc.query("select IDSOU, DATESOUT, HEURE, ISVALID, e.nom, e.prenom, e.cin from Soutenance join Enseignant e on e.cin=examinateur where IDJury="+idJury);
+            Object[][] res = new Object[size][7];
+            int i=0;
+            while(dbc.rs.next()){
+                //"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
+                res[i][0] = dbc.rs.getString(1);
+                res[i][1] = dbc.rs.getDate(2);
+                res[i][2] = dbc.rs.getString(3);
+                res[i][3] = dbc.rs.getBoolean(4);
+                res[i][4] = dbc.rs.getString(7);
+                String np = dbc.rs.getString(6)+ " "+dbc.rs.getString(5);
+                res[i][5]=np;
+                res[i][6]=null;
+                i++;
+            }
+            titleOfTable.setText("Soutenance ("+size+")");
+            dbc.conn.close();
+            return res;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Object[][] fillPfeData(String idJury){ // À changer
         try{
             MyDataBaseConnector dbc = new MyDataBaseConnector();
             

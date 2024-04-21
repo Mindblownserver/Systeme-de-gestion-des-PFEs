@@ -1,83 +1,67 @@
 package model;
 
 import java.util.Date;
-import java.util.Map;
 
 public class PFE {
 
     /**
-     * Default constructor
+     *  DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, "
+    + "ISMONOME, HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, "
+    + "FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU from PFE
      */
     public PFE() {
     }
     private Integer id;
     private String theme;
     private String Sujet;
-    private Groupe type;
-    private Boolean isApproved;
     private String description;
-    private Integer annéee;
-    private Enseignant rapporteur;
-    private Enseignant encadreurInt;
-    private EncadreurExt encadreurExt;
-    private Etudiant first;
-    private Etudiant second;
-    private int nbEtudiant;
-    private Map<Date,Map.Entry<String,String>> JournalEncadreur;
-    private Map<Date,Map.Entry<String,String>> Rapport;
-//    private Rendu memoire;
-//    private Rendu presentation;
-    private Soutenance soutenance;
+    private Groupe type;
+    private int annee;
+    private Date dateDebut;
+    private int dureeStage; // en mois
+    private Date dateFin;
+    private Date dateR1; // date de la mise du rapport 1
+    private Date dateR2; // date de la mise du rapport 2
+    private String encadreurExt;
+    private String firstEtu;
+    private String secondEtu;
+    private String encadIsimm;
+    private String rappIsimm;
+    private String idSout;
+    private boolean isApproved;
+    private boolean isScheduled;
+    private boolean isValidByRapp;
+    private boolean isMonome;
+    private boolean hasInternship;
+    private boolean isInternshipLocal;
 
-    /**
-     * @param memoire  
-     * @param presentation
-     * @return
-     */
-    //public Boolean deposerRendu(Rendu rendu) {
-    //    return null;
-    //}
-
-    public Boolean deposerSujet() {
-        return null;
+    public PFE(Integer id, String theme, String Sujet, String description, String idGr, String idFill, int annee, Date dateDebut, int dureeStage, Date dateFin, Date dateR1, Date dateR2, String encadreurExt, String firstEtu, String secondEtu, String encadIsimm, String rappIsimm, String idSout, boolean isApproved, boolean isScheduled, boolean isValidByRapp, boolean isMonome, boolean hasInternship, boolean isInternshipLocal) {
+        this.id = id;
+        this.theme = theme;
+        this.Sujet = Sujet;
+        this.description = description;
+        this.type = new Groupe(idGr, null, idFill, null);
+        this.annee = annee;
+        this.dateDebut = dateDebut;
+        this.dureeStage = dureeStage;
+        this.dateFin = dateFin;
+        this.dateR1 = dateR1;
+        this.dateR2 = dateR2;
+        this.encadreurExt = encadreurExt;
+        this.firstEtu = firstEtu;
+        this.secondEtu = secondEtu;
+        this.encadIsimm = encadIsimm;
+        this.rappIsimm = rappIsimm;
+        this.idSout = idSout;
+        this.isApproved = isApproved;
+        this.isScheduled = isScheduled;
+        this.isValidByRapp = isValidByRapp;
+        this.isMonome = isMonome;
+        this.hasInternship = hasInternship;
+        this.isInternshipLocal = isInternshipLocal;
     }
-
-    public Boolean modifierRendu() {
-        return null;
-    }
-
-    /**
-     * @param fiche À changer
-     * @return  À changer
-     */
-//    public void deposerJournalEncadreur(Rendu fiche) { 
-//        return;
-//    }
-
-    /**
-     * @param fiche À changer
-     * @return À changer
-     */
-//    public void deposerFicheRapporteur(Rendu fiche) {
-//        return;
-//    }
-
-    /**
-     * @param approuve 
-     * @return
-     */
-    public void SujetApprouvee(Boolean approuve) {
-        return;
-    }
-
-    /**
-     * @param rendu1 
-     * @param rendu2 
-     * @param soutenance 
-     * @return
-     */
-    public void definirCalendrier(Date rendu1, Date rendu2, Date soutenance) {
-        return;
+    public static String[] getColumnNames(){
+        return new String []{"ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", "Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage"};
     }
 
     public Integer getId() {
@@ -100,16 +84,8 @@ public class PFE {
         return Sujet;
     }
 
-    public void setSujet(String sujet) {
-        Sujet = sujet;
-    }
-
-    public Groupe getType() {
-        return type;
-    }
-
-    public void setType(Groupe type) {
-        this.type = type;
+    public void setSujet(String Sujet) {
+        this.Sujet = Sujet;
     }
 
     public String getDescription() {
@@ -120,90 +96,157 @@ public class PFE {
         this.description = description;
     }
 
-    public Integer getAnnéee() {
-        return annéee;
+    public Groupe getType() {
+        return type;
     }
 
-    public void setAnnéee(Integer annéee) {
-        this.annéee = annéee;
+    public void setType(Groupe type) {
+        this.type = type;
     }
 
-    public Enseignant getRapporteur() {
-        return rapporteur;
+    public int getAnnee() {
+        return annee;
     }
 
-    public void setRapporteur(Enseignant rapporteur) {
-        this.rapporteur = rapporteur;
+    public void setAnnee(int annee) {
+        this.annee = annee;
     }
 
-    public Enseignant getEncadreurInt() {
-        return encadreurInt;
+    public Date getDateDebut() {
+        return dateDebut;
     }
 
-    public void setEncadreurInt(Enseignant encadreurInt) {
-        this.encadreurInt = encadreurInt;
+    public void setDateDebut(Date dateDebut) {
+        this.dateDebut = dateDebut;
     }
 
-    public EncadreurExt getEncadreurExt() {
+    public int getDureeStage() {
+        return dureeStage;
+    }
+
+    public void setDureeStage(int dureeStage) {
+        this.dureeStage = dureeStage;
+    }
+
+    public Date getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(Date dateFin) {
+        this.dateFin = dateFin;
+    }
+
+    public Date getDateR1() {
+        return dateR1;
+    }
+
+    public void setDateR1(Date dateR1) {
+        this.dateR1 = dateR1;
+    }
+
+    public Date getDateR2() {
+        return dateR2;
+    }
+
+    public void setDateR2(Date dateR2) {
+        this.dateR2 = dateR2;
+    }
+
+    public String getEncadreurExt() {
         return encadreurExt;
     }
 
-    public void setEncadreurExt(EncadreurExt encadreurExt) {
+    public void setEncadreurExt(String encadreurExt) {
         this.encadreurExt = encadreurExt;
     }
 
-    public Etudiant getFirst() {
-        return first;
+    public String getFirstEtu() {
+        return firstEtu;
     }
 
-    public void setFirst(Etudiant first) {
-        this.first = first;
+    public void setFirstEtu(String firstEtu) {
+        this.firstEtu = firstEtu;
     }
 
-    public Etudiant getSecond() {
-        return second;
+    public String getSecondEtu() {
+        return secondEtu;
     }
 
-    public void setSecond(Etudiant second) {
-        this.second = second;
+    public void setSecondEtu(String secondEtu) {
+        this.secondEtu = secondEtu;
     }
 
-    public int getNbEtudiant() {
-        return nbEtudiant;
+    public String getEncadIsimm() {
+        return encadIsimm;
     }
 
-    public void setNbEtudiant(int nbEtudiant) {
-        this.nbEtudiant = nbEtudiant;
+    public void setEncadIsimm(String encadIsimm) {
+        this.encadIsimm = encadIsimm;
     }
 
-    public Map<Date, Map.Entry<String, String>> getJournalEncadreur() {
-        return JournalEncadreur;
+    public String getRappIsimm() {
+        return rappIsimm;
     }
 
-    public void setJournalEncadreur(Map<Date, Map.Entry<String, String>> journalEncadreur) {
-        JournalEncadreur = journalEncadreur;
+    public void setRappIsimm(String rappIsimm) {
+        this.rappIsimm = rappIsimm;
     }
 
-    public Map<Date, Map.Entry<String, String>> getRapport() {
-        return Rapport;
+    public String getIdSout() {
+        return idSout;
     }
 
-    public void setRapport(Map<Date, Map.Entry<String, String>> rapport) {
-        Rapport = rapport;
+    public void setIdSout(String idSout) {
+        this.idSout = idSout;
     }
 
-
-    public Soutenance getSoutenance() {
-        return soutenance;
-    }
-
-    public void setSoutenance(Soutenance soutenance) {
-        this.soutenance = soutenance;
-    }
-
-    public Boolean getIsApproved() {
+    public boolean isIsApproved() {
         return isApproved;
     }
 
+    public void setIsApproved(boolean isApproved) {
+        this.isApproved = isApproved;
+    }
 
+    public boolean isIsScheduled() {
+        return isScheduled;
+    }
+
+    public void setIsScheduled(boolean isScheduled) {
+        this.isScheduled = isScheduled;
+    }
+
+    public boolean isIsValidByRapp() {
+        return isValidByRapp;
+    }
+
+    public void setIsValidByRapp(boolean isValidByRapp) {
+        this.isValidByRapp = isValidByRapp;
+    }
+
+    public boolean isIsMonome() {
+        return isMonome;
+    }
+
+    public void setIsMonome(boolean isMonome) {
+        this.isMonome = isMonome;
+    }
+
+    public boolean isHasInternship() {
+        return hasInternship;
+    }
+
+    public void setHasInternship(boolean hasInternship) {
+        this.hasInternship = hasInternship;
+    }
+
+    public boolean isIsInternshipLocal() {
+        return isInternshipLocal;
+    }
+
+    public void setIsInternshipLocal(boolean isInternshipLocal) {
+        this.isInternshipLocal = isInternshipLocal;
+    }
+    
+    
 }

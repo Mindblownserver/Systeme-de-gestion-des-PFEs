@@ -18,9 +18,11 @@ import ui.MyComponents;
 public class App { 
     public static void main(String[] args){
         try {
+            int roundDegree = 15;
             UIManager.setLookAndFeel( new FlatLightLaf() );
-            UIManager.put( "TextComponent.arc", 15 );
-            UIManager.put( "Button.arc", 15 );
+            UIManager.put( "Component.arc", roundDegree );
+            UIManager.put( "TextComponent.arc", roundDegree);
+            UIManager.put( "Button.arc", roundDegree);
             // TabPanel
             UIManager.put( "TabbedPane.selectedBackground", MyComponents.accentNormal );
             UIManager.put( "TabbedPane.selectedForeground", MyComponents.primaryColor );

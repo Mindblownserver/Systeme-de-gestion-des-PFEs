@@ -13,10 +13,20 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
+import model.PFE;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
 
 /**
  *
@@ -34,10 +44,44 @@ public class viewPfePanel extends JPanel{
     private AjouterPage.AjouterPFEDialog ajouterPfeD;
     
     public class LeftAdditionalInfoPfe extends JPanel {
+        private JTextField themeField;
+        private JTextField sujetField;
+        private JTextArea descArea;
+        private JLabel label1;
+        private JLabel label2;
+        private JLabel label3;
+        private JLabel label4;
+        private JScrollPane descScroll;
+        
         public LeftAdditionalInfoPfe() {
             initComponents();
         }
 
+        public JTextField getThemeField() {
+            return themeField;
+        }
+
+        public JTextField getSujetField() {
+            return sujetField;
+        }
+
+        public JTextArea getDescArea() {
+            return descArea;
+        }
+
+        public void setThemeFieldText(String themeField) {
+            this.themeField.setText(themeField);
+        }
+
+        public void setSujetFieldText(String sujetField) {
+            this.sujetField.setText(sujetField);
+        }
+
+        public void setDescAreaText(String descArea) {
+            this.descArea.setText(descArea);
+        }
+        
+        
         private void initComponents() {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
@@ -111,17 +155,31 @@ public class viewPfePanel extends JPanel{
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-        private JLabel label1;
-        private JLabel label2;
-        private JTextField themeField;
-        private JLabel label3;
-        private JTextField sujetField;
-        private JLabel label4;
-        private JScrollPane descScroll;
-        private JTextArea descArea;
+       
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public class TabbedPfePane extends JPanel{
+        private JTabbedPane pfeTabPanel;
+        private JPanel etudiantTab;
+        private JPanel juryTab;
+        private JPanel soutTab;
+        private MyComponents.EtudiantTable etu1Table;
+        private MyComponents.JuryTable juryTable;
+        private MyComponents.SoutenanceTable soutTable;
+
+        public MyComponents.EtudiantTable getEtu1Table() {
+            return etu1Table;
+        }
+
+        public MyComponents.JuryTable getJuryTable() {
+            return juryTable;
+        }
+
+        public MyComponents.SoutenanceTable getSoutTable() {
+            return soutTable;
+        }
+        
+        
         public TabbedPfePane() {
             initComponents();
         }
@@ -130,15 +188,11 @@ public class viewPfePanel extends JPanel{
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             pfeTabPanel = new JTabbedPane();
             etudiantTab = new JPanel();
-            etudiantScroll = new JScrollPane();
-            etudiantTable = new JTable();
             juryTab = new JPanel();
-            juryScroll = new JScrollPane();
-            juryTable = new JTable();
             soutTab = new JPanel();
-            soutScroll = new JScrollPane();
-            soutTable = new JTable();
-
+            etu1Table = new MyComponents.EtudiantTable(null, "FNo");
+            juryTable = new MyComponents.JuryTable(null, "Fno");
+            soutTable = new MyComponents.SoutenanceTable();
             //======== pfeTabPanel ========
             {
 
@@ -146,105 +200,29 @@ public class viewPfePanel extends JPanel{
                 {
                     etudiantTab.setLayout(new BorderLayout());
 
-                    //======== etudiantScroll ========
-                    {
-
-                        //---- etudiantTable ----
-                        etudiantTable.setModel(new DefaultTableModel(
-                            new Object[][] {
-                                {null, null, null, null, null, "Binome", "Interne"},
-                                {null, null, null, null, null, "Monome", "Externe"},
-                            },
-                            new String[] {
-                                "Prenom", "Nom", "CIN", "Photo", "Groupe et Sp\u00e9cialit\u00e9", "Projet/Stage trait\u00e9 en:", "Nature du projet"
-                            }
-                        ) {
-                            Class<?>[] columnTypes = new Class<?>[] {
-                                String.class, String.class, String.class, Object.class, Object.class, String.class, Object.class
-                            };
-                            boolean[] columnEditable = new boolean[] {
-                                false, false, false, false, false, false, false
-                            };
-                            @Override
-                            public Class<?> getColumnClass(int columnIndex) {
-                                return columnTypes[columnIndex];
-                            }
-                            @Override
-                            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                                return columnEditable[columnIndex];
-                            }
-                        });
-                        {
-                            TableColumnModel cm = etudiantTable.getColumnModel();
-                            cm.getColumn(1).setPreferredWidth(125);
-                        }
-                        etudiantTable.setGridColor(Color.black);
-                        etudiantTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                        etudiantTable.setBorder(null);
-                        etudiantTable.setFillsViewportHeight(true);
-                        etudiantTable.setRowHeight(40);
-                        etudiantTable.setPreferredSize(new Dimension(775, 80));
-                        etudiantTable.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-                        etudiantTable.setCellSelectionEnabled(true);
-                        etudiantScroll.setViewportView(etudiantTable);
-                    }
-                    etudiantTab.add(etudiantScroll, BorderLayout.CENTER);
+                    
+                    etudiantTab.add(etu1Table, BorderLayout.CENTER);
                 }
-                pfeTabPanel.addTab("Etudiant (2)", etudiantTab);
+                pfeTabPanel.addTab("Etudiant(s)", etudiantTab); // tab etudiant ayant 2 lignes
 
                 //======== juryTab ========
                 {
                     juryTab.setLayout(new BorderLayout());
 
-                    //======== juryScroll ========
-                    {
-
-                        //---- juryTable ----
-                        juryTable.setModel(new DefaultTableModel(
-                            new Object[][] {
-                                {null, null, null, null, ""},
-                                {null, null, null, null, null},
-                            },
-                            new String[] {
-                                "ID", "Local", "Filli\u00e8re", "CIN president", "nom et prenom president"
-                            }
-                        ));
-                        juryScroll.setViewportView(juryTable);
-                    }
-                    juryTab.add(juryScroll, BorderLayout.CENTER);
+                    
+                    juryTab.add(juryTable, BorderLayout.CENTER);
                 }
-                pfeTabPanel.addTab("Jury (1)", juryTab);
+                pfeTabPanel.addTab("Jury", juryTab);
 
                 //======== soutTab ========
                 {
                     soutTab.setLayout(new BorderLayout());
 
                     //======== soutScroll ========
-                    {
-
-                        //---- soutTable ----
-                        soutTable.setModel(new DefaultTableModel(
-                            new Object[][] {
-                                {null, null, null, null, null, null},
-                                {null, null, null, null, null, null},
-                            },
-                            new String[] {
-                                "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur"
-                            }
-                        ) {
-                            boolean[] columnEditable = new boolean[] {
-                                false, false, false, false, true, false
-                            };
-                            @Override
-                            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                                return columnEditable[columnIndex];
-                            }
-                        });
-                        soutScroll.setViewportView(soutTable);
-                    }
-                    soutTab.add(soutScroll, BorderLayout.CENTER);
+                    
+                    soutTab.add(soutTable, BorderLayout.CENTER);
                 }
-                pfeTabPanel.addTab("Soutenance (1)", soutTab);
+                pfeTabPanel.addTab("Soutenance", soutTab);
             }
             this.setLayout(new BorderLayout());
             this.add(pfeTabPanel, BorderLayout.CENTER);
@@ -252,96 +230,235 @@ public class viewPfePanel extends JPanel{
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-        private JTabbedPane pfeTabPanel;
-        private JPanel etudiantTab;
-        private JScrollPane etudiantScroll;
-        private JTable etudiantTable;
-        private JPanel juryTab;
-        private JScrollPane juryScroll;
-        private JTable juryTable;
-        private JPanel soutTab;
-        private JScrollPane soutScroll;
-        private JTable soutTable;
+        
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     
-    public viewPfePanel() {
-	initComponents();
+    public viewPfePanel(String[] criteres, List<PFE>info) {
+	initComponents(criteres,info);
 	}
-	private void initComponents() {
-            // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-            titlePanel = new JPanel();
-            title = new JLabel();
-            ajouterBtn = new JButton();
-            searchBtn = new JButton();
-            critereCB = new JComboBox<>();
-            searchBar = new JTextField();
-            
-            eastBorder = new JPanel();
-            table = new MyComponents.PFETable();
-            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame);
-            JPanel westBorder = new JPanel();
-            JPanel centerContent = new JPanel(null);
-            LeftAdditionalInfoPfe plusInfo = new LeftAdditionalInfoPfe();
-            TabbedPfePane pfeTab = new TabbedPfePane();
+    private void initComponents(String[] criteres, List<PFE>info) {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+        titlePanel = new JPanel();
+        title = new JLabel();
+        ajouterBtn = new JButton();
+        searchBtn = new JButton();
+        critereCB = new JComboBox<>(criteres);
+        searchBar = new JTextField();
 
-            //======== this ========
-            setLayout(new BorderLayout());
+        eastBorder = new JPanel();
+        table = new MyComponents.PFETable(info);
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame);
+        JPanel westBorder = new JPanel();
+        JPanel centerContent = new JPanel(null);
+        LeftAdditionalInfoPfe plusInfo = new LeftAdditionalInfoPfe();
+        TabbedPfePane pfeTab = new TabbedPfePane();
 
-            //======== title ========
-            {
-                
-                titlePanel.setBackground(Color.white);
-                titlePanel.setPreferredSize(new Dimension(75, 150));
-                titlePanel.setLayout(new MigLayout(
-                    "insets 20 10 0 0, hidemode 3",
-                    // columns
-                    "10[169,fill]" +
-                    "[74,fill]" +
-                    "[70,fill]",
-                    // rows
-                    "[30]" +
-                    "[30]" +
-                    "[32]"));
+        //======== this ========
+        setLayout(new BorderLayout());
 
-                //---- title ----
-                title.setText("Consulter PFE");
-                title.setFont(new Font("SansSerif", Font.BOLD, 24));
-                titlePanel.add(title, "cell 0 0");
-                titlePanel.add(searchBar, "cell 0 1,grow");
-                titlePanel.add(critereCB, "cell 1 1,growy");
+        //======== title ========
+        {
 
-                //---- chercherBtn ----
-                searchBtn.setText("Chercher");
-                titlePanel.add(searchBtn, "cell 2 1,growy");
+            titlePanel.setBackground(Color.white);
+            titlePanel.setPreferredSize(new Dimension(75, 150));
+            titlePanel.setLayout(new MigLayout(
+                "insets 20 10 0 0, hidemode 3",
+                // columns
+                "10[169,fill]" +
+                "[74,fill]" +
+                "[70,fill]",
+                // rows
+                "[30]" +
+                "[30]" +
+                "[32]"));
 
-                //---- ajouterBtn ----
-                ajouterBtn.setText("Ajouter");
-                titlePanel.add(ajouterBtn, "cell 2 2,growy");
-            }
-            
-            //====CenterContent=======
-            int y = 100;
-            table.setBounds(0,0,1310,400+y);
-            pfeTab.setBounds(0,400+y+10,1310,400);
-            plusInfo.setBounds(1330,0,575,407+y);
-            centerContent.add(table);
-            centerContent.add(plusInfo);
-            centerContent.add(pfeTab);
-            centerContent.setBackground(Color.WHITE);
-            plusInfo.setBackground(Color.WHITE);
-            pfeTab.setBackground(Color.WHITE);
-            
-            ajouterBtn.addActionListener(l->{
-                ajouterPfeD.setVisible(true);
+            //---- title ----
+            title.setText("Consulter PFE");
+            title.setFont(new Font("SansSerif", Font.BOLD, 24));
+            titlePanel.add(title, "cell 0 0");
+            titlePanel.add(searchBar, "cell 0 1,grow");
+            titlePanel.add(critereCB, "cell 1 1,growy");
+
+            //---- chercherBtn ----
+            searchBtn.setText("Chercher");
+            titlePanel.add(searchBtn, "cell 2 1,growy");
+
+            //---- ajouterBtn ----
+            ajouterBtn.setText("Ajouter");
+            titlePanel.add(ajouterBtn, "cell 2 2,growy");
+            searchBtn.addActionListener(l->{
+                DefaultTableModel myTableModel = (DefaultTableModel) table.getTable().getModel();
+                TableRowSorter<DefaultTableModel> obj = new TableRowSorter<>(myTableModel);
+                table.getTable().setRowSorter(obj);
+                System.out.println(critereCB.getSelectedIndex());
+                obj.setRowFilter(RowFilter.regexFilter(searchBar.getText(),critereCB.getSelectedIndex()));
             });
-            eastBorder.setPreferredSize(new Dimension(10,0));
-            westBorder.setPreferredSize(new Dimension(10,0));
-            add(centerContent, BorderLayout.CENTER);
-            add(eastBorder, BorderLayout.EAST);
-            add(westBorder,BorderLayout.WEST);
-            add(titlePanel, BorderLayout.NORTH);
-		// JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+        }
+
+        //====CenterContent=======
+        int y = 100;
+        //=====Table===========
+        table.setBounds(0,0,1310,400+y);
+        ListSelectionModel selectionModel = table.getTable().getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = table.getTable().getSelectedRow();
+                    if (selectedRow != -1) {
+                        MyComponents.SoutenanceTable sTable= pfeTab.getSoutTable();
+                        MyComponents.JuryTable jTable = pfeTab.getJuryTable();
+                        MyComponents.EtudiantTable eTable = pfeTab.getEtu1Table();
+                        Object value = table.getTable().getValueAt(selectedRow, 0); 
+                        System.out.println("Selected row value: " + value);
+                        
+                        sTable.clearTable();
+                        jTable.clearTable();
+                        eTable.clearTable();
+                        // Start Future thread
+                        ExecutorService executorP = Executors.newSingleThreadExecutor();
+                        Callable<Object[][]> populateSout = () -> populateSout(sTable.getTable(),value.toString()); // pfeTab.setTitleAt(i, textField.getText()); to the etudiant
+                        Callable<Object[][]> populateEtudiant = () -> populateEtudiant(eTable.getTable(),value.toString());
+                        Callable<Object[][]> populateJury = () -> populateJury(jTable.getTable(),value.toString());
+                        Future<Object[][]> futureSout = executorP.submit(populateSout);
+                        Future<Object[][]> futureEtud = executorP.submit(populateEtudiant);
+                        Future<Object[][]> futureJury = executorP.submit(populateJury);
+                        // end Thread
+                        try{
+                           sTable.populateTable(futureSout.get());
+                           eTable.populateTable(futureEtud.get());
+                           jTable.populateTable(futureJury.get());
+
+                        }catch(Exception exception){
+                            exception.printStackTrace();
+                        }
+                        // Start Left Additional
+                        PFE pfeObject = info.get(selectedRow);
+                        plusInfo.setThemeFieldText(pfeObject.getTheme());
+                        plusInfo.setSujetFieldText(pfeObject.getSujet());
+                        plusInfo.setDescAreaText(pfeObject.getDescription());
+                        
+
+                    }
+                }
+            }
+        });
+        //=====Tabbed Panel========
+        pfeTab.setBounds(0,400+y+10,1310,360);
+        plusInfo.setBounds(1330,0,575,407+y);
+        centerContent.add(table);
+        centerContent.add(plusInfo);
+        centerContent.add(pfeTab);
+        centerContent.setBackground(Color.WHITE);
+        plusInfo.setBackground(Color.WHITE);
+        pfeTab.setBackground(Color.WHITE);
+
+        ajouterBtn.addActionListener(l->{
+            ajouterPfeD.setVisible(true);
+        });
+        eastBorder.setPreferredSize(new Dimension(10,0));
+        westBorder.setPreferredSize(new Dimension(10,0));
+        add(centerContent, BorderLayout.CENTER);
+        add(eastBorder, BorderLayout.EAST);
+        add(westBorder,BorderLayout.WEST);
+        add(titlePanel, BorderLayout.NORTH);
     }
+    public Object[][] populateEtudiant(JTable etuTable,String idPfe){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            //"Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""
+            dbc.query("select count(*) from Etudiant, PFE p where (p.firstEtu=cin OR p.secondEtu=cin) and p.idPFE="+idPfe);
+            int size =0;
+            if(dbc.rs.next())
+                size = dbc.rs.getInt(1);
+            
+            
+            dbc.query("select CIN, prenom, nom, photo, nce, email, tel from Etudiant, PFE p where (p.firstEtu=cin OR p.secondEtu=cin) and p.idPFE="+idPfe);
+            Object[][] res = new Object[size][8];
+            int i=0;
+            while(dbc.rs.next()){
+                res[i][0] = dbc.rs.getString(1);
+                res[i][1] = dbc.rs.getString(2);
+                res[i][2] = dbc.rs.getString(3);
+                res[i][3] = dbc.rs.getString(4);
+                res[i][4] = dbc.rs.getString(5);
+                res[i][5]=dbc.rs.getString(6);
+                res[i][6]=dbc.rs.getString(7);
+                res[i][7]=null;
+                i++;
+            }
+            dbc.conn.close();
+            return res;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Object[][] populateJury(JTable etuTable, String idPfe){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            //"IdJury", "nom & prenom president",  "CIN de president", "grad","Fillière","Local",""
+            
+            dbc.query("select IdJury ,nom, prenom, cin,grad,p.idGr, p.idFill,nomSalle, numSalle from PFE p "
+                    + "join Soutenance using (idSou) "
+                    + "join Jury using (idJury) "
+                    +"join Enseignant on president=cin "
+                    + "where p.IDPFE="+idPfe);
+            Object[][] res = new Object[1][7];
+            int i=0;
+            while(dbc.rs.next()){
+                res[i][0] = dbc.rs.getString(1);
+                String np = dbc.rs.getString(2)+ " "+dbc.rs.getString(3);
+                res[i][1] =np;
+                res[i][2] = dbc.rs.getString(4);
+                res[i][3] = dbc.rs.getString("grad");
+                String grFill = dbc.rs.getString(6)+"_"+dbc.rs.getString(7);
+                res[i][4] = grFill;
+                String loc = dbc.rs.getString(8)+ " "+dbc.rs.getString(9);
+                res[i][5]=loc;
+                res[i][6]=null;
+                i++;
+               
+            }
+             System.out.println(res[0][1]);
+            dbc.conn.close();
+            return res;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Object[][] populateSout(JTable etuTable, String idPfe){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select IDSOU, DATESOUT, HEURE, ISVALID, e.nom, e.prenom, e.cin from PFE "
+                    +"join Soutenance using (idSou) "
+                    +"join Enseignant e on e.cin=examinateur "
+                    + "where IDPFE="+idPfe);
+            Object[][] res = new Object[1][7];
+            int i=0;
+            while(dbc.rs.next()){
+                //"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
+                res[i][0] = dbc.rs.getString(1);
+                res[i][1] = dbc.rs.getDate(2);
+                res[i][2] = dbc.rs.getString(3);
+                res[i][3] = dbc.rs.getBoolean(4);
+                res[i][4] = dbc.rs.getString(7);
+                String np = dbc.rs.getString(6)+ " "+dbc.rs.getString(5);
+                res[i][5]=np;
+                res[i][6]=null;
+                i++;
+            }
+            dbc.conn.close();
+            return res;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+        
+    
 }

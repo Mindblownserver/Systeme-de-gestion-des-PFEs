@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,10 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.MouseInputAdapter;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -144,6 +140,28 @@ public class MyComponents {
                 String loc =((Jury)l.get(i)).getLoc().getNomSalle() + " "+((Jury)l.get(i)).getLoc().getNumSalle(); 
                 res[i][5] = loc;
                 res[i][6] = null;
+            }
+        }
+        else if (o instanceof PFE){
+            //"ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", 
+            //"Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage",""
+            res = new Object[l.size()][13];
+            for(int i=0;i<l.size();i++){
+                res[i][0] = ((PFE)l.get(i)).getId();
+                res[i][1] = ((PFE)l.get(i)).getAnnee();
+                res[i][2] = (((PFE)l.get(i)).isIsMonome())?"Monôme":"Binôme";
+                res[i][3] = (((PFE)l.get(i)).isHasInternship())?"Externe":"Interne";
+                Groupe type = ((PFE)l.get(i)).getType();
+                res[i][4] = type.getIdGr()+"_"+type.getSpecialite().getIdFill();
+                res[i][5] = ((PFE)l.get(i)).getDateDebut();
+                res[i][6] = ((PFE)l.get(i)).getDureeStage();
+                res[i][7] = ((PFE)l.get(i)).getDateFin();
+                res[i][8] = ((PFE)l.get(i)).isIsApproved();
+                res[i][9] = ((PFE)l.get(i)).isIsValidByRapp();
+                res[i][10] = ((PFE)l.get(i)).isIsScheduled();
+                res[i][11] = ((PFE)l.get(i)).isHasInternship();
+                res[i][12]= null;
+                
             }
         }
         
@@ -358,9 +376,10 @@ public class MyComponents {
 
         private JTable spTable;
     }
-    public static class PFETable  extends JScrollPane{
-        public PFETable(){
-            initComponents();
+    public static class PFETable  extends JScrollPane implements ComponentWithTable{
+        private JTable pfeTable;
+        public PFETable(List<PFE> info){
+            initComponents(info);
         }
         public JButton getEditBtn(){
             return modifyBtn;
@@ -368,7 +387,7 @@ public class MyComponents {
         public JButton getDeleteBtn(){
             return deleteBtn;
         }
-        private void initComponents() {
+        private void initComponents(List<PFE> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             pfeTable = new JTable();
             
@@ -378,19 +397,16 @@ public class MyComponents {
 
                 //---- pfeTable ----
                 pfeTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, null, null, "", "", null, null, null, null, null,modifyBtn,deleteBtn},
-                        {null, null, null, null, null, null, null, null, null, null, null,  null,modifyBtn,deleteBtn},
-                    },
+                        listToObjects(info),
                     new String[] {
-                        "ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", "Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage","",""
+                        "ID ", "Ann\u00e9e", "Trait\u00e9 en", "Nature", "Filliere", "Date debut", "Dur\u00e9e", "Date Fin", "Approuv\u00e9", "Valid\u00e9 par Rapporteur", "Plannifi\u00e9", "A un Stage",""
                     }
                 ) {
                     Class<?>[] columnTypes = new Class<?>[] {
-                        String.class, Object.class, String.class, String.class, String.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class, Object.class,JButton.class,JButton.class
+                        String.class, Object.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class, String.class,Object.class
                     };
                     boolean[] columnEditable = new boolean[] {
-                        false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+                        false, false, false, false, false, false, false, false, false, false, false, false, true
                     };
                     @Override
                     public Class<?> getColumnClass(int columnIndex) {
@@ -402,6 +418,27 @@ public class MyComponents {
                     }
                 });
                 {
+                    TableActionEvent event = new TableActionEvent() {
+                        @Override
+                        public void onEdit(int row) {
+                            System.out.println("Edit row : " + row);
+                        }
+
+                        @Override
+                        public void onDelete(int row) {
+                            
+                            if (pfeTable.isEditing()) {
+                                pfeTable.getCellEditor().stopCellEditing();
+                            }
+                            DefaultTableModel model = (DefaultTableModel)pfeTable.getModel();
+                            model.removeRow(row);
+                        }
+
+                        @Override
+                        public void onView(int row) {
+                            System.out.println("View row : " + row);
+                        }
+                    };
                     TableColumnModel cm = pfeTable.getColumnModel();
                     cm.getColumn(0).setPreferredWidth(85);
                     cm.getColumn(2).setPreferredWidth(80);
@@ -414,10 +451,10 @@ public class MyComponents {
                     cm.getColumn(9).setPreferredWidth(150);
                     cm.getColumn(10).setPreferredWidth(70);
                     cm.getColumn(11).setPreferredWidth(90);
-                    cm.getColumn(12).setMaxWidth(80);
-                    cm.getColumn(13).setMaxWidth(80);
-//                    TableCellRenderer tableRenderer = pfeTable.getDefaultRenderer(JButton.class);
-//                    pfeTable.setDefaultRenderer(deleteBtn.getClass(), new MyComponents.JTableButtonRenderer(tableRenderer));
+                    cm.getColumn(12).setMaxWidth(100);
+                    cm.getColumn(12).setMinWidth(100);
+                    cm.getColumn(12).setCellRenderer(new TableActionCellRender());
+                    cm.getColumn(12).setCellEditor(new TableActionCellEditor(event));
                     pfeTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 }
                 pfeTable.setGridColor(Color.black);
@@ -430,10 +467,10 @@ public class MyComponents {
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
-
-        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-        private JTable pfeTable;
-        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+        @Override
+        public JTable getTable() {
+            return pfeTable;
+        }
     }
     public static class SoutenanceTable extends JScrollPane implements ComponentWithTable{
         private JTable soutTable;
@@ -456,10 +493,7 @@ public class MyComponents {
 
                 //---- soutTable ----
                 soutTable.setModel(new DefaultTableModel(
-                    new Object[][] {
-                        {null, null, null, null,"","",""},
-                        {null, null, null, null,"","",""},
-                    },
+                    null,
                     new String[] {
                         "ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
                     }
@@ -983,11 +1017,11 @@ public class MyComponents {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class JuryTable extends JScrollPane implements ComponentWithTable{
-        public JuryTable(List<Jury> info){
-            initComponents(info);
+        public JuryTable(List<Jury> info,String...mode){
+            initComponents(info, mode);
         }
         
-        private void initComponents(List<Jury> inf) {
+        private void initComponents(List<Jury> inf,String[] mode) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             juryTable = new JTable();
 
@@ -997,7 +1031,7 @@ public class MyComponents {
 
                 //---- encExtTable ----
                 juryTable.setModel(new DefaultTableModel(
-                    listToObjects(inf),
+                    (mode.length!=0)?null:listToObjects(inf),
                     new String[] {
                         "IdJury", "nom & prenom president",  "CIN de president", "grad","Fillière","Local",""
                     }
@@ -1055,23 +1089,53 @@ public class MyComponents {
         public JTable getTable() {
             return juryTable;
         }
+    
+        public void clearTable(){
+            DefaultTableModel dtm = (DefaultTableModel) juryTable.getModel();
+            int taille = dtm.getRowCount();
+            System.out.println(taille);
+            for(int i=0;i<taille;i++)
+                dtm.removeRow(0);
+        }
+        public void populateTable(Object[][] data){
+             TableActionEvent event = new TableActionEvent() {
+                @Override
+                public void onEdit(int row) {
+                    System.out.println("Edit row : " + row);
+                }
+
+                @Override
+                public void onDelete(int row) {
+                    if (juryTable.isEditing()) {
+                        juryTable.getCellEditor().stopCellEditing();
+                    }
+                    DefaultTableModel model = (DefaultTableModel) juryTable.getModel();
+                    model.removeRow(row);
+                }
+
+                @Override
+                public void onView(int row) {
+                    System.out.println("View row : " + row);
+                }
+            };
+            ((DefaultTableModel)juryTable.getModel()).setDataVector(data, new String[]{"IdJury", "nom & prenom president",  "CIN de president", "grad","Fillière","Local",""});    
+        }
     }
     
     public static class EnseignantTable extends JScrollPane implements ComponentWithTable{
-        public EnseignantTable(List<Enseignant> info) {
-            initComponents(info);
+        public EnseignantTable(List<Enseignant> info, String...mode) {
+            initComponents(info,mode);
         }
 
-        private void initComponents(List<Enseignant> info) {
+        private void initComponents(List<Enseignant> info,String... mode) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             ensTable = new JTable();
 
             //======== ensScroll ========
             {
-
                 //---- ensTable ----
                 ensTable.setModel(new DefaultTableModel(
-                    listToObjects(info),
+                    (mode.length!=0)?null:listToObjects(info),
                     new String[] {
                         "Cin", "Prenom", "Nom", "Photo", "Grad","Email","Tel", "peutEtrePresident", ""
                     }
@@ -1153,15 +1217,15 @@ public class MyComponents {
     public static class EtudiantTable extends JScrollPane implements ComponentWithTable{
         private JTable etudiantTable;
 
-        public EtudiantTable(List<Etudiant> info) {
-            initComponents(info);
+        public EtudiantTable(List<Etudiant> info, String...mode) {
+            initComponents(info, mode);
         }
         @Override
         public JTable getTable() {
             return etudiantTable;
         }
 
-        private void initComponents(List<Etudiant> info) {
+        private void initComponents(List<Etudiant> info, String[]mode) {
             
             etudiantTable = new JTable();
 
@@ -1171,7 +1235,7 @@ public class MyComponents {
 
                 //---- etudiantTable ----
                 etudiantTable.setModel(new DefaultTableModel(
-                        listToObjects(info),
+                        (mode.length!=0)?null:listToObjects(info),
                     new String[] {
                         "Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""
                         //"Cin","Prenom","Nom","Groupe et Sp\u00e9cialit\u00e9","Nce","Email","Tel","A un binôme","Projet/Stage trait\u00e9 en:","Nature du projet",""
@@ -1233,11 +1297,42 @@ public class MyComponents {
                 etudiantTable.setRowHeight(40);
                 etudiantTable.setCellSelectionEnabled(true);
                 etudiantTable.setShowHorizontalLines(true);
+                etudiantTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 this.setViewportView(etudiantTable);
             }
 
         }
+        public void clearTable(){
+            DefaultTableModel dtm = (DefaultTableModel) etudiantTable.getModel();
+            int taille = dtm.getRowCount();
+            System.out.println(taille);
+            for(int i=0;i<taille;i++)
+                dtm.removeRow(0);
+        }
+        public void populateTable(Object[][] data){
+             TableActionEvent event = new TableActionEvent() {
+                @Override
+                public void onEdit(int row) {
+                    System.out.println("Edit row : " + row);
+                }
 
+                @Override
+                public void onDelete(int row) {
+                    if (etudiantTable.isEditing()) {
+                        etudiantTable.getCellEditor().stopCellEditing();
+                    }
+                    DefaultTableModel model = (DefaultTableModel) etudiantTable.getModel();
+                    model.removeRow(row);
+                }
+
+                @Override
+                public void onView(int row) {
+                    System.out.println("View row : " + row);
+                }
+            };
+            ((DefaultTableModel)etudiantTable.getModel()).setDataVector(data, new String[]{"Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""});    
+        }
+        
     }
 
 }
