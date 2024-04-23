@@ -1,13 +1,17 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Specialite implements ColumnNames{
     private String fillier;
     private String idFill;
     private static int columnCount=2;
-
+    public static List<String> ids=new ArrayList<>();
     public Specialite(String id, String fillier) {
         this.fillier=fillier;
         idFill=id;
+        ids.add(idFill);
     }
 
     public String getFillier() {

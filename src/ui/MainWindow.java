@@ -109,7 +109,7 @@ public class MainWindow extends JFrame {
             encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
             organismeP = new ViewSmallClassPanel("Organisme", orgList);
             localeP =new ViewSmallClassPanel("Local", locList);
-            juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList);
+            juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList);
             
             this.setUndecorated(true);
             // Setup menu bar
@@ -150,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"1");
+                cl.show(cardContainer,"Jury");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);

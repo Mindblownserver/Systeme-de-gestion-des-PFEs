@@ -32,7 +32,7 @@ import repo.MyDataBaseConnector;
  *
  * @author yassine
  */
-public class viewPfePanel extends JPanel{
+public class viewPfePanel extends JPanel implements TableActionEvent{
     private JPanel titlePanel;
     private JLabel title;
     private JTextField searchBar;
@@ -42,6 +42,7 @@ public class viewPfePanel extends JPanel{
     private JPanel eastBorder;
     private MyComponents.PFETable table;
     private AjouterPage.AjouterPFEDialog ajouterPfeD;
+
     
     public class LeftAdditionalInfoPfe extends JPanel {
         private JTextField themeField;
@@ -247,7 +248,7 @@ public class viewPfePanel extends JPanel{
         searchBar = new JTextField();
 
         eastBorder = new JPanel();
-        table = new MyComponents.PFETable(info);
+        table = new MyComponents.PFETable(info,this);
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame);
         JPanel westBorder = new JPanel();
@@ -302,6 +303,7 @@ public class viewPfePanel extends JPanel{
         //=====Table===========
         table.setBounds(0,0,1310,400+y);
         ListSelectionModel selectionModel = table.getTable().getSelectionModel();
+        
         selectionModel.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -459,6 +461,47 @@ public class viewPfePanel extends JPanel{
         }
         return null;
     }
-        
     
+    @Override
+    public void onEdit(int row) {
+        System.out.println("Eddited PFE row number: " + row);
+    }
+
+    @Override
+    public void onDelete(int row) {
+        String idPFE=table.getTable().getModel().getValueAt(row, 0).toString();
+        try{
+
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            dbc.query("delete from PFE where idPFE="+idPFE);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        if (table.getTable().isEditing()) {
+            table.getTable().getCellEditor().stopCellEditing();
+        }
+        DefaultTableModel model = (DefaultTableModel)table.getTable().getModel();
+        model.removeRow(row);
+    }
+
+
+    @Override
+    public void onView(int row) {
+    }
 }
+
+
+//        String idEtu = table.getTable().getModel().getValueAt(row, 0).toString();
+//        try{
+//            MyDataBaseConnector dbc = new MyDataBaseConnector();
+//            dbc.query("delete from PFE where firstEtu='"+idEtu+"' or secondEtu='"+idEtu+"'");
+//            dbc.query("delete from Etudiant where cin='"+idEtu+"'");
+//        }catch(Exception e){
+//
+//        }
+//        if (table.getTable().isEditing()) {
+//            table.getTable().getCellEditor().stopCellEditing();
+//        }
+//        DefaultTableModel model = (DefaultTableModel) table.getTable().getModel();
+//        model.removeRow(row);
+//    }

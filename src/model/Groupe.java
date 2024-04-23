@@ -1,10 +1,14 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Groupe implements ColumnNames{
     private String idGr;
     private String libelle;
     private Specialite specialite;
     private static int columnCount=4;
+    public static List<String> ids=new ArrayList<>();
     /**
      * Default Constructor
      * @param libelle
@@ -14,7 +18,7 @@ public class Groupe implements ColumnNames{
         this.libelle = libelle;
         specialite=sp;
         idGr=id;
-
+        ids.add(idGr+"_"+sp.getIdFill());
     }
     /**
      * Second Constructor
@@ -25,6 +29,7 @@ public class Groupe implements ColumnNames{
         idGr=id;
         this.libelle = libelle;
         this.specialite= new Specialite(idFilliere,specialite);
+        ids.add(idGr+"_"+idFilliere);
     }
     
     public String getIdGr() {

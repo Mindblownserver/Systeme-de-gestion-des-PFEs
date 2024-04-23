@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // A changer l'exception
@@ -9,11 +10,13 @@ public class Local implements ColumnNames{
     private String nomSalle;
     private static int columnCount=2;
     private String []columnNames = {"Num Salle","Nom Salle"};
+    public static List<String> ids=new ArrayList<>();
     // implement an interface which has the field column Names!!!!!
     
     public Local(String nom, int num){
         nomSalle = nom;
         numSalle = num;
+        ids.add(nom+" "+num);
     }
     public int getNumSalle() {
         return numSalle;

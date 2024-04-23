@@ -4,7 +4,6 @@
  */
 package ui;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -12,14 +11,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
 import java.util.concurrent.Callable;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -30,8 +27,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import model.Enseignant;
-import model.Jury;
+import model.*;
 import net.miginfocom.swing.MigLayout;
 import repo.MyDataBaseConnector;
 import java.util.concurrent.Future;
@@ -516,12 +512,12 @@ public class ViewJuryPanel extends JPanel{
     private LeftAdditionalInfoJury plusInfoJury;
     private AjouterPage.AjouterSoutenance ajSoutD;
     
-    public ViewJuryPanel(String[] critereCB, List<Jury> info){
+    public ViewJuryPanel(String[] critereCB, List<Jury> info,List<Enseignant> ensList){
         System.out.println(info.get(0).getPresident().getNom());
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         jTable = new MyComponents.JuryTable(info);
         uContent = new upperContent(critereCB);
-        ajJury = new AjouterPage.AjouterJuryDialogue(topFrame);
+        ajJury = new AjouterPage.AjouterJuryDialogue(topFrame,ensList);
         sTable = new MyComponents.SoutenanceTable();
         plusInfoJury = new LeftAdditionalInfoJury();
         

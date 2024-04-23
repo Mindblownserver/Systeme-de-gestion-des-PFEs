@@ -7,6 +7,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Window;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -18,13 +25,12 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
+import model.*;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
 
 public class AjouterPage {
     public static class AjouterGroupe extends JPanel {
@@ -111,6 +117,8 @@ public class AjouterPage {
             textField2 = new JTextField();
             label4 = new JLabel();
             textField3 = new JTextField();
+            JLabel label5 = new JLabel();
+            JTextField textField4 = new JTextField();
             button1 = new JButton();
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             this.setBackground(Color.WHITE);
@@ -122,6 +130,8 @@ public class AjouterPage {
                 "[158,fill]" +
                 "[84,fill]",
                 // rows
+                "[32]" +
+                "[32]" +
                 "[32]" +
                 "[32]" +
                 "[32]" +
@@ -147,10 +157,40 @@ public class AjouterPage {
             label4.setText("Domaine d'activit\u00e9");
             add(label4, "cell 0 3");
             add(textField3, "cell 1 3 2 1,growy,width 200px");
+            
+            label5.setText("Adresse");
+            add(label5, "cell 0 4");
+            add(textField4, "cell 1 4 2 1,growy,width 200px");
 
             //---- button1 ----
             button1.setText("Ajouter");
             add(button1, "cell 0 4,growy");
+            button1.addActionListener((l)->{
+                ExecutorService executorJ = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into OrganismeExt(idSc, nomSc, domaineActivite, adresse) values('%s','%s','%s','%s')", 
+                                textField1.getText(), textField2.getText(),textField3.getText(),textField4.getText()));
+                    }catch(SQLException sqlE){
+                        return false;
+                    }
+                    return true;
+                };
+                Future<Boolean> futureOrg = executorJ.submit(populateThread);
+                try{
+                    if(futureOrg.get()){
+                    // dialogue ok
+                    }
+
+                    else{
+                        // dialogue error
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                    
+            });
         }
 
         private JLabel label1;
@@ -307,11 +347,6 @@ public class AjouterPage {
             label1.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 22));
             add(label1, "cell 0 0 2 1");
 
-            //---- label2 ----
-            label2.setText("Id");
-            add(label2, "cell 0 1");
-            add(idField, "cell 1 1 2 1,growy");
-
             //---- label3 ----
             label3.setText("Nom de la salle");
             add(label3, "cell 0 2");
@@ -325,7 +360,31 @@ public class AjouterPage {
             //---- button1 ----
             button1.setText("Ajouter");
             add(button1, "cell 0 4,growy,width 200px");
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+            button1.addActionListener(l->{
+                ExecutorService executorL = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into Loc (nomSalle, numSalle)  values('%s',%d)", 
+                                 nomField.getText(),Integer.parseInt(numField.getText())));
+                    }catch(SQLException sqlE){
+                        return false;
+                    }
+                    return true;
+                };
+                Future<Boolean> futureLoc = executorL.submit(populateThread);
+                try{
+                    if(futureLoc.get()){
+                    // dialogue ok
+                    }
+
+                    else{
+                        // dialogue error
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            });
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
@@ -387,7 +446,33 @@ public class AjouterPage {
             //---- button1 ----
             button1.setText("Ajouter");
             add(button1, "cell 0 4,growy");
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+            
+            button1.addActionListener(l->{
+                ExecutorService executorL = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into Specialite (idFill, filliere) values('%s','%s')", 
+                                 textField1.getText(),textField2.getText()));
+                    }catch(SQLException sqlE){
+                        return false;
+                    }
+                    return true;
+                };
+                Future<Boolean> futureSp = executorL.submit(populateThread);
+                try{
+                    if(futureSp.get()){
+                    // dialogue ok
+                    }
+
+                    else{
+                        // dialogue error
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            });
+            
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
@@ -622,12 +707,12 @@ public class AjouterPage {
 
             //======== LoVFormEncIsimm ========
             
-            LoVForm encIsimmForm = new LoVForm();
+            LoVForm encIsimmForm = new LoVForm(obList);
             contentPane.add(encIsimmForm, "cell 2 8 3 1,aligny top");
 
             //======== LoVForm2RappIsimm ========
             
-            LoVForm rappIsimmForm = new LoVForm();
+            LoVForm rappIsimmForm = new LoVForm(obList);
             contentPane.add(rappIsimmForm, "cell 6 8 2 1,aligny top");
 
             //---- label22 ----
@@ -640,7 +725,7 @@ public class AjouterPage {
 
             //======== LoVForm3Etu1 ========
             
-            LoVForm etu1Form = new LoVForm();
+            LoVForm etu1Form = new LoVForm(obList);
             contentPane.add(etu1Form, "cell 2 9 3 1,aligny top");
 
             //---- label28 ----
@@ -649,7 +734,7 @@ public class AjouterPage {
 
             //======== LoVForm4Etu2 ========
             
-            LoVForm etu2Form = new LoVForm();
+            LoVForm etu2Form = new LoVForm(obList);
             contentPane.add(etu2Form, "cell 6 9 2 1,aligny top");
 
             //---- label31 ----
@@ -658,7 +743,7 @@ public class AjouterPage {
 
             //======== LoVForm5EncExt ========
             
-            LoVForm encExtForm = new LoVForm();
+            LoVForm encExtForm = new LoVForm(obList);
             contentPane.add(encExtForm, "cell 2 10 3 1,aligny top");
 
             //---- approuveChB ----
@@ -948,24 +1033,26 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterJuryDialogue extends JDialog {
-        public AjouterJuryDialogue(Window owner) {
+        public AjouterJuryDialogue(Window owner, List<Enseignant> ensList) {
             super(owner);
-            initComponents();
+            initComponents(ensList);
         }
 
-        private void initComponents() {
+        private void initComponents(List<Enseignant> ensList) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
+                    
             label1 = new JLabel();
             content = new JPanel();
             label2 = new JLabel();
             idField = new JTextField();
             label3 = new JLabel();
-            localCB = new JComboBox();
+            localCB = new JComboBox(Local.ids.toArray());
             label4 = new JLabel();
-            filliereCB = new JComboBox();
+            filliereCB = new JComboBox(Groupe.ids.toArray());
             label5 = new JLabel();
             button1 = new JButton();
-            form = new LoVForm();
+            ensList.removeIf(p->!p.isCanBePresident());
+            form = new LoVForm(ensList);
 
             //======== this ========
             Container contentPane = getContentPane();
@@ -1016,11 +1103,13 @@ public class AjouterPage {
 
                 //======== this2 ========
                 
-                content.add(form, "cell 2 4 3 1,growy");
+                content.add(form, "cell 2 4 3 1,growy, growx");
 
                 //---- button1 ----
                 button1.setText("Ajouter");
                 content.add(button1, "cell 1 5,growy");
+                // Charger les données
+
             }
             contentPane.add(content, BorderLayout.CENTER);
             pack();
@@ -1040,6 +1129,8 @@ public class AjouterPage {
         private JLabel label5;
         private JButton button1;
         private LoVForm form;
+        
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
+    private static List<? extends Personne> obList = new ArrayList<>();
 }

@@ -45,6 +45,13 @@ public class Personne {
     public void setTel(String tel) {
         this.tel = tel;
     }
+
+    @Override
+    public String toString() {
+        return prenom +" "+ nom+ ","+cin ;
+    }
+    
+    
     
     
 }

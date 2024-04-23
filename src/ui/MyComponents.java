@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import model.*;
+import repo.MyDataBaseConnector;
 
 public class MyComponents {
     public static Font h1 = new Font("Monosans",0,24);
@@ -36,11 +37,8 @@ public class MyComponents {
     public static Color accentNormal = Color.decode("#2c67f2");
     public static Color accentLessHue=Color.decode("#2c8ff2");
     // when modify, make the changes on the spot
-    public static Stack<String> modifyStack = new Stack<>();
-    public static Stack<String> deleteStack = new Stack<>();
 
-    private static JButton modifyBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-    private static JButton deleteBtn = new JButton(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
+
     
     public static Object[][] listToObjects(List<? extends Object> l){
         Object[][]res=null;
@@ -284,13 +282,7 @@ public class MyComponents {
         public SpTable(List<? extends ColumnNames>l){
             initComponents(l);
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
-
+        
         public JTable getTable() {
             return spTable;
         }
@@ -339,12 +331,18 @@ public class MyComponents {
 
                     @Override
                     public void onDelete(int row) {
-                        Object idFill=spTable.getModel().getValueAt(row, 2);
-                        deleteStack.add("delete from Specialite where idFill ='"+idFill+"';");
-                        deleteStack.add("delete from Groupe where idFill='"+idFill+"';");
-                        deleteStack.add("delete from Jury where idFill='"+idFill+"';");
-                        deleteStack.add("delete from Soutenance where idJury =(select idJury from Jury where idFill='"+idFill+"');");
-                        deleteStack.add("delete from PFE where idFill='"+idFill+"';");
+                        String idFill=spTable.getModel().getValueAt(row, 0).toString();
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("delete from Specialite where idFill ='"+idFill+"'");
+                            dbc.query("delete from Groupe where idFill='"+idFill+"'");
+                            dbc.query("delete from Jury where idFill='"+idFill+"'");
+                            dbc.query("delete from Soutenance where idJury =(select idJury from Jury where idFill='"+idFill+"')");
+                            dbc.query("delete from PFE where idFill='"+idFill+"'");
+                            
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                         if (spTable.isEditing()) {
                             spTable.getCellEditor().stopCellEditing();
                         }
@@ -358,8 +356,6 @@ public class MyComponents {
                     }
                 };
                 this.setViewportView(spTable);
-//                TableCellRenderer tableRenderer = spTable.getDefaultRenderer(JButton.class);
-//                spTable.setDefaultRenderer(JButton.class, new MyComponents.JTableButtonRenderer(tableRenderer));
                 spTable.getTableHeader().setDefaultRenderer( new MyHeaderRenderer());
                 spTable.setRowHeight(40);
                 TableColumnModel cm = spTable.getColumnModel();
@@ -371,21 +367,20 @@ public class MyComponents {
                 spTable.setShowGrid(true);
 
             }
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         private JTable spTable;
     }
     public static class PFETable  extends JScrollPane implements ComponentWithTable{
         private JTable pfeTable;
-        public PFETable(List<PFE> info){
+        private TableActionEvent event;
+        public PFETable(List<PFE> info, TableActionEvent event){
+            setTableActionEvent(event);
             initComponents(info);
+            
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
+        public void setTableActionEvent(TableActionEvent e){
+            event =e;
         }
         private void initComponents(List<PFE> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -418,26 +413,6 @@ public class MyComponents {
                     }
                 });
                 {
-                    TableActionEvent event = new TableActionEvent() {
-                        @Override
-                        public void onEdit(int row) {
-                            System.out.println("Edit row : " + row);
-                        }
-
-                        @Override
-                        public void onDelete(int row) {
-                            
-                            if (pfeTable.isEditing()) {
-                                pfeTable.getCellEditor().stopCellEditing();
-                            }
-                            DefaultTableModel model = (DefaultTableModel)pfeTable.getModel();
-                            model.removeRow(row);
-                        }
-
-                        @Override
-                        public void onView(int row) {
-                            System.out.println("View row : " + row);
-                        }
                     };
                     TableColumnModel cm = pfeTable.getColumnModel();
                     cm.getColumn(0).setPreferredWidth(85);
@@ -466,7 +441,7 @@ public class MyComponents {
                 this.setVisible(true);
             }
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
-        }
+        
         @Override
         public JTable getTable() {
             return pfeTable;
@@ -541,6 +516,15 @@ public class MyComponents {
 
                 @Override
                 public void onDelete(int row) {
+                    String idSout = soutTable.getModel().getValueAt(row, 0).toString();
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query("delete from PFE where idSou="+idSout);
+                        dbc.query("delete from Soutenance where idSou="+idSout);
+                        
+                    }catch(Exception e){
+                        
+                    }
                     if (soutTable.isEditing()) {
                         soutTable.getCellEditor().stopCellEditing();
                     }
@@ -574,13 +558,7 @@ public class MyComponents {
         public SoutenanceTableSansModSupp() {
             initComponents();
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
-
+        
         public JTable getTable() {
             return soutTable;
         }
@@ -642,12 +620,7 @@ public class MyComponents {
         public OrganismeTable(List<? extends ColumnNames>l) {
             initComponents(l);
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
+        
         public JTable getTable() {
             return orgTable;
         }
@@ -693,7 +666,16 @@ public class MyComponents {
 
                     @Override
                     public void onDelete(int row) {
+                        String idSc = orgTable.getModel().getValueAt(row, 0).toString();
                         System.out.println("Delete row : " + row);
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("delete from EncadreurExt where idSc='"+idSc+"'");
+                            dbc.query("delete from OrganismeExt where idSc='"+idSc+"'");
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                        
                     }
 
                     @Override
@@ -769,14 +751,17 @@ public class MyComponents {
                     @Override
                     // add dialogue to verify if user really wants to delete rows
                     public void onDelete(int row) {
-                        Object idGr=groupeTable.getModel().getValueAt(row, 0);
-                        Object idFill=groupeTable.getModel().getValueAt(row, 2);
-                        deleteStack.add("delete from Groupe where idGr='"+idGr+"' and idFill='"+idFill+"';");
-                        deleteStack.add("delete from Jury where idGr='"+idGr+"' and idFill='"+idFill+"';");
-                        deleteStack.add("delete from Soutenance where idJury =(select idJury from Jury where idGr='"+idGr+"' and idFill='"+idFill+"');");
-                        deleteStack.add("delete from PFE where idGr='"+idGr+"' and idFill='"+idFill+"';");
-                        
-                        System.out.println(deleteStack.peek());
+                        String idGr=groupeTable.getModel().getValueAt(row, 0).toString();
+                        String idFill=groupeTable.getModel().getValueAt(row, 2).toString();
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("delete from Groupe where idGr='"+idGr+"' and idFill='"+idFill+"'");
+                            dbc.query("delete from Jury where idGr='"+idGr+"' and idFill='"+idFill+"'");
+                            dbc.query("delete from Soutenance where idJury =(select idJury from Jury where idGr='"+idGr+"' and idFill='"+idFill+"')");
+                            dbc.query("delete from PFE where idGr='"+idGr+"' and idFill='"+idFill+"'");
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }                        
                         if (groupeTable.isEditing()) {
                             groupeTable.getCellEditor().stopCellEditing();
                         }
@@ -819,12 +804,7 @@ public class MyComponents {
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
         
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
+        
         public JTable getTable() {
             return groupeTable;
         }
@@ -839,13 +819,7 @@ public class MyComponents {
         public LocalTable(List<? extends ColumnNames> l) {
             initComponents(l);
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
-
+        
         private void initComponents(List<? extends ColumnNames> l) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             locTable = new JTable();
@@ -888,6 +862,15 @@ public class MyComponents {
                             // See which attributes in which tables can be nullable so
                             // that you can give null to an attribute instead of deleting
                             // the row;
+                            String nomLoc = locTable.getModel().getValueAt(row, 0).toString();
+                            String numLoc = locTable.getModel().getValueAt(row, 1).toString();
+                            try{
+                                MyDataBaseConnector dbc = new MyDataBaseConnector();
+                                dbc.query("delete from Jury where numSalle="+numLoc+" and nomSalle='"+nomLoc+"'");
+                                dbc.query("delete from Loc where numSalle="+numLoc+" and nomSalle='"+numLoc+"'");
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                             if (locTable.isEditing()) {
                                 locTable.getCellEditor().stopCellEditing();
                             }
@@ -936,12 +919,7 @@ public class MyComponents {
         public EncadreurExterieurTable(List<? extends ColumnNames> info){
             initComponents(info);
         }
-        public JButton getEditBtn(){
-            return modifyBtn;
-        }
-        public JButton getDeleteBtn(){
-            return deleteBtn;
-        }
+        
         public JTable getTable() {
             return encExtTable;
         }
@@ -988,6 +966,17 @@ public class MyComponents {
                     @Override
                     public void onDelete(int row) {
                         System.out.println("Delete row : " + row);
+                        String idEncadExt = encExtTable.getModel().getValueAt(row, 0).toString();
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("update PFE "
+                                    + "set ENCADEUREXT=null "
+                                    + "where ENCADEUREXT='"+idEncadExt+"'");
+                            dbc.query("delete from ENCADREUREXT where cin='"+idEncadExt+"'");
+                            
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -1026,10 +1015,10 @@ public class MyComponents {
             juryTable = new JTable();
 
 
-            //======== encExtScroll ========
+            //======== juryScroll ========
             {
 
-                //---- encExtTable ----
+                //---- juryTable ----
                 juryTable.setModel(new DefaultTableModel(
                     (mode.length!=0)?null:listToObjects(inf),
                     new String[] {
@@ -1059,7 +1048,17 @@ public class MyComponents {
 
                     @Override
                     public void onDelete(int row) {
+                        String idJury = juryTable.getModel().getValueAt(row, 0).toString();
                         System.out.println("Delete row : " + row);
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("delete from PFE where idSou=(select idSou from Soutenance where idJury="+idJury+")");
+                            dbc.query("delete from Soutenance where idJury="+idJury);
+                            dbc.query("delete from Jury where idJury="+idJury);
+                        }catch(Exception e){
+                            System.out.println("Jury error");
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -1106,6 +1105,16 @@ public class MyComponents {
 
                 @Override
                 public void onDelete(int row) {
+                    String idJury = juryTable.getModel().getValueAt(row, 0).toString();
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query("delete from PFE where idSou=(select idSou from Soutenance where idJury="+idJury+")");
+                        dbc.query("delete from Soutenance where idJury="+idJury);
+                        dbc.query("delete from Jury where idJury="+idJury);
+                    }catch(Exception e){
+                        System.out.println("Jury error");
+                        e.printStackTrace();
+                    }
                     if (juryTable.isEditing()) {
                         juryTable.getCellEditor().stopCellEditing();
                     }
@@ -1163,7 +1172,26 @@ public class MyComponents {
 
                     @Override
                     public void onDelete(int row) {
-                        
+                        String idEns = ensTable.getModel().getValueAt(row, 0).toString();
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query("delete from PFE where encadreur='"+idEns+"' or rapporteur='"+idEns+"'");
+                            dbc.query("delete from PFE "
+                                    + "where idSou ="
+                                    + "(select idSou from Soutenance where examinateur='"+idEns+"')");
+                            dbc.query("delete from Soutenance where examinateur='"+idEns+"'");
+                            dbc.query("delete from PFE "
+                                    + "join Soutenance using (idSou) "
+                                    + "join Jury using (idJury) "
+                                    + "where president='"+idEns+"'");
+                            dbc.query("delete from Soutenance "
+                                    + "where idJury=(select idJury from Jury"
+                                    + "where president='"+idEns+"')");
+                            dbc.query("delete from Jury where president ='"+idEns+"'");
+                        }catch(Exception e){
+                            System.out.println("Jury error");
+                            e.printStackTrace();
+                        }
                         if (ensTable.isEditing()) {
                             ensTable.getCellEditor().stopCellEditing();
                         }
@@ -1199,8 +1227,6 @@ public class MyComponents {
             this.setViewportView(ensTable);
             this.setViewportBorder(null);
             this.setDoubleBuffered(true);
-            ensTable.setCellSelectionEnabled(true);
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
@@ -1216,6 +1242,10 @@ public class MyComponents {
     }
     public static class EtudiantTable extends JScrollPane implements ComponentWithTable{
         private JTable etudiantTable;
+        private TableActionEvent event;
+        public void setTableActionEvent(TableActionEvent e){
+            event = e;
+        }
 
         public EtudiantTable(List<Etudiant> info, String...mode) {
             initComponents(info, mode);
@@ -1268,12 +1298,7 @@ public class MyComponents {
 
                         @Override
                         public void onDelete(int row) {
-
-                            if (etudiantTable.isEditing()) {
-                                etudiantTable.getCellEditor().stopCellEditing();
-                            }
-                            DefaultTableModel model = (DefaultTableModel) etudiantTable.getModel();
-                            model.removeRow(row);
+                            
                         }
 
                         @Override
@@ -1310,34 +1335,17 @@ public class MyComponents {
                 dtm.removeRow(0);
         }
         public void populateTable(Object[][] data){
-             TableActionEvent event = new TableActionEvent() {
-                @Override
-                public void onEdit(int row) {
-                    System.out.println("Edit row : " + row);
-                }
-
-                @Override
-                public void onDelete(int row) {
-                    if (etudiantTable.isEditing()) {
-                        etudiantTable.getCellEditor().stopCellEditing();
-                    }
-                    DefaultTableModel model = (DefaultTableModel) etudiantTable.getModel();
-                    model.removeRow(row);
-                }
-
-                @Override
-                public void onView(int row) {
-                    System.out.println("View row : " + row);
-                }
-            };
+             
+            TableColumnModel cm = etudiantTable.getColumnModel();
+            cm.getColumn(1).setPreferredWidth(100);
+            cm.getColumn(2).setPreferredWidth(100);
+            cm.getColumn(8).setMinWidth(100);
+            cm.getColumn(8).setMaxWidth(100);
+            cm.getColumn(8).setCellRenderer(new TableActionCellRender());
+            cm.getColumn(8).setCellEditor(new TableActionCellEditor(event));
             ((DefaultTableModel)etudiantTable.getModel()).setDataVector(data, new String[]{"Cin","Prenom","Nom","photo","Nce","Email","Tel","A un binôme",""});    
         }
         
     }
 
 }
-
-//
-//            Component res; 
-//            res=(Component)value;
-//            res.setFont(h1);
