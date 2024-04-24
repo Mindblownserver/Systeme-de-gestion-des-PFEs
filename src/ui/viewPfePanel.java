@@ -24,6 +24,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
+import model.EncadreurExt;
+import model.Enseignant;
+import model.Etudiant;
+import model.Groupe;
 import model.PFE;
 import net.miginfocom.swing.MigLayout;
 import repo.MyDataBaseConnector;
@@ -235,10 +239,10 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     
-    public viewPfePanel(String[] criteres, List<PFE>info) {
-	initComponents(criteres,info);
+    public viewPfePanel(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList) {
+	initComponents(criteres,info, ensListe, encExtList, etuList,grList);
 	}
-    private void initComponents(String[] criteres, List<PFE>info) {
+    private void initComponents(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList) {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         titlePanel = new JPanel();
         title = new JLabel();
@@ -250,7 +254,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         eastBorder = new JPanel();
         table = new MyComponents.PFETable(info,this);
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame);
+        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame, ensListe, encExtList, etuList,grList);
         JPanel westBorder = new JPanel();
         JPanel centerContent = new JPanel(null);
         LeftAdditionalInfoPfe plusInfo = new LeftAdditionalInfoPfe();

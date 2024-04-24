@@ -5,12 +5,12 @@ public class EncadreurExt extends Personne implements ColumnNames{
     private OrganismeExt societe;
     private static int columnCount = 10;
     public EncadreurExt(String n, String p, String c,String e,String t,String poste, OrganismeExt societe) {
-        super(n, p, c,e,t);
+        super(c, n, p,e,t);
         this.poste = poste;
         this.societe = societe;
     }
     public EncadreurExt(String n, String p, String c,String e,String t,String poste, String idSc, String nomSc, String domAct, String adresse) {
-        super(n, p, c,e,t);
+        super(c, n, p,e,t);
         this.poste = poste;
         this.societe = new OrganismeExt(idSc, nomSc, domAct, adresse);
     }
@@ -37,6 +37,10 @@ public class EncadreurExt extends Personne implements ColumnNames{
         String[]res = {"Cin","Prenom","Nom","Email","tel","Poste","id Société"};
         return res;
     }
+    public String toString(){
+        return super.toString()+":"+societe.getIdSc();
+    }
+    
     
 
 }

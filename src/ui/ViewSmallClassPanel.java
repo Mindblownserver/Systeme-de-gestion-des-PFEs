@@ -22,12 +22,12 @@ public class ViewSmallClassPanel extends JPanel {
         
 	private Boolean estVisible=false;
 
-	public ViewSmallClassPanel(String nomDuClasse, List<? extends ColumnNames> info) {
+	public ViewSmallClassPanel(String nomDuClasse, List<? extends ColumnNames> info, String[] comboBoxValues) {
                 JComponent leftComp = null;
                 ComponentWithTable tableComp=null;
                 switch(nomDuClasse){
                     case "Groupe":
-                        leftComp = new AjouterPage.AjouterGroupe();
+                        leftComp = new AjouterPage.AjouterGroupe(comboBoxValues);
                         tableComp = new MyComponents.GroupeTable(info);
                         break;
                     case "Specialité":
@@ -39,7 +39,7 @@ public class ViewSmallClassPanel extends JPanel {
                         tableComp = new MyComponents.LocalTable(info);
                         break;
                     case "Encadreur Exterieure":
-                        leftComp= new AjouterPage.AjouterEncadreurExt();
+                        leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues);
                         tableComp = new MyComponents.EncadreurExterieurTable(info);
                         break;
                     case "Organisme":

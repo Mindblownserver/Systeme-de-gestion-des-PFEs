@@ -42,11 +42,11 @@ public class AjouterPage {
         private JLabel label4;
         private JComboBox comboBox1;
         private JButton button3;
-        public AjouterGroupe() {
-            initComponents();
+        public AjouterGroupe(String[] comboBoxValues) {
+            initComponents(comboBoxValues);
         }
 
-        private void initComponents() {
+        private void initComponents(String[] comboBoxValues) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -54,7 +54,7 @@ public class AjouterPage {
             label3 = new JLabel();
             textField2 = new JTextField();
             label4 = new JLabel();
-            comboBox1 = new JComboBox();
+            comboBox1 = new JComboBox(comboBoxValues);
             button3 = new JButton();
 
             //======== this ========
@@ -203,11 +203,11 @@ public class AjouterPage {
         private JButton button1;
     }
     public static class AjouterEncadreurExt extends JPanel {
-        public AjouterEncadreurExt() {
-            initComponents();
+        public AjouterEncadreurExt(String[] comboBoxValues) {
+            initComponents(comboBoxValues);
         }
 
-        private void initComponents() {
+        private void initComponents(String[] comboBoxValues) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -223,7 +223,7 @@ public class AjouterPage {
             label7 = new JLabel();
             textField6 = new JTextField();
             label8 = new JLabel();
-            comboBox1 = new JComboBox();
+            comboBox1 = new JComboBox(comboBoxValues);
             button1 = new JButton();
 
             //======== this ========
@@ -485,12 +485,12 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterPFEDialog extends JDialog {
-        public AjouterPFEDialog(Window owner) {
+        public AjouterPFEDialog(Window owner, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList) {
             super(owner);
-            initComponents();
+            initComponents(ensListe, encExtList, etuList, grList);
         }
 
-        private void initComponents() {
+        private void initComponents(List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label4 = new JLabel();
             idPfeField = new JTextField();
@@ -503,7 +503,7 @@ public class AjouterPage {
             label7 = new JLabel();
             orgCB = new JComboBox();
             label10 = new JLabel();
-            filliereCB = new JComboBox();
+            filliereCB = new JComboBox<>();
             label9 = new JLabel();
             dateFinField = new JFormattedTextField();
             label8 = new JLabel();
@@ -556,7 +556,6 @@ public class AjouterPage {
             scrollPane3 = new JScrollPane();
             list3 = new JList();
             label28 = new JLabel();
-            LoVForm4Etu2 = new JPanel();
             panel8 = new JPanel();
             textField13 = new JTextField();
             label29 = new JLabel();
@@ -627,40 +626,33 @@ public class AjouterPage {
             contentPane.add(label5, "cell 3 1");
             contentPane.add(AnneeField, "cell 4 1,growy");
 
-            //---- label6 ----
-            label6.setText("Nature");
-            contentPane.add(label6, "cell 5 1");
-
-            //---- NatureCB ----
-            NatureCB.setModel(new DefaultComboBoxModel<>(new String[] {
-                "Interne",
-                "Externe"
-            }));
-            contentPane.add(NatureCB, "cell 6 1,growy");
 
             //---- label12 ----
-            label12.setText("Trait\u00e9 en");
+            label12.setText("Traité en/Nature");
             contentPane.add(label12, "cell 1 2");
 
             //---- traiteCB ----
             traiteCB.setModel(new DefaultComboBoxModel<>(new String[] {
-                "Mon\u00f4me",
-                "Bin\u00f4me"
+                "Monôme/Interne",
+                "Binôme/Interne",
+                "Monôme/Externe",
+                "Binôme/Externe",
             }));
             contentPane.add(traiteCB, "cell 2 2,growy");
 
+
+            //---- label10 ----
+            
+            {//---- Filliere CB -----
+                String[] res = new String[grList.size()];
+                for(int i = 0; i<grList.size();i++)
+                    filliereCB.addItem(grList.get(i).getIdGr()+"_"+grList.get(i).getSpecialite().getIdFill());
+                
+            }
             //---- label7 ----
             label7.setText("Filli\u00e8re");
             contentPane.add(label7, "cell 3 2");
-
-            //---- orgCB ----
-            orgCB.setEditable(true);
-            contentPane.add(orgCB, "cell 4 2,growy");
-
-            //---- label10 ----
-            label10.setText("Societ\u00e9");
-            contentPane.add(label10, "cell 5 2");
-            contentPane.add(filliereCB, "cell 6 2,growy");
+            contentPane.add(filliereCB, "cell 4 2,growy");
 
             //---- label9 ----
             label9.setText("Date debut du stage");
@@ -707,12 +699,12 @@ public class AjouterPage {
 
             //======== LoVFormEncIsimm ========
             
-            LoVForm encIsimmForm = new LoVForm(obList);
+            LoVForm encIsimmForm = new LoVForm(ensListe);
             contentPane.add(encIsimmForm, "cell 2 8 3 1,aligny top");
 
             //======== LoVForm2RappIsimm ========
             
-            LoVForm rappIsimmForm = new LoVForm(obList);
+            LoVForm rappIsimmForm = new LoVForm(ensListe);
             contentPane.add(rappIsimmForm, "cell 6 8 2 1,aligny top");
 
             //---- label22 ----
@@ -724,26 +716,30 @@ public class AjouterPage {
             contentPane.add(label25, "cell 1 9,aligny top,growy 0");
 
             //======== LoVForm3Etu1 ========
-            
-            LoVForm etu1Form = new LoVForm(obList);
+            etuList.removeIf(p->p.isHasBinome());
+            LoVForm etu1Form = new LoVForm(etuList);
             contentPane.add(etu1Form, "cell 2 9 3 1,aligny top");
 
             //---- label28 ----
+            label28.setVisible(false);
             label28.setText("Etudiant 2");
+            
             contentPane.add(label28, "cell 5 9,aligny top,growy 0");
 
             //======== LoVForm4Etu2 ========
             
-            LoVForm etu2Form = new LoVForm(obList);
+            LoVForm etu2Form = new LoVForm(etuList);
+            etu2Form.setVisible(false);
             contentPane.add(etu2Form, "cell 6 9 2 1,aligny top");
 
             //---- label31 ----
             label31.setText("Encadreur Ext");
             contentPane.add(label31, "cell 1 10,aligny top,growy 0");
-
+            label31.setVisible(false);
             //======== LoVForm5EncExt ========
             
-            LoVForm encExtForm = new LoVForm(obList);
+            LoVForm encExtForm = new LoVForm(encExtList);
+            encExtForm.setVisible(false);
             contentPane.add(encExtForm, "cell 2 10 3 1,aligny top");
 
             //---- approuveChB ----
@@ -763,7 +759,36 @@ public class AjouterPage {
             contentPane.add(button1, "cell 1 14");
             pack();
             setLocationRelativeTo(getOwner());
-            // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
+            traiteCB.addActionListener(l->{
+                String choix = traiteCB.getSelectedItem().toString();
+                switch (choix) {
+                    case "Monôme/Interne":
+                        etu2Form.setVisible(false);
+                        label28.setVisible(false);
+                        label31.setVisible(false);
+                        encExtForm.setVisible(false);
+                        break;
+                    case "Binôme/Interne":
+                        etu2Form.setVisible(true);
+                        label28.setVisible(true);
+                        label31.setVisible(false);
+                        encExtForm.setVisible(false);
+                        break;
+                    case "Monôme/Externe":
+                        etu2Form.setVisible(false);
+                        label28.setVisible(false);
+                        label31.setVisible(true);
+                        encExtForm.setVisible(true);
+                        break;
+                    case "Binôme/Externe":
+                        etu2Form.setVisible(true);
+                        etu2Form.setVisible(true);
+                        label31.setVisible(true);
+                        encExtForm.setVisible(true);
+                        break;
+                }
+                
+            });
         }
 
         private JLabel label4;
@@ -830,7 +855,6 @@ public class AjouterPage {
         private JScrollPane scrollPane3;
         private JList list3;
         private JLabel label28;
-        private JPanel LoVForm4Etu2;
         private JPanel panel8;
         private JTextField textField13;
         private JLabel label29;

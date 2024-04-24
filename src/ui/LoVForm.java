@@ -100,6 +100,7 @@ public class LoVForm extends JPanel {
                 }
             }
         });
+        
         list.addListSelectionListener((e)->{
             if (!e.getValueIsAdjusting()) {
                 String np,cin;
@@ -109,6 +110,9 @@ public class LoVForm extends JPanel {
                 cin = item.substring(indexComma+1);
                 cinField.setText(cin);
                 npField.setText(np);
+                estVisible = !estVisible;
+                panel7.setVisible(estVisible);
+                
 
                 // You can perform any custom actions here
             }
@@ -150,7 +154,7 @@ public class LoVForm extends JPanel {
         //======== panel7 ========
         {
             panel7.setLayout(new BorderLayout(0, 10));
-            searchBar.setPreferredSize(new Dimension(0,32));
+            searchBar.setPreferredSize(new Dimension(0,24));
             panel7.add(searchBar, BorderLayout.NORTH);
 
             //======== scrollPane3 ========

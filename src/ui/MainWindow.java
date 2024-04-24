@@ -103,12 +103,12 @@ public class MainWindow extends JFrame {
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
             etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
-            pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList);
-            specialiteP = new ViewSmallClassPanel("Specialité",spList);
-            groupeP = new ViewSmallClassPanel("Groupe", grList);
-            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList);
-            organismeP = new ViewSmallClassPanel("Organisme", orgList);
-            localeP =new ViewSmallClassPanel("Local", locList);
+            pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+            specialiteP = new ViewSmallClassPanel("Specialité",spList, null);
+            groupeP = new ViewSmallClassPanel("Groupe", grList, Specialite.getFilliers());
+            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
+            organismeP = new ViewSmallClassPanel("Organisme", orgList, null);
+            localeP =new ViewSmallClassPanel("Local", locList, null);
             juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList);
             
             this.setUndecorated(true);
@@ -150,7 +150,7 @@ public class MainWindow extends JFrame {
                 cardContainer.add(etudiantP,"Etudiant");
                 cardContainer.add(pfeP, "PFE");
                 cardContainer.add(juryP,"Jury");
-                cl.show(cardContainer,"Jury");
+                cl.show(cardContainer,"1");
                 // setup button events
                 loginPanel.getAuthBtn().addActionListener(e->{
                     this.setJMenuBar(mb);
@@ -236,7 +236,7 @@ public class MainWindow extends JFrame {
             
         }
         private void loadSp()throws ClassNotFoundException,SQLException{
-            dbc.query("select * from specialite");
+            dbc.query("select * from specialite order by idFill");
             
             //System.out.print(dbc.rsMetadata.getColumnName(0)+ " ");
             ResultSet res = dbc.rs;
@@ -249,7 +249,7 @@ public class MainWindow extends JFrame {
             }
         }
         private void loadLoc()throws ClassNotFoundException,SQLException{
-            dbc.query("Select * from Loc");
+            dbc.query("Select * from Loc order by NomSalle");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 locList.add(new Local(res.getString(2), Integer.parseInt(res.getString(1))));
@@ -258,7 +258,7 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadGroup()throws ClassNotFoundException,SQLException{
-            dbc.query("Select idGr,libelle,idFill,filliere from Groupe join Specialite using (idFill)");
+            dbc.query("Select idGr,libelle,idFill,filliere from Groupe join Specialite using (idFill) order by idGr asc");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 grList.add(new Groupe(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
@@ -267,7 +267,7 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadOrg()throws ClassNotFoundException,SQLException{
-            dbc.query("Select idSc, nomSc, domaineActivite, adresse from OrganismeExt");
+            dbc.query("Select idSc, nomSc, domaineActivite, adresse from OrganismeExt order by idSc asc");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 orgList.add(new OrganismeExt(res.getString(1),res.getString(2),res.getString(3),res.getString(4)));
@@ -324,7 +324,7 @@ public class MainWindow extends JFrame {
         private void loadPfe()throws ClassNotFoundException,SQLException{
             dbc.query("select IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, "
                     + "ISMONOME, HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, "
-                    + "FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU from PFE");
+                    + "FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU from PFE order by idPFE");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 pfeList.add(new PFE(res.getInt(1), res.getString(2), res.getString(3), res.getString(5), res.getString("IDGR"),
