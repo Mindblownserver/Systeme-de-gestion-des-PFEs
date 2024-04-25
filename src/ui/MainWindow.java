@@ -45,11 +45,11 @@ public class MainWindow extends JFrame {
         private ViewEtudiantPanel etudiantP;
         private viewPfePanel pfeP;
         private ViewJuryPanel juryP;
-        private ViewSmallClassPanel specialiteP;
-        private ViewSmallClassPanel groupeP;
-        private ViewSmallClassPanel encadreurExtP;
-        private ViewSmallClassPanel organismeP;
-        private ViewSmallClassPanel localeP;
+        private ViewSpecialitePanel specialiteP;
+        private ViewGroupePanel groupeP;
+        private ViewEncadreurExternePanel encadreurExtP;
+        private ViewOrganismePanel organismeP;
+        private ViewLocalPanel localeP;
         // declaring list of Models
         private MyDataBaseConnector dbc;
         private List<Specialite> spList = new ArrayList<>();
@@ -104,11 +104,11 @@ public class MainWindow extends JFrame {
             enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
             etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
             pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
-            specialiteP = new ViewSmallClassPanel("Specialité",spList, null);
-            groupeP = new ViewSmallClassPanel("Groupe", grList, Specialite.getFilliers());
-            encadreurExtP = new ViewSmallClassPanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
-            organismeP = new ViewSmallClassPanel("Organisme", orgList, null);
-            localeP =new ViewSmallClassPanel("Local", locList, null);
+            specialiteP = new ViewSpecialitePanel("Specialité",spList, null);
+            groupeP = new ViewGroupePanel("Groupe", grList, Specialite.getFilliers());
+            encadreurExtP = new ViewEncadreurExternePanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
+            organismeP = new ViewOrganismePanel("Organisme", orgList, null);
+            localeP =new ViewLocalPanel("Local", locList, null);
             juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList);
             
             this.setUndecorated(true);

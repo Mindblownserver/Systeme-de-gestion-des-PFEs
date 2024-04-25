@@ -335,7 +335,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
                         try{
                            sTable.populateTable(futureSout.get());
                            eTable.populateTable(futureEtud.get());
-                           jTable.populateTable(futureJury.get());
+                           jTable.populateTableWithoutAction(futureJury.get());
 
                         }catch(Exception exception){
                             exception.printStackTrace();

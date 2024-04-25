@@ -4,8 +4,8 @@
  */
 package model;
 
-import javax.swing.JButton;
 import javax.swing.JTable;
+
 
 /**
  *
@@ -13,5 +13,7 @@ import javax.swing.JTable;
  */
 public interface ComponentWithTable {
     public JTable getTable();
-
+    public void clearTable();
+    public void populateTable(Object[][] data);
+        
 }

@@ -11,47 +11,22 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import model.*;
 import net.miginfocom.swing.MigLayout;
-public class ViewSmallClassPanel extends JPanel {
+public class ViewLocalPanel extends JPanel {
 	private JLabel title;
 	private JPanel border2;
 	private JPanel centerContent;
 	private JPanel buttonPanel;
 	private JButton modifyBtn=new JButton();
 	private JButton deleteBtn = new JButton();
-	private JButton ajouterBtn = new JButton("Ajouter");
-        
+	private JButton ajouterBtn = new JButton("Ajouter");    
 	private Boolean estVisible=false;
-
-	public ViewSmallClassPanel(String nomDuClasse, List<? extends ColumnNames> info, String[] comboBoxValues) {
+        
+	public ViewLocalPanel(String nomDuClasse, List<? extends ColumnNames> info, String[] comboBoxValues) {
                 JComponent leftComp = null;
-                ComponentWithTable tableComp=null;
-                switch(nomDuClasse){
-                    case "Groupe":
-                        leftComp = new AjouterPage.AjouterGroupe(comboBoxValues);
-                        tableComp = new MyComponents.GroupeTable(info);
-                        break;
-                    case "Specialité":
-                        leftComp= new AjouterPage.AjouterSp();
-                        tableComp = new MyComponents.SpTable(info);
-                        break;
-                    case "Local":
-                        leftComp=new AjouterPage.AjouterLocal();
-                        tableComp = new MyComponents.LocalTable(info);
-                        break;
-                    case "Encadreur Exterieure":
-                        leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues);
-                        tableComp = new MyComponents.EncadreurExterieurTable(info);
-                        break;
-                    case "Organisme":
-                        leftComp = new AjouterPage.AjouterOrganisme();
-                        tableComp = new MyComponents.OrganismeTable(info);
-                        break;
-                    case "Soutenance":
-                        tableComp = new MyComponents.SoutenanceTableSansModSupp();
-                        leftComp=new JPanel();
-                        leftComp.setVisible(false);
-                        break;
-                }
+                ComponentWithTable tableComp=null;                
+                leftComp=new AjouterPage.AjouterLocal();
+                tableComp = new MyComponents.LocalTable(info);
+                    
 		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
 	}
 

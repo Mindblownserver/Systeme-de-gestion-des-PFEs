@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.Window;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -42,11 +44,11 @@ public class AjouterPage {
         private JLabel label4;
         private JComboBox comboBox1;
         private JButton button3;
-        public AjouterGroupe(String[] comboBoxValues) {
-            initComponents(comboBoxValues);
+        public AjouterGroupe(String[] comboBoxValues, List<Groupe> liste, ComponentWithTable scrollP) {
+            initComponents(comboBoxValues, liste, scrollP);
         }
 
-        private void initComponents(String[] comboBoxValues) {
+        private void initComponents(String[] comboBoxValues, List<Groupe> liste, ComponentWithTable comp) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -99,17 +101,38 @@ public class AjouterPage {
             add(comboBox1, "cell 0 7 2 1,growy, width 200px");
 
             //---- button3 ----
-            button3.setText("text");
+            button3.setText("Ajouter");
             add(button3, "cell 0 9 2 1,growy");
-
+            button3.addActionListener(l->{
+                try{
+                    MyDataBaseConnector dbc = new MyDataBaseConnector();
+                    dbc.query(String.format("insert into Groupe(idGr, libelle, idFill) values('%s','%s','%s')", 
+                            textField1.getText(), textField2.getText(),comboBox1.getSelectedItem().toString()));
+                    
+                    liste.add(new Groupe(textField1.getText(), textField2.getText(),comboBox1.getSelectedItem().toString(), ""));
+                    //comp.clearTable();
+                    comp.populateTable(MyComponents.listToObjects(liste));
+                    
+                    JOptionPane.showMessageDialog(null, "Un nouveau Groupe " + textField1.getText()+"_"+comboBox1.getSelectedItem().toString()+" a "
+                            + "éte ajouté");
+                    
+                    
+                    
+                }catch(SQLException sqlE){
+                    JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                
+            });
         }
     }
     public static class AjouterOrganisme extends JPanel {
-        public AjouterOrganisme() {
-            initComponents();
+        public AjouterOrganisme(List<OrganismeExt> info, ComponentWithTable comp) {
+            initComponents(info, comp);
         }
 
-        private void initComponents() {
+        private void initComponents(List<OrganismeExt> info, ComponentWithTable comp) {
             label1 = new JLabel();
             label2 = new JLabel();
             textField1 = new JTextField();
@@ -172,21 +195,22 @@ public class AjouterPage {
                         MyDataBaseConnector dbc = new MyDataBaseConnector();
                         dbc.query(String.format("insert into OrganismeExt(idSc, nomSc, domaineActivite, adresse) values('%s','%s','%s','%s')", 
                                 textField1.getText(), textField2.getText(),textField3.getText(),textField4.getText()));
+                        info.add(new OrganismeExt(textField1.getText(), textField2.getText(),textField3.getText(),textField4.getText()));
+                        return true;
                     }catch(SQLException sqlE){
-                        return false;
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
                     }
-                    return true;
+                    return false;
                 };
                 Future<Boolean> futureOrg = executorJ.submit(populateThread);
                 try{
                     if(futureOrg.get()){
-                    // dialogue ok
-                    }
-
-                    else{
-                        // dialogue error
-                    }
-                }catch(Exception e){
+                        comp.populateTable(MyComponents.listToObjects(info));
+                        JOptionPane.showMessageDialog(null, "Une nouvelle Organisation a été ajouté\n" + textField1.getText()+": "+textField2.getText()); 
+                        }
+                }
+                catch(Exception e){
                     e.printStackTrace();
                 }
                     
@@ -312,11 +336,11 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterLocal extends JPanel {
-        public AjouterLocal() {
-            initComponents();
+        public AjouterLocal(List<Local> info, ComponentWithTable comp) {
+            initComponents(info, comp);
         }
 
-        private void initComponents() {
+        private void initComponents(List<Local> info, ComponentWithTable comp) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -367,19 +391,18 @@ public class AjouterPage {
                         MyDataBaseConnector dbc = new MyDataBaseConnector();
                         dbc.query(String.format("insert into Loc (nomSalle, numSalle)  values('%s',%d)", 
                                  nomField.getText(),Integer.parseInt(numField.getText())));
+                        info.add(new Local(nomField.getText(),Integer.parseInt(numField.getText())));
+                        return true;
                     }catch(SQLException sqlE){
-                        return false;
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
                     }
-                    return true;
+                    return false;
                 };
                 Future<Boolean> futureLoc = executorL.submit(populateThread);
                 try{
                     if(futureLoc.get()){
-                    // dialogue ok
-                    }
-
-                    else{
-                        // dialogue error
+                        comp.populateTable(MyComponents.listToObjects(info));
+                        JOptionPane.showMessageDialog(null, "Une nouvelle Organisation a été ajouté\n" + nomField.getText() +" "+numField.getText());
                     }
                 }catch(Exception e){
                     e.printStackTrace();
@@ -399,11 +422,11 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterSp extends JPanel {
-        public AjouterSp() {
-            initComponents();
+        public AjouterSp(ComponentWithTable comp, List<Specialite> info) {
+            initComponents(comp, info);
         }
 
-        private void initComponents() {
+        private void initComponents(ComponentWithTable comp, List<Specialite> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -454,21 +477,22 @@ public class AjouterPage {
                         MyDataBaseConnector dbc = new MyDataBaseConnector();
                         dbc.query(String.format("insert into Specialite (idFill, filliere) values('%s','%s')", 
                                  textField1.getText(),textField2.getText()));
+                        info.add(new Specialite(textField1.getText(),textField2.getText()));
+                        return true;
                     }catch(SQLException sqlE){
-                        return false;
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
                     }
-                    return true;
+                    return false;
                 };
                 Future<Boolean> futureSp = executorL.submit(populateThread);
                 try{
                     if(futureSp.get()){
-                    // dialogue ok
-                    }
-
-                    else{
-                        // dialogue error
-                    }
-                }catch(Exception e){
+                        comp.populateTable(MyComponents.listToObjects(info));
+                        JOptionPane.showMessageDialog(null, "Une nouvelle Specialité a été ajouté\n" + textField1.getText()+": "+textField2.getText()); 
+                        }
+                }
+                catch(Exception e){
                     e.printStackTrace();
                 }
             });
