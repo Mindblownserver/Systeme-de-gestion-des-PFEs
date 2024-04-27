@@ -4,15 +4,12 @@
  */
 package ui;
 
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
-import java.awt.Rectangle;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -22,7 +19,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import model.EncadreurExt;
 import model.Enseignant;
@@ -254,7 +250,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         eastBorder = new JPanel();
         table = new MyComponents.PFETable(info,this);
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame, ensListe, encExtList, etuList,grList);
+        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame, ensListe, encExtList, etuList,grList, info);
         JPanel westBorder = new JPanel();
         JPanel centerContent = new JPanel(null);
         LeftAdditionalInfoPfe plusInfo = new LeftAdditionalInfoPfe();

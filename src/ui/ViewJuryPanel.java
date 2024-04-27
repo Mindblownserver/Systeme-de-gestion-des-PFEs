@@ -511,18 +511,22 @@ public class ViewJuryPanel extends JPanel{
     private JButton ajSoutBtn;
     private LeftAdditionalInfoJury plusInfoJury;
     private AjouterPage.AjouterSoutenance ajSoutD;
+    private int selectedRow=-1;
+    private int nextSoutId=-1;
     
-    public ViewJuryPanel(String[] critereCB, List<Jury> info,List<Enseignant> ensList){
+    public ViewJuryPanel(String[] critereCB, List<Jury> info,List<Enseignant> ensList, List<Soutenance> soutListe){
         System.out.println(info.get(0).getPresident().getNom());
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         jTable = new MyComponents.JuryTable(info);
         uContent = new upperContent(critereCB);
-        ajJury = new AjouterPage.AjouterJuryDialogue(topFrame,ensList);
+        ajJury = new AjouterPage.AjouterJuryDialogue(topFrame,ensList, info, jTable);
         sTable = new MyComponents.SoutenanceTable();
         plusInfoJury = new LeftAdditionalInfoJury();
         
         ajSoutBtn =new JButton("+");
-        ajSoutD = new AjouterPage.AjouterSoutenance(topFrame);
+        ajSoutBtn.setVisible(false);
+        ajSoutD = new AjouterPage.AjouterSoutenance(topFrame,ensList,soutListe, sTable);
+        
         
         JPanel centerPanel = new JPanel();
         JPanel soutBtnPanel = new JPanel();
@@ -541,9 +545,11 @@ public class ViewJuryPanel extends JPanel{
         
         uContent.setBackground(Color.WHITE);
         uContent.ajBtn.addActionListener(l->{
+            ajJury.idField.setText(String.valueOf(getNextJuryId()));
             ajJury.setVisible(true);
         });
         ajSoutBtn.addActionListener(l->{
+            ajSoutD.textField1.setText(jTable.getTable().getValueAt(selectedRow, 0).toString());
             ajSoutD.setVisible(true);
         });
         
@@ -560,8 +566,9 @@ public class ViewJuryPanel extends JPanel{
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    int selectedRow = jTable.getTable().getSelectedRow();
+                    selectedRow = jTable.getTable().getSelectedRow();
                     if (selectedRow != -1) {
+                        ajSoutBtn.setVisible(true);
                         Object value = jTable.getTable().getValueAt(selectedRow, 0); 
                         System.out.println("Selected row value: " + value);
                         sTable.clearTable();
@@ -569,14 +576,20 @@ public class ViewJuryPanel extends JPanel{
                         ExecutorService executorJ = Executors.newSingleThreadExecutor();
                         Callable<Object[][]> populateThread = () -> populateSoutenanceTable(value.toString(), titleSoutPanel);
                         Future<Object[][]> future = executorJ.submit(populateThread);
-                        // end Thread
-                        
+                        // start of INT Thread
+                        Callable<Integer> getNextId = () -> getNextSoutId();
+                        Future<Integer> futureId = executorJ.submit(getNextId);
+                       
                         try{
                            sTable.populateTable(future.get());
+                           ajSoutD.idSField.setText(String.valueOf(futureId.get()));
                         }catch(Exception exception){
                             exception.printStackTrace();
                         }
                         //executor.shutdown();
+                    }
+                    else{
+                        ajSoutBtn.setVisible(false);
                     }
                     
                 }
@@ -626,6 +639,34 @@ public class ViewJuryPanel extends JPanel{
             e.printStackTrace();
         }
         return null;
+    }
+    public int getNextSoutId(){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select max(IDSOU) nbr from Soutenance ");
+            dbc.rs.next();
+            int i = dbc.rs.getInt("nbr");
+            dbc.conn.close();
+            return i+1;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    public int getNextJuryId(){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select max(IDJURY) nbr from JURY ");
+            dbc.rs.next();
+            int i = dbc.rs.getInt("nbr");
+            dbc.conn.close();
+            return i+1;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
 //select count(IDSou) as nbrSout, president from Soutenance

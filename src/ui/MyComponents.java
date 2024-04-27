@@ -41,6 +41,7 @@ public class MyComponents {
 
     
     public static Object[][] listToObjects(List<? extends Object> l){
+        // the variable arity is a workaround exclusively for populating Soutenance Table from AjouterSoutenance in AjouterPage
         Object[][]res=null;
         System.out.println(l);
         Object o = l.get(0);
@@ -162,9 +163,25 @@ public class MyComponents {
                 
             }
         }
+//        else if (o instanceof Soutenance){
+//            //"ID", "Date", "Heure", "Est Valide", "CIN examinateur", "Nom & prenom examinateur",""
+//            res = new Object[l.size()][7];
+//            for(int i=0;i<l.size();i++){
+//                res[i][0] = ((Soutenance)l.get(i)).getIdSout();
+//                res[i][1] = ((Soutenance)l.get(i)).getDate();
+//                res[i][2] = ((Soutenance)l.get(i)).getHeure();
+//                res[i][3] = ((Soutenance)l.get(i)).getIsValid();
+//                res[i][4] = ((Soutenance)l.get(i)).getExaminateur();
+//                res[i][5] = NomPrenomExamminateur[1]+ " "+ NomPrenomExamminateur[0];
+//                res[i][6] = null;
+//                
+//                
+//            }
+//        }
         
         return res;
     }
+    
     public static class MyHeaderRenderer extends JLabel implements TableCellRenderer {
  
         public MyHeaderRenderer() {
@@ -641,6 +658,11 @@ public class MyComponents {
                     MyDataBaseConnector dbc = new MyDataBaseConnector();
                     dbc.query("delete from EncadreurExt where idSc='"+idSc+"'");
                     dbc.query("delete from OrganismeExt where idSc='"+idSc+"'");
+                    if (orgTable.isEditing()) {
+                        orgTable.getCellEditor().stopCellEditing();
+                    }
+                    DefaultTableModel model = (DefaultTableModel) orgTable.getModel();
+                    model.removeRow(row);
                 }catch(Exception e){
                     e.printStackTrace();
                 }

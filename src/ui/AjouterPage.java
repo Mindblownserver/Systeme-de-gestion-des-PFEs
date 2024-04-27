@@ -1,20 +1,22 @@
 package ui;
 
+import com.raven.datechooser.DateChooser;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.Window;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -187,7 +189,7 @@ public class AjouterPage {
 
             //---- button1 ----
             button1.setText("Ajouter");
-            add(button1, "cell 0 4,growy");
+            add(button1, "cell 0 5,growy");
             button1.addActionListener((l)->{
                 ExecutorService executorJ = Executors.newSingleThreadExecutor();
                 Callable<Boolean> populateThread = () -> {
@@ -227,11 +229,11 @@ public class AjouterPage {
         private JButton button1;
     }
     public static class AjouterEncadreurExt extends JPanel {
-        public AjouterEncadreurExt(String[] comboBoxValues) {
-            initComponents(comboBoxValues);
+        public AjouterEncadreurExt(String[] comboBoxValues, List<EncadreurExt>liste, ComponentWithTable comp) {
+            initComponents(comboBoxValues, liste, comp);
         }
 
-        private void initComponents(String[] comboBoxValues) {
+        private void initComponents(String[] comboBoxValues, List<EncadreurExt>info, ComponentWithTable comp) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -313,6 +315,35 @@ public class AjouterPage {
             //---- button1 ----
             button1.setText("Ajouter");
             add(button1, "cell 0 8,growy,width 200px");
+            button1.addActionListener((l)->{
+                ExecutorService executorJ = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into EncadreurExt (cin, nom, prenom, tel, email,poste,idSc)  "
+                                + "values('%s','%s','%s','%s','%s','%s','%s')", 
+                                textField1.getText(), textField2.getText(),textField3.getText(),textField4.getText(),textField5.getText(),textField6.getText(),comboBox1.getSelectedItem().toString()));
+                        info.add(new EncadreurExt(textField2.getText(), textField3.getText(), textField1.getText(), 
+                                textField5.getText(), textField4.getText(), textField6.getText(), comboBox1.getSelectedItem().toString(), "", "", ""));
+                        return true;
+                    }catch(SQLException sqlE){
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
+                    }
+                    return false;
+                };
+                Future<Boolean> futureExtEnc = executorJ.submit(populateThread);
+                try{
+                    if(futureExtEnc.get()){
+                        comp.populateTable(MyComponents.listToObjects(info));
+                        JOptionPane.showMessageDialog(null, "Une nouvelle entité a été ajouté\n" + textField1.getText()+": "+textField2.getText()+" "+textField3.getText()); 
+                        }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                    
+            });
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
         }
 
@@ -403,6 +434,7 @@ public class AjouterPage {
                     if(futureLoc.get()){
                         comp.populateTable(MyComponents.listToObjects(info));
                         JOptionPane.showMessageDialog(null, "Une nouvelle Organisation a été ajouté\n" + nomField.getText() +" "+numField.getText());
+                        
                     }
                 }catch(Exception e){
                     e.printStackTrace();
@@ -490,7 +522,7 @@ public class AjouterPage {
                     if(futureSp.get()){
                         comp.populateTable(MyComponents.listToObjects(info));
                         JOptionPane.showMessageDialog(null, "Une nouvelle Specialité a été ajouté\n" + textField1.getText()+": "+textField2.getText()); 
-                        }
+                    }
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -509,12 +541,12 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterPFEDialog extends JDialog {
-        public AjouterPFEDialog(Window owner, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList) {
+        public AjouterPFEDialog(Window owner, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList, List<PFE> info) {
             super(owner);
-            initComponents(ensListe, encExtList, etuList, grList);
+            initComponents(ensListe, encExtList, etuList, grList,info);
         }
 
-        private void initComponents(List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList) {
+        private void initComponents(List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList, List<PFE> info) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label4 = new JLabel();
             idPfeField = new JTextField();
@@ -680,22 +712,40 @@ public class AjouterPage {
 
             //---- label9 ----
             label9.setText("Date debut du stage");
+            
             contentPane.add(label9, "cell 1 3");
-            contentPane.add(dateFinField, "cell 2 3,growy");
+            MyDateChooser dateChDebDate = new MyDateChooser();
+            dateChDebDate.setTextField(dateDebField);
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-YYYY");
+            dateChDebDate.setDateFormat(format);
+            dateDebField.setBackground(Color.white);
+            contentPane.add(dateDebField, "cell 2 3,growy");
 
             //---- label8 ----
             label8.setText("Date fin du stage");
             contentPane.add(label8, "cell 3 3");
-            contentPane.add(dateDebField, "cell 4 3,growy");
+            MyDateChooser dateChFinDate = new MyDateChooser();
+            dateChFinDate.setTextField(dateFinField);
+            dateChFinDate.setDateFormat(format);
+            dateFinField.setBackground(Color.white);
+            contentPane.add(dateFinField, "cell 4 3,growy");
 
             //---- label32 ----
             label32.setText("Date Rendu 1");
             contentPane.add(label32, "cell 1 4");
+            MyDateChooser dateChR1Date = new MyDateChooser();
+            dateChR1Date.setTextField(formattedTextField1);
+            dateChR1Date.setDateFormat(format);
+            formattedTextField1.setBackground(Color.white);
             contentPane.add(formattedTextField1, "cell 2 4,growy");
 
             //---- label35 ----
             label35.setText("Date Rendu 2");
             contentPane.add(label35, "cell 3 4");
+            MyDateChooser dateChR2Date = new MyDateChooser();
+            dateChR2Date.setTextField(formattedTextField2);
+            dateChR2Date.setDateFormat(format);
+            formattedTextField2.setBackground(Color.white);
             contentPane.add(formattedTextField2, "cell 4 4,growy");
             
             //---- label17 ----
@@ -806,13 +856,52 @@ public class AjouterPage {
                         break;
                     case "Binôme/Externe":
                         etu2Form.setVisible(true);
-                        etu2Form.setVisible(true);
+                        label28.setVisible(true);
                         label31.setVisible(true);
                         encExtForm.setVisible(true);
                         break;
                 }
                 
             });
+        button1.addActionListener(event->{
+            //Add PFE
+            
+            //PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, 
+            //HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, FIRSTETU, SECONDETU, ENCADREUR, 
+            //RAPPORTEUR, IDGR, IDFILL, IDSOU) 
+            ExecutorService executorL = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into Soutenance (IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY) "));
+                        String[] grFill = filliereCB.getSelectedItem().toString().split("_");
+                        info.add(new PFE(idPfeField.getText(), themeField.getText(), sujetField.getText(), descArea.getText(), grFill[0], grFill[1], 
+                                AnneeField.getText(), dateDebField.getText(),findDifference(dateDebField.getText(), dateFinField.getText()) , 
+                                dateFinField.getText(), formattedTextField1.getText(), dateR2, encadreurExt, firstEtu, secondEtu, encadIsimm, 
+                                rappIsimm, idSout, approved, scheduled, ValidByRapp, isMonome, 
+                                hasInternShip, isInternshipLocal));
+                        return true;
+                    }catch(SQLException sqlE){
+                        
+                        sqlE.printStackTrace();
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
+                    }
+                    
+                    return false;
+                };
+                Future<Boolean> futureSp = executorL.submit(populateThread);
+                try{
+                    if(futureSp.get()){
+                        comp.clearTable();
+                        JOptionPane.showMessageDialog(null, "Une nouvelle Soutenance a été ajouté\n" + idSField.getText()+": "+textField1.getText()); 
+                        dispose();
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+        });
         }
 
         private JLabel label4;
@@ -908,12 +997,12 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterSoutenance extends JDialog {
-        public AjouterSoutenance(Window owner) {
+        public AjouterSoutenance(Window owner, List<Enseignant> liste, List<Soutenance> soutList, ComponentWithTable comp) {
             super(owner);
-            initComponents();
+            initComponents(liste, soutList, comp);
         }
 
-        private void initComponents() {
+        private void initComponents(List<Enseignant> liste, List<Soutenance> info, ComponentWithTable comp) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label1 = new JLabel();
             label2 = new JLabel();
@@ -923,7 +1012,6 @@ public class AjouterPage {
             label5 = new JLabel();
             heureSField = new JTextField();
             label4 = new JLabel();
-            LoVExam = new JPanel();
             choisirPanel = new JPanel();
             cinField = new JTextField();
             label26 = new JLabel();
@@ -938,6 +1026,8 @@ public class AjouterPage {
             textField1 = new JTextField();
             estValidChB = new JCheckBox();
             ajBtn = new JButton();
+            
+            
 
             //======== this ========
             Container contentPane = getContentPane();
@@ -969,10 +1059,18 @@ public class AjouterPage {
             label2.setText("Id Soutenance");
             contentPane.add(label2, "cell 0 1");
             contentPane.add(idSField, "cell 1 1,growy");
+            idSField.setEditable(false);
 
             //---- label3 ----
             label3.setText("Date");
             contentPane.add(label3, "cell 0 2");
+            
+            MyDateChooser dateCh = new MyDateChooser();
+            dateCh.setTextField(dateSField);
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-YYYY");
+            dateCh.setDateFormat(format);
+            dateSField.setBackground(Color.WHITE);
+            
             contentPane.add(dateSField, "cell 1 2,growy");
 
             //---- label5 ----
@@ -985,60 +1083,14 @@ public class AjouterPage {
             contentPane.add(label4, "cell 0 4,aligny top,growy 0");
 
             //======== LoVExam ========
-            {
-                LoVExam.setLayout(new BorderLayout(0, 10));
-
-                //======== choisirPanel ========
-                {
-                    choisirPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
-                    //---- cinField ----
-                    cinField.setPreferredSize(new Dimension(75, 24));
-                    cinField.setText("cin");
-                    cinField.setEditable(false);
-                    choisirPanel.add(cinField);
-
-                    //---- label26 ----
-                    label26.setPreferredSize(new Dimension(5, 0));
-                    choisirPanel.add(label26);
-
-                    //---- nomField ----
-                    nomField.setPreferredSize(new Dimension(220, 24));
-                    nomField.setText("Nom et Prenom");
-                    nomField.setEditable(false);
-                    choisirPanel.add(nomField);
-
-                    //---- label27 ----
-                    label27.setPreferredSize(new Dimension(5, 0));
-                    choisirPanel.add(label27);
-
-                    //---- choisirBtn ----
-                    choisirBtn.setText("Choisir");
-                    choisirPanel.add(choisirBtn);
-                }
-                LoVExam.add(choisirPanel, BorderLayout.NORTH);
-
-                //======== panel7 ========
-                {
-                    panel7.setLayout(new BorderLayout(0, 10));
-                    panel7.add(searchField, BorderLayout.NORTH);
-
-                    //======== listScroll ========
-                    {
-                        listScroll.setViewportView(list);
-                    }
-                    panel7.add(listScroll, BorderLayout.CENTER);
-                }
-                LoVExam.add(panel7, BorderLayout.CENTER);
-            }
+            LoVForm LoVExam = new LoVForm(liste);
             contentPane.add(LoVExam, "cell 1 4 2 1");
 
             //---- label6 ----
-            label6.setText("Jury");
+            label6.setText("Id Jury");
             contentPane.add(label6, "cell 0 5,aligny top,growy 0");
 
             //---- textField1 ----
-            textField1.setText("courant");
             textField1.setEditable(false);
             contentPane.add(textField1, "cell 1 5,aligny top,growy 0");
 
@@ -1049,6 +1101,39 @@ public class AjouterPage {
             //---- ajBtn ----
             ajBtn.setText("Ajouter");
             contentPane.add(ajBtn, "cell 0 8,growy");
+            ajBtn.addActionListener(l->{
+                ExecutorService executorL = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("insert into Soutenance (IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY) "
+                                + "values(%d,TO_DATE('"+dateSField.getText()+"' , 'dd-MM-YYYY') ,'%s', %d,'%s', %d)", 
+                                Integer.parseInt(idSField.getText()),heureSField.getText(),
+                                (estValidChB.isSelected())?1:0,LoVExam.getIdText(), Integer.parseInt(textField1.getText())));
+                        info.add(new Soutenance(Integer.parseInt(idSField.getText()),format.parse(dateSField.getText()),heureSField.getText(),
+                                estValidChB.isSelected(),LoVExam.getIdText(), Integer.parseInt(textField1.getText())));
+                        return true;
+                    }catch(SQLException sqlE){
+                        
+                        sqlE.printStackTrace();
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
+                    }
+                    
+                    return false;
+                };
+                Future<Boolean> futureSp = executorL.submit(populateThread);
+                try{
+                    if(futureSp.get()){
+                        comp.clearTable();
+                        JOptionPane.showMessageDialog(null, "Une nouvelle Soutenance a été ajouté\n" + idSField.getText()+": "+textField1.getText()); 
+                        dispose();
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            });
             pack();
             setLocationRelativeTo(getOwner());
             // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -1057,13 +1142,12 @@ public class AjouterPage {
         // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
         private JLabel label1;
         private JLabel label2;
-        private JTextField idSField;
+        public JTextField idSField;
         private JLabel label3;
         private JFormattedTextField dateSField;
         private JLabel label5;
         private JTextField heureSField;
         private JLabel label4;
-        private JPanel LoVExam;
         private JPanel choisirPanel;
         private JTextField cinField;
         private JLabel label26;
@@ -1075,18 +1159,18 @@ public class AjouterPage {
         private JScrollPane listScroll;
         private JList list;
         private JLabel label6;
-        private JTextField textField1;
+        public JTextField textField1;
         private JCheckBox estValidChB;
         private JButton ajBtn;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterJuryDialogue extends JDialog {
-        public AjouterJuryDialogue(Window owner, List<Enseignant> ensList) {
+        public AjouterJuryDialogue(Window owner, List<Enseignant> ensList, List<Jury> info, ComponentWithTable comp) {
             super(owner);
-            initComponents(ensList);
+            initComponents(ensList,info,comp);
         }
 
-        private void initComponents(List<Enseignant> ensList) {
+        private void initComponents(List<Enseignant> ensList,List<Jury>info, ComponentWithTable comp) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
                     
             label1 = new JLabel();
@@ -1133,6 +1217,7 @@ public class AjouterPage {
                 //---- label2 ----
                 label2.setText("Id jury");
                 content.add(label2, "cell 1 1");
+                idField.setEditable(false);
                 content.add(idField, "cell 2 1,growy");
 
                 //---- label3 ----
@@ -1157,6 +1242,41 @@ public class AjouterPage {
                 button1.setText("Ajouter");
                 content.add(button1, "cell 1 5,growy");
                 // Charger les données
+                button1.addActionListener(event->{
+                    ExecutorService executorL = Executors.newSingleThreadExecutor();
+                    Callable<Boolean> populateThread = () -> {
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            String[] grFill = filliereCB.getSelectedItem().toString().split("_");
+                            String loc[] = localCB.getSelectedItem().toString().split(" ");
+                            
+                            dbc.query(String.format("insert into JURY(idJury, president, idGr, idFill, numSalle, nomSalle) values(%d,'%s','%s','%s',%d,'%s')",
+                                    Integer.parseInt(idField.getText()), form.getIdText(),grFill[0], grFill[1], Integer.parseInt(loc[1]),loc[0]));
+                            
+                            info.add(new Jury(Integer.parseInt(idField.getText()), form.getIdText(), form.getNom(), form.getPrenom(), gradFromCin(form.getIdText(), ensList), 
+                                    grFill[0], grFill[1], loc[0], Integer.parseInt(loc[1])));
+                            return true;
+                        }catch(SQLException sqlE){
+                            sqlE.printStackTrace();
+                            JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+
+                        }
+
+                        return false;
+                    };
+                    Future<Boolean> futureSp = executorL.submit(populateThread);
+                    try{
+                        if(futureSp.get()){
+                            comp.populateTable(MyComponents.listToObjects(info)); 
+                            JOptionPane.showMessageDialog(null, "Un nouveau Jury a été ajouté\n" + idField.getText()+": "+form.getIdText()+"\n dont le president est: " 
+                                    +form.getNom()+" " +form.getPrenom()); 
+                            dispose();
+                            }
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+                });
 
             }
             contentPane.add(content, BorderLayout.CENTER);
@@ -1169,7 +1289,7 @@ public class AjouterPage {
         private JLabel label1;
         private JPanel content;
         private JLabel label2;
-        private JTextField idField;
+        public JTextField idField;
         private JLabel label3;
         private JComboBox localCB;
         private JLabel label4;
@@ -1180,5 +1300,60 @@ public class AjouterPage {
         
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    private static List<? extends Personne> obList = new ArrayList<>();
+    public static String gradFromCin(String cin, List<Enseignant>ensListe){
+        for(Enseignant e: ensListe){
+            if(e.getCin().equals(cin))
+                return e.getGrad();
+        }
+        return "N/A";
+    }
+    public static long findDifference(String start_date,String end_date ){
+        try {
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            Date d1 = sdf.parse(start_date);
+            Date d2 = sdf.parse(end_date);
+            
+            long difference_In_Time
+                = d2.getTime() - d1.getTime();
+            
+            long difference_In_Seconds
+                = (difference_In_Time / 1000) % 60;
+ 
+            long difference_In_Minutes
+                = (difference_In_Time / (1000 * 60)) % 60;
+ 
+            long difference_In_Hours
+                = (difference_In_Time
+                   / (1000 * 60 * 60))
+                  % 24;
+            
+            long difference_In_Days
+                = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+            
+            long difference_In_Months
+                = (difference_In_Time
+                   / (1000l * 60 * 60 * 24 * 30));
+ 
+            System.out.print(
+                "Difference "
+                + "between two dates is: ");
+ 
+            System.out.println(
+                difference_In_Months
+                + " years, "
+                + difference_In_Days
+                + " days, "
+                + difference_In_Hours
+                + " hours, "
+                + difference_In_Minutes
+                + " minutes, "
+                + difference_In_Seconds
+                + " seconds");
+            return difference_In_Months;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
 }

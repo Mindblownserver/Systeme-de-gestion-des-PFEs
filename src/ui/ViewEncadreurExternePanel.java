@@ -21,12 +21,12 @@ public class ViewEncadreurExternePanel extends JPanel {
 	private JButton ajouterBtn = new JButton("Ajouter");    
 	private Boolean estVisible=false;
         
-	public ViewEncadreurExternePanel(String nomDuClasse, List<? extends ColumnNames> info, String[] comboBoxValues) {
+	public ViewEncadreurExternePanel(String nomDuClasse, List<EncadreurExt> info, String[] comboBoxValues) {
                 JComponent leftComp = null;
                 ComponentWithTable tableComp=null;
-
-                leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues);
                 tableComp = new MyComponents.EncadreurExterieurTable(info);
+                leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues, info, tableComp);
+                
 
                 
 		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);

@@ -21,11 +21,12 @@ public class ViewLocalPanel extends JPanel {
 	private JButton ajouterBtn = new JButton("Ajouter");    
 	private Boolean estVisible=false;
         
-	public ViewLocalPanel(String nomDuClasse, List<? extends ColumnNames> info, String[] comboBoxValues) {
+	public ViewLocalPanel(String nomDuClasse, List<Local> info, String[] comboBoxValues) {
                 JComponent leftComp = null;
                 ComponentWithTable tableComp=null;                
-                leftComp=new AjouterPage.AjouterLocal();
                 tableComp = new MyComponents.LocalTable(info);
+                leftComp=new AjouterPage.AjouterLocal(info, tableComp);
+                
                     
 		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
 	}

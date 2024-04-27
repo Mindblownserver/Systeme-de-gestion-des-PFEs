@@ -174,7 +174,17 @@ public class LoVForm extends JPanel {
         add(panel7, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
-
+    public String getIdText(){
+        return cinField.getText();
+    }
+    public String getNom(){
+        
+        return npField.getText().split(" ")[0];
+    }
+    public String getPrenom(){
+        
+        return npField.getText().split(" ")[1];
+    }
     public void populateList(List<? extends Personne> personneListe, String critere){
         List<String> res = new ArrayList<>();
         if(critere.equals("")){

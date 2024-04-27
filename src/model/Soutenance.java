@@ -3,27 +3,32 @@ package model;
 import java.util.Date;
 
 public class Soutenance {
+
     private Date date;
     private String heure;
-    private Boolean isValid = false;
-    private Local locale;
-    private Enseignant Examinateur;
-    private PFE pfe;
-    public Soutenance() {
+    private boolean isValid;
+    private String examinateur;
+    private int idJury;
+    private int idSout;
+    //IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY
+
+    public Soutenance(int id, Date date, String heure, boolean isValid, String examinateur, int idJury) {
+        this.idSout = id;
+        this.date = date;
+        this.heure = heure;
+        this.examinateur = examinateur;
+        this.idJury = idJury;
+        this.isValid = isValid;
     }
 
-    /**
-     * @param b 
-     * @return
-     */
     public void setValid(Boolean b) {
         isValid = b;
     }
 
     /**
-     * @param date 
-     * @param heure 
-     * @param loc 
+     * @param date
+     * @param heure
+     * @param loc
      * @return
      */
     public Boolean PlannifierSoutenance(Date date, Integer heure, Local loc) {
@@ -54,29 +59,20 @@ public class Soutenance {
         this.isValid = isValid;
     }
 
-    public Local getLocale() {
-        return locale;
+    public String getExaminateur() {
+        return examinateur;
     }
 
-    public void setLocale(Local locale) {
-        this.locale = locale;
+    public void setExaminateur(String examinateur) {
+        this.examinateur = examinateur;
     }
 
-    public Enseignant getExaminateur() {
-        return Examinateur;
+    public int getIdJury() {
+        return idJury;
     }
 
-    public void setExaminateur(Enseignant examinateur) {
-        Examinateur = examinateur;
+    public int getIdSout() {
+        return idSout;
     }
 
-    public PFE getPfe() {
-        return pfe;
-    }
-
-    public void setPfe(PFE pfe) {
-        this.pfe = pfe;
-    }
-
-    
 }

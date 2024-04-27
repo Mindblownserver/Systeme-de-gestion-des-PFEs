@@ -182,6 +182,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         //---- AjouterBtn ----
                         AjouterBtn.setText("Ajouter enseignant");
                         panel1.add(AjouterBtn, "cell 0 14 2 1");
+                        
                 }
                 this2.add(panel1, BorderLayout.EAST);
 

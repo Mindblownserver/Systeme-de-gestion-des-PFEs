@@ -61,6 +61,7 @@ public class MainWindow extends JFrame {
         private List<Etudiant> etuList = new ArrayList<>();
         private List<Jury> juryList = new ArrayList<>();
         private List<PFE> pfeList = new ArrayList<>();
+        private List<Soutenance> soutList = new ArrayList<>();
         
         
 	public MainWindow(){
@@ -109,7 +110,7 @@ public class MainWindow extends JFrame {
             encadreurExtP = new ViewEncadreurExternePanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
             organismeP = new ViewOrganismePanel("Organisme", orgList, null);
             localeP =new ViewLocalPanel("Local", locList, null);
-            juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList);
+            juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList,soutList);
             
             this.setUndecorated(true);
             // Setup menu bar
@@ -165,12 +166,18 @@ public class MainWindow extends JFrame {
                 });
                 // paramètres page
                 paramSpecialite.addActionListener(l->{
+                    
+                    
                     cl.show(cardContainer,"Specialité");
                 });
                 paramGroupe.addActionListener(l->{
+                    groupeP = new ViewGroupePanel("Groupe", grList, Specialite.getFilliers());
+                    cardContainer.add(groupeP,"Groupe");
                     cl.show(cardContainer,"Groupe");
                 });
                 paramEncadreurExt.addActionListener(l->{
+                    encadreurExtP = new ViewEncadreurExternePanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
+                    cardContainer.add(encadreurExtP,"Encadreur Exterieure");
                     cl.show(cardContainer,"Encadreur Exterieure");
                 });
                 paramLocal.addActionListener(l->{
@@ -186,15 +193,24 @@ public class MainWindow extends JFrame {
                     cl.show(cardContainer,"Enseignant");
                 });
                 pfeConsult.addActionListener(l->{
+                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+                    cardContainer.add(pfeP, "PFE");
                     cl.show(cardContainer,"PFE");
                 });
                 juryConsult.addActionListener(l->{
+                    juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList,soutList);
+                    cardContainer.add(juryP,"Jury");
                     cl.show(cardContainer,"Jury");
                 });
                 homePage.getJuryBtn().addActionListener(l->{
+                    juryP = new ViewJuryPanel(Jury.getColumnNames(), juryList, ensList,soutList);
+                    cardContainer.add(juryP,"Jury");
+                    
                     cl.show(cardContainer,"Jury");
                 });
                 homePage.getPfeBtn().addActionListener(l->{
+                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+                    cardContainer.add(pfeP, "PFE");
                     cl.show(cardContainer, "PFE");
                 });
 
@@ -227,6 +243,7 @@ public class MainWindow extends JFrame {
                 loadEtu();
                 loadJury();
                 loadPfe();
+                loadSout();
                 dbc.conn.close();
                 
             }catch(Exception e){
@@ -316,7 +333,9 @@ public class MainWindow extends JFrame {
             dbc.query("Select * from Soutenance");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
-                //System.out.println(res.getInt(1)+ " "+ res.getString(2)+ " "+res.getString(3)+ " "+res.getString(4)+ " "+res.getString(5)+ " "+res.getString(6)+ " "+res.getString(7)+ "s "+ res.getString(8)+ " "+ res.getInt(9));
+                // IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY
+                soutList.add(new Soutenance(res.getInt("IDSou"), res.getDate("DateSout"), res.getString("Heure"), res.getBoolean("IsValid"),
+                res.getString("examinateur"), res.getInt("IDJURY")));
                 
                 
             }   
