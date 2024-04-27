@@ -14,22 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import model.Personne;
+import model.Soutenance;
 
 /**
  *
  * @author yassine
  */
-public class LoVForm extends JPanel {
+public class LoVSoutenance extends JPanel {
     private JPanel panel6;
-    private JTextField cinField;
+    private JTextField idField;
     private JLabel label26;
     private JTextField npField;
     private JLabel label27;
@@ -39,7 +38,6 @@ public class LoVForm extends JPanel {
     private JScrollPane scrollPane3;
     private JList list;
     private boolean estVisible= false;
-    private String country;
     
     private class SlicedItemRenderer extends DefaultListCellRenderer {
         @Override
@@ -61,14 +59,14 @@ public class LoVForm extends JPanel {
     }
     
     
-    public LoVForm(List<? extends Personne> ensList) {
-        initComponents(ensList);
+    public LoVSoutenance(List<Soutenance> soutList) {
+        initComponents(soutList);
     }
 
-    private void initComponents(List<? extends Personne> infoList) {
+    private void initComponents(List<Soutenance> infoList) {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         panel6 = new JPanel();
-        cinField = new JTextField();
+        idField = new JTextField();
         label26 = new JLabel();
         npField = new JTextField();
         label27 = new JLabel();
@@ -104,17 +102,16 @@ public class LoVForm extends JPanel {
         
         list.addListSelectionListener((e)->{
             if (!e.getValueIsAdjusting()) {
-                String np,cin;
+                String np,idSout;
                 String item = list.getSelectedValue().toString();
                 int indexComma = item.indexOf(",");
+                int indexComma2 = item.indexOf(indexComma);
                 np = item.substring(0, indexComma);
-                cin = item.substring(indexComma+1,indexComma+7);
-                cinField.setText(cin);
+                idSout = item.substring(indexComma+1,indexComma2);
+                
+                
+                idField.setText(idSout);
                 npField.setText(np);
-                if(item.indexOf("=")!=-1){
-                    int indexLastComma = item.lastIndexOf("=");
-                    country = item.substring(indexLastComma+1);
-                }
                 estVisible = !estVisible;
                 panel7.setVisible(estVisible);
                 
@@ -129,12 +126,12 @@ public class LoVForm extends JPanel {
         {
             panel6.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-            //---- cinField ----
-            cinField.setPreferredSize(new Dimension(80, 24));
-            cinField.setText("cin");
+            //---- idField ----
+            idField.setPreferredSize(new Dimension(80, 24));
+            idField.setText("id");
             
-            cinField.setEditable(false);
-            panel6.add(cinField);
+            idField.setEditable(false);
+            panel6.add(idField);
 
             //---- label26 ----
             label26.setPreferredSize(new Dimension(5, 0));
@@ -180,7 +177,7 @@ public class LoVForm extends JPanel {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
     public String getIdText(){
-        return cinField.getText();
+        return idField.getText();
     }
     public String getNom(){
         
@@ -190,27 +187,22 @@ public class LoVForm extends JPanel {
         
         return npField.getText().split(" ")[1];
     }
-    public void populateList(List<? extends Personne> personneListe, String critere){
+    public void populateList(List<Soutenance> soutList, String critere){
         List<String> res = new ArrayList<>();
         if(critere.equals("")){
-            for(Personne personne:personneListe){
-                res.add(personne.toString());
+            for(Soutenance sout:soutList){
+                res.add(sout.toString());
             }
             list.setListData(res.toArray());
         }
         else{
-            ListIterator ltPersonne = personneListe.listIterator();
-            while(ltPersonne.hasNext()){
-                Object p = ltPersonne.next();
+            ListIterator ltSout = soutList.listIterator();
+            while(ltSout.hasNext()){
+                Object p = ltSout.next();
                 if(p.toString().contains(critere))
                     res.add(p.toString());
             }
             list.setListData(res.toArray());
         }
     }
-
-    public String getCountry() {
-        return country;
-    }
-    
 }

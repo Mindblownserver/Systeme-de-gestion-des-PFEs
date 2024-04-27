@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -541,12 +542,14 @@ public class AjouterPage {
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     public static class AjouterPFEDialog extends JDialog {
-        public AjouterPFEDialog(Window owner, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList, List<PFE> info) {
+        private boolean isMonome;
+        private boolean hasInternship;
+        public AjouterPFEDialog(Window owner, ComponentWithTable comp,List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList, List<PFE> info, List<Soutenance> soutList) {
             super(owner);
-            initComponents(ensListe, encExtList, etuList, grList,info);
+            initComponents(comp,ensListe, encExtList, etuList, grList,info,soutList);
         }
 
-        private void initComponents(List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList, List<PFE> info) {
+        private void initComponents(ComponentWithTable comp,List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList, List<PFE> info, List<Soutenance> soutList) {
             // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
             label4 = new JLabel();
             idPfeField = new JTextField();
@@ -576,69 +579,19 @@ public class AjouterPage {
             descScroll = new JScrollPane();
             descArea = new JTextArea();
             label11 = new JLabel();
-            LoVFormEncIsimm = new JPanel();
-            panel2 = new JPanel();
-            textField4 = new JTextField();
-            label20 = new JLabel();
-            textField5 = new JTextField();
-            label21 = new JLabel();
-            button2 = new JButton();
-            panel3 = new JPanel();
-            textField6 = new JTextField();
-            scrollPane1 = new JScrollPane();
-            list1 = new JList();
-            LoVForm2RappIsimm = new JPanel();
-            panel4 = new JPanel();
-            textField7 = new JTextField();
-            label23 = new JLabel();
-            textField8 = new JTextField();
-            label24 = new JLabel();
-            button3 = new JButton();
-            panel5 = new JPanel();
-            textField9 = new JTextField();
-            scrollPane2 = new JScrollPane();
-            list2 = new JList();
             label22 = new JLabel();
             label25 = new JLabel();
-            LoVForm3Etu1 = new JPanel();
-            panel6 = new JPanel();
-            textField10 = new JTextField();
-            label26 = new JLabel();
-            textField11 = new JTextField();
-            label27 = new JLabel();
-            button4 = new JButton();
-            panel7 = new JPanel();
-            textField12 = new JTextField();
-            scrollPane3 = new JScrollPane();
-            list3 = new JList();
             label28 = new JLabel();
-            panel8 = new JPanel();
-            textField13 = new JTextField();
-            label29 = new JLabel();
-            textField14 = new JTextField();
-            label30 = new JLabel();
-            button5 = new JButton();
-            panel9 = new JPanel();
-            textField15 = new JTextField();
-            scrollPane4 = new JScrollPane();
-            list4 = new JList();
             label31 = new JLabel();
-            LoVForm5EncExt = new JPanel();
-            panel10 = new JPanel();
-            textField16 = new JTextField();
-            label33 = new JLabel();
-            textField17 = new JTextField();
-            label34 = new JLabel();
-            button6 = new JButton();
-            panel11 = new JPanel();
-            textField18 = new JTextField();
-            scrollPane5 = new JScrollPane();
-            list5 = new JList();
-            approuveChB = new JCheckBox();
+            scheduledChB = new JCheckBox();
             stageChB = new JCheckBox();
             valideChB = new JCheckBox();
             button1 = new JButton();
-
+            
+            JLabel soutLabel = new JLabel("Soutenance");
+            LoVSoutenance soutLoV = new LoVSoutenance(soutList);
+            isMonome = true;
+            hasInternship = false;
             //======== this ========
             setTitle("Ajouter PFE");
             Container contentPane = getContentPane();
@@ -815,10 +768,13 @@ public class AjouterPage {
             LoVForm encExtForm = new LoVForm(encExtList);
             encExtForm.setVisible(false);
             contentPane.add(encExtForm, "cell 2 10 3 1,aligny top");
+            //========= LoV Soutenance=======/
+            contentPane.add(soutLabel,"cell 5 10, aligny top,growy 0");
+            contentPane.add(soutLoV, "cell 6 10 3 1, aligny top");
 
-            //---- approuveChB ----
-            approuveChB.setText("Est approuv\u00e9 par la comit\u00e9");
-            contentPane.add(approuveChB, "cell 1 11 2 1");
+            //---- scheduledChB ----
+            scheduledChB.setText("Est approuv\u00e9 par la comit\u00e9");
+            contentPane.add(scheduledChB, "cell 1 11 2 1");
 
             //---- stageChB ----
             stageChB.setText("A fait un Stage");
@@ -841,12 +797,16 @@ public class AjouterPage {
                         label28.setVisible(false);
                         label31.setVisible(false);
                         encExtForm.setVisible(false);
+                        hasInternship = false;
+                        isMonome=true;
                         break;
                     case "Binôme/Interne":
                         etu2Form.setVisible(true);
                         label28.setVisible(true);
                         label31.setVisible(false);
                         encExtForm.setVisible(false);
+                        isMonome = false;
+                        
                         break;
                     case "Monôme/Externe":
                         etu2Form.setVisible(false);
@@ -863,45 +823,68 @@ public class AjouterPage {
                 }
                 
             });
-        button1.addActionListener(event->{
-            //Add PFE
-            
-            //PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, 
-            //HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, FIRSTETU, SECONDETU, ENCADREUR, 
-            //RAPPORTEUR, IDGR, IDFILL, IDSOU) 
-            ExecutorService executorL = Executors.newSingleThreadExecutor();
-                Callable<Boolean> populateThread = () -> {
+            button1.addActionListener(event->{
+                int duree;
+                //Gestions des erreurs
+                if(AnneeField.getText().trim().equals("") || sujetField.getText().trim().equals("")|| themeField.getText().trim().equals("")||
+                        descArea.getText().trim().equals("") || encIsimmForm.getIdText().equals("cin")|| rappIsimmForm.getIdText().equals("cin") ||
+                        etu1Form.getIdText().equals("cin") || 
+                        (stageChB.isSelected() && (dateDebField.getText().trim().equals("") || dateFinField.getText().trim().equals(""))) ||
+                        // Binome & Has Internship check
+                        (!isMonome && etu2Form.getIdText().trim().equals("cin")) || (hasInternship && (encExtForm.getIdText().trim().equals("cin")))||
+                        (scheduledChB.isSelected() && soutLoV.getIdText().equals("id")) )
+                    JOptionPane.showMessageDialog(null, "Vous avez une(des) faute(s) de saisie des données", "Echec d'ajout", JOptionPane.ERROR_MESSAGE);
+                else{
+                    //Add PFE
+                    //PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, 
+                    //HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, DATER2, ENCADEUREXT, FIRSTETU, SECONDETU, ENCADREUR, 
+                    //RAPPORTEUR, IDGR, IDFILL, IDSOU) 
+                    if(dateDebField.getText().trim().equals("") || dateFinField.getText().trim().equals(""))
+                        duree = 0;
+                    else
+                        duree =(int) findDifference(dateDebField.getText(), dateFinField.getText());
+                        
+                    ExecutorService executorL = Executors.newSingleThreadExecutor();
+                    Callable<Boolean> populateThread = () -> {
+                        try{
+                            MyDataBaseConnector dbc = new MyDataBaseConnector();
+                            dbc.query(String.format("insert into PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, "
+                                    + "ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, "
+                                    + "DATER2, ENCADEUREXT, FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU) "
+                                    + "values()"));
+                            String[] grFill = filliereCB.getSelectedItem().toString().split("_");
+
+                            info.add(new PFE(Integer.parseInt(idPfeField.getText()), themeField.getText(), sujetField.getText(), descArea.getText(), grFill[0], grFill[1], 
+                                    Integer.parseInt(AnneeField.getText()), format.parse(canBeNull(dateDebField.getText(), ch->ch.equals(""))), duree, 
+                                    format.parse(canBeNull(dateFinField.getText(), ch->ch.equals(""))),format.parse(formattedTextField1.getText()), 
+                                    format.parse(formattedTextField2.getText()), canBeNull(encExtForm.getIdText(), ch->ch.equals("cin")), 
+                                    etu1Form.getIdText(), canBeNull(etu2Form.getIdText(), ch->ch.equals("cin")),encIsimmForm.getIdText(),rappIsimmForm.getIdText(), 
+                                    canBeNull(soutLoV.getIdText(), ch->ch.equals("id")), true, scheduledChB.isSelected(), valideChB.isSelected(), isMonome, hasInternship, 
+                                    encExtForm.getCountry().equalsIgnoreCase("Tunisia")));
+                            return true;
+                        }catch(SQLException sqlE){
+
+                            sqlE.printStackTrace();
+                            JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+
+                        }
+
+                        return false;
+                    };
+                    Future<Boolean> futureSp = executorL.submit(populateThread);
                     try{
-                        MyDataBaseConnector dbc = new MyDataBaseConnector();
-                        dbc.query(String.format("insert into Soutenance (IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY) "));
-                        String[] grFill = filliereCB.getSelectedItem().toString().split("_");
-                        info.add(new PFE(idPfeField.getText(), themeField.getText(), sujetField.getText(), descArea.getText(), grFill[0], grFill[1], 
-                                AnneeField.getText(), dateDebField.getText(),findDifference(dateDebField.getText(), dateFinField.getText()) , 
-                                dateFinField.getText(), formattedTextField1.getText(), dateR2, encadreurExt, firstEtu, secondEtu, encadIsimm, 
-                                rappIsimm, idSout, approved, scheduled, ValidByRapp, isMonome, 
-                                hasInternShip, isInternshipLocal));
-                        return true;
-                    }catch(SQLException sqlE){
-                        
-                        sqlE.printStackTrace();
-                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
-                        
+                        if(futureSp.get()){
+                            comp.clearTable();
+                            JOptionPane.showMessageDialog(null, "Une nouvelle PFE a été ajouté\n" + idPfeField.getText()); 
+                            dispose();
+                        }
                     }
-                    
-                    return false;
-                };
-                Future<Boolean> futureSp = executorL.submit(populateThread);
-                try{
-                    if(futureSp.get()){
-                        comp.clearTable();
-                        JOptionPane.showMessageDialog(null, "Une nouvelle Soutenance a été ajouté\n" + idSField.getText()+": "+textField1.getText()); 
-                        dispose();
+                    catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-        });
+
+            });
         }
 
         private JLabel label4;
@@ -932,65 +915,15 @@ public class AjouterPage {
         private JScrollPane descScroll;
         private JTextArea descArea;
         private JLabel label11;
-        private JPanel LoVFormEncIsimm;
-        private JPanel panel2;
-        private JTextField textField4;
-        private JLabel label20;
-        private JTextField textField5;
-        private JLabel label21;
-        private JButton button2;
-        private JPanel panel3;
-        private JTextField textField6;
-        private JScrollPane scrollPane1;
-        private JList list1;
-        private JPanel LoVForm2RappIsimm;
-        private JPanel panel4;
-        private JTextField textField7;
-        private JLabel label23;
-        private JTextField textField8;
-        private JLabel label24;
-        private JButton button3;
-        private JPanel panel5;
-        private JTextField textField9;
-        private JScrollPane scrollPane2;
-        private JList list2;
+        
         private JLabel label22;
         private JLabel label25;
-        private JPanel LoVForm3Etu1;
-        private JPanel panel6;
-        private JTextField textField10;
-        private JLabel label26;
-        private JTextField textField11;
-        private JLabel label27;
-        private JButton button4;
-        private JPanel panel7;
-        private JTextField textField12;
-        private JScrollPane scrollPane3;
-        private JList list3;
+        
         private JLabel label28;
-        private JPanel panel8;
-        private JTextField textField13;
-        private JLabel label29;
-        private JTextField textField14;
-        private JLabel label30;
-        private JButton button5;
-        private JPanel panel9;
-        private JTextField textField15;
-        private JScrollPane scrollPane4;
-        private JList list4;
+        
         private JLabel label31;
-        private JPanel LoVForm5EncExt;
-        private JPanel panel10;
-        private JTextField textField16;
-        private JLabel label33;
-        private JTextField textField17;
-        private JLabel label34;
-        private JButton button6;
-        private JPanel panel11;
-        private JTextField textField18;
-        private JScrollPane scrollPane5;
-        private JList list5;
-        private JCheckBox approuveChB;
+       
+        private JCheckBox scheduledChB;
         private JCheckBox stageChB;
         private JCheckBox valideChB;
         private JButton button1;
@@ -1111,7 +1044,7 @@ public class AjouterPage {
                                 Integer.parseInt(idSField.getText()),heureSField.getText(),
                                 (estValidChB.isSelected())?1:0,LoVExam.getIdText(), Integer.parseInt(textField1.getText())));
                         info.add(new Soutenance(Integer.parseInt(idSField.getText()),format.parse(dateSField.getText()),heureSField.getText(),
-                                estValidChB.isSelected(),LoVExam.getIdText(), Integer.parseInt(textField1.getText())));
+                                estValidChB.isSelected(),LoVExam.getIdText(), LoVExam.getNom(),LoVExam.getPrenom(),Integer.parseInt(textField1.getText())));
                         return true;
                     }catch(SQLException sqlE){
                         
@@ -1355,5 +1288,10 @@ public class AjouterPage {
             e.printStackTrace();
         }
         return -1;
+    }
+    public static String canBeNull(String obj, Predicate<String> pred){
+        if(pred.test(obj))
+            return null;
+        return obj;
     }
 }

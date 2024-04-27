@@ -104,7 +104,7 @@ public class MainWindow extends JFrame {
             homePage = new HomePage();
             enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
             etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
-            pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+            pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList,soutList);
             specialiteP = new ViewSpecialitePanel("Specialité",spList, null);
             groupeP = new ViewGroupePanel("Groupe", grList, Specialite.getFilliers());
             encadreurExtP = new ViewEncadreurExternePanel("Encadreur Exterieure",encExtList, OrganismeExt.getOrgs());
@@ -193,7 +193,7 @@ public class MainWindow extends JFrame {
                     cl.show(cardContainer,"Enseignant");
                 });
                 pfeConsult.addActionListener(l->{
-                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList,soutList);
                     cardContainer.add(pfeP, "PFE");
                     cl.show(cardContainer,"PFE");
                 });
@@ -209,7 +209,7 @@ public class MainWindow extends JFrame {
                     cl.show(cardContainer,"Jury");
                 });
                 homePage.getPfeBtn().addActionListener(l->{
-                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList);
+                    pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList,soutList);
                     cardContainer.add(pfeP, "PFE");
                     cl.show(cardContainer, "PFE");
                 });
@@ -330,12 +330,13 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadSout()throws ClassNotFoundException,SQLException{
-            dbc.query("Select * from Soutenance");
+            dbc.query("Select IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY, ens.NOM,ens.PRENOM from Soutenance s "
+                    + "join Enseignant e on e.cin = s.EXAMINATEUR");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
                 // IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY
                 soutList.add(new Soutenance(res.getInt("IDSou"), res.getDate("DateSout"), res.getString("Heure"), res.getBoolean("IsValid"),
-                res.getString("examinateur"), res.getInt("IDJURY")));
+                res.getString("examinateur"),res.getString(7),res.getString(8), res.getInt("IDJURY")));
                 
                 
             }   

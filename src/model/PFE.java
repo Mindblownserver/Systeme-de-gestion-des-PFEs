@@ -11,7 +11,7 @@ public class PFE {
      */
     public PFE() {
     }
-    private Integer id;
+    private int id;
     private String theme;
     private String Sujet;
     private String description;
@@ -35,7 +35,7 @@ public class PFE {
     private boolean hasInternship;
     private boolean isInternshipLocal;
 
-    public PFE(Integer id, String theme, String Sujet, String description, String idGr, String idFill, int annee, Date dateDebut, int dureeStage, Date dateFin, Date dateR1, Date dateR2, String encadreurExt, String firstEtu, String secondEtu, String encadIsimm, String rappIsimm, String idSout, boolean isApproved, boolean isScheduled, boolean isValidByRapp, boolean isMonome, boolean hasInternship, boolean isInternshipLocal) {
+    public PFE(int id, String theme, String Sujet, String description, String idGr, String idFill, int annee, Date dateDebut, int dureeStage, Date dateFin, Date dateR1, Date dateR2, String encadreurExt, String firstEtu, String secondEtu, String encadIsimm, String rappIsimm, String idSout, boolean isApproved, boolean isScheduled, boolean isValidByRapp, boolean isMonome, boolean hasInternship, boolean isInternshipLocal) {
         this.id = id;
         this.theme = theme;
         this.Sujet = Sujet;

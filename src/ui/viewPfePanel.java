@@ -25,6 +25,7 @@ import model.Enseignant;
 import model.Etudiant;
 import model.Groupe;
 import model.PFE;
+import model.Soutenance;
 import net.miginfocom.swing.MigLayout;
 import repo.MyDataBaseConnector;
 
@@ -235,10 +236,10 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
     
-    public viewPfePanel(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList) {
-	initComponents(criteres,info, ensListe, encExtList, etuList,grList);
+    public viewPfePanel(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList, List<Groupe> grList, List<Soutenance>soutList) {
+	initComponents(criteres,info, ensListe, encExtList, etuList,grList,soutList);
 	}
-    private void initComponents(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList) {
+    private void initComponents(String[] criteres, List<PFE>info, List<Enseignant> ensListe, List<EncadreurExt> encExtList, List<Etudiant> etuList,List<Groupe> grList, List<Soutenance>soutList) {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         titlePanel = new JPanel();
         title = new JLabel();
@@ -250,7 +251,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         eastBorder = new JPanel();
         table = new MyComponents.PFETable(info,this);
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame, ensListe, encExtList, etuList,grList, info);
+        ajouterPfeD = new AjouterPage.AjouterPFEDialog(topFrame, table,ensListe, encExtList, etuList,grList, info, soutList);
         JPanel westBorder = new JPanel();
         JPanel centerContent = new JPanel(null);
         LeftAdditionalInfoPfe plusInfo = new LeftAdditionalInfoPfe();

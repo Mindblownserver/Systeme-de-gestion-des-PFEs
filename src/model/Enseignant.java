@@ -11,7 +11,13 @@ public class Enseignant extends Personne{
         this.grad = grad;
         canBePresident =cBePrez;
     }
-
+    public Enseignant(String c, String n, String p, String photo,String e,String t, String grad) {
+        super(c,n, p,e,t);
+        this.photo = photo;
+        this.grad = grad;
+        canBePresident =false;
+    }
+    
     public String getGrad() {
         return grad;
     }

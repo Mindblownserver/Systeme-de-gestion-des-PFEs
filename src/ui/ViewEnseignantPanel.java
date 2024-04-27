@@ -44,6 +44,7 @@ import javax.swing.table.TableRowSorter;
 import model.ColumnNames;
 import model.Enseignant;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
 
 /**
  *
@@ -182,6 +183,16 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         //---- AjouterBtn ----
                         AjouterBtn.setText("Ajouter enseignant");
                         panel1.add(AjouterBtn, "cell 0 14 2 1");
+                        
+                        AjouterBtn.addActionListener(event->{
+                                    try{
+                                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                                        dbc.query("insert into Etudiant (cin, nom, prenom, email, tel, photo,nce,hasBinome) VALUES "
+                                                + "()");
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+                                });
                         
                 }
                 this2.add(panel1, BorderLayout.EAST);

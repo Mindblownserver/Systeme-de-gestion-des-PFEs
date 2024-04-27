@@ -29,6 +29,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import model.Etudiant;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
 
 /**
  *
@@ -116,7 +117,7 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 			}
 			addtionalInfo.addTab("Bin\u00f4me (0)", pfeRapporte);
 		}
-		add(addtionalInfo, BorderLayout.SOUTH);
+		//add(addtionalInfo, BorderLayout.SOUTH);
 
 		//======== this2 ========
 		{
@@ -146,7 +147,11 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                                         "[32,fill]" +
 					"[42]" +
 					"[32,fill]" +
-					"20[41]" 
+                                        "[42]" +
+                                        "[32,fill]" +
+					"[42]" +
+					"[32,fill]" +
+					"20[32, fill]" 
                                         ));
 
 				//---- titreAjout ----
@@ -175,14 +180,36 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
 				panel1.add(photo, "cell 0 7");
 				panel1.add(photoCB, "cell 0 8 2 1,width 200px");
                                 
-                                //---- photo ----
+                                //---- Filliere ----
 				grp.setText("Fillière");
 				panel1.add(grp, "cell 0 9");
 				panel1.add(grpCB, "cell 0 10 2 1,width 200px");
-
-				//---- AjouterBtn ----
-				AjouterBtn.setText("Ajouter enseignant");
-				panel1.add(AjouterBtn, "cell 0 11 2 1");
+                                
+                                //---- Email ----
+				JLabel emailLbl = new JLabel("Email");
+				panel1.add(emailLbl, "cell 0 11");
+                                JTextField emailField = new JTextField();
+                                
+				panel1.add(emailField, "cell 0 12 2 1,width 200px");
+                                
+                                //---- tel ----
+				JLabel telLbl = new JLabel("Tel");
+				panel1.add(telLbl, "cell 0 13");
+                                JTextField telField = new JTextField();
+				panel1.add(telField, "cell 0 14 2 1,width 200px");
+                                
+                                //---- AjouterBtn ----
+				AjouterBtn.setText("Ajouter Etudiant");
+				panel1.add(AjouterBtn, "cell 0 15 2 1");
+                                AjouterBtn.addActionListener(event->{
+                                    try{
+                                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                                        dbc.query("insert into Etudiant (cin, nom, prenom, email, tel, photo,nce,hasBinome) VALUES "
+                                                + "()");
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+                                });
                                 
 			}
 			this2.add(panel1, BorderLayout.EAST);
@@ -226,6 +253,10 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                             //---- ajouterBtn ----
                             ajouterBtn.setText("Ajouter");
                             titlePanel.add(ajouterBtn, "cell 2 2,growy");
+                            ajouterBtn.addActionListener(l->{// panel1
+                                estVisible = !estVisible;
+                                panel1.setVisible(estVisible);
+                            });
                             
                             eastBorder.setPreferredSize(new Dimension(10,0));
                             //----- Table -------

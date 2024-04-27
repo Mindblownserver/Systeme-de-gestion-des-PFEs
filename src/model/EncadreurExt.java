@@ -38,7 +38,7 @@ public class EncadreurExt extends Personne implements ColumnNames{
         return res;
     }
     public String toString(){
-        return super.toString()+":"+societe.getIdSc();
+        return super.toString()+":"+societe.getIdSc()+"="+societe.getAdress();
     }
     
     
