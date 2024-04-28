@@ -39,7 +39,8 @@ public class LoVForm extends JPanel {
     private JScrollPane scrollPane3;
     private JList list;
     private boolean estVisible= false;
-    private String country;
+    private String country="";
+    private String cin="";
     
     private class SlicedItemRenderer extends DefaultListCellRenderer {
         @Override
@@ -75,6 +76,7 @@ public class LoVForm extends JPanel {
         choisirBtn = new JButton();
         panel7 = new JPanel();
         searchBar = new JTextField();
+        searchBar.setToolTipText("Tu peux chercher par cin, nom et prenom et même\n la société à laquelle l'encadreur exterieure travail");
         scrollPane3 = new JScrollPane();
         list = new JList();
         
@@ -108,12 +110,14 @@ public class LoVForm extends JPanel {
                 String item = list.getSelectedValue().toString();
                 int indexComma = item.indexOf(",");
                 np = item.substring(0, indexComma);
-                cin = item.substring(indexComma+1,indexComma+7);
+                cin = item.substring(indexComma+1,indexComma+9);
                 cinField.setText(cin);
                 npField.setText(np);
-                if(item.indexOf("=")!=-1){
-                    int indexLastComma = item.lastIndexOf("=");
-                    country = item.substring(indexLastComma+1);
+                this.cin = cin;
+                if(item.contains("=")){
+                    int indexLastEq = item.lastIndexOf("=");
+                    country = item.substring(indexLastEq+1);
+                    
                 }
                 estVisible = !estVisible;
                 panel7.setVisible(estVisible);

@@ -7,6 +7,8 @@ import java.awt.Container;
 
 import java.awt.Font;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -229,7 +231,7 @@ public class AjouterPage {
         private JTextField textField3;
         private JButton button1;
     }
-    public static class AjouterEncadreurExt extends JPanel {
+    public static class AjouterEncadreurExt extends JPanel  {
         public AjouterEncadreurExt(String[] comboBoxValues, List<EncadreurExt>liste, ComponentWithTable comp) {
             initComponents(comboBoxValues, liste, comp);
         }
@@ -454,7 +456,9 @@ public class AjouterPage {
         private JButton button1;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
     }
-    public static class AjouterSp extends JPanel {
+    public static class AjouterSp extends JPanel implements ActionListener{
+        private List<Specialite>info;
+        private ComponentWithTable comp;
         public AjouterSp(ComponentWithTable comp, List<Specialite> info) {
             initComponents(comp, info);
         }
@@ -466,7 +470,11 @@ public class AjouterPage {
             textField1 = new JTextField();
             label3 = new JLabel();
             textField2 = new JTextField();
-            button1 = new JButton();
+            ajBtn = new JButton();
+            editBtn = new JButton("Edit");
+            this.comp = comp;
+            this.info = info;
+            
             this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             this.setBackground(Color.WHITE);
 
@@ -482,6 +490,7 @@ public class AjouterPage {
                 "[32]" +
                 "[32]" +
                 "[]" +
+                "[32]"+
                 "[32]"));
 
             //---- label1 ----
@@ -500,10 +509,42 @@ public class AjouterPage {
             add(textField2, "cell 1 2 2 1,growy, width 200px");
 
             //---- button1 ----
-            button1.setText("Ajouter");
-            add(button1, "cell 0 4,growy");
+            ajBtn.setText("Ajouter");
+            add(ajBtn, "cell 0 4,growy");
             
-            button1.addActionListener(l->{
+            add(editBtn, "cell 0 4,growy");
+            ajBtn.addActionListener(this);
+            editBtn.addActionListener(this);
+            
+        }
+
+        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
+        private JLabel label1;
+        private JLabel label2;
+        private JTextField textField1;
+        private JLabel label3;
+        private JTextField textField2;
+        private JButton ajBtn;
+        private JButton editBtn;
+        
+        public void addToEdit(String idFill, String libb){
+            ajBtn.setVisible(false);
+            editBtn.setVisible(true);
+            textField1.setEditable(false);
+            textField1.setText(idFill);
+            textField2.setText(libb);
+            
+        }
+        public void editToAdd(){
+            textField1.setText("");
+            textField2.setText("");
+            textField1.setEditable(true);
+            ajBtn.setVisible(true);
+            editBtn.setVisible(false);
+        }
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            if(ae.getSource()== ajBtn){
                 ExecutorService executorL = Executors.newSingleThreadExecutor();
                 Callable<Boolean> populateThread = () -> {
                     try{
@@ -528,18 +569,48 @@ public class AjouterPage {
                 catch(Exception e){
                     e.printStackTrace();
                 }
-            });
-            
-        }
+                executorL.shutdown();
+            }
+            else if(ae.getSource()==editBtn){
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Callable<Boolean> populateThread = () -> {
+                    try{
+                        MyDataBaseConnector dbc = new MyDataBaseConnector();
+                        dbc.query(String.format("update Specialite set filliere='%s' where idFill='%s'", 
+                                 textField2.getText(),textField1.getText()));
+                        // edit structure
+                        applyChangesToList(textField1.getText(),textField2.getText());
+                        return true;
+                    }catch(SQLException sqlE){
+                        JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                        
+                    }
+                    return false;
+                };
+                Future<Boolean> futureSp = executor.submit(populateThread);
+                try{
+                    if(futureSp.get()){
+                        comp.populateTable(MyComponents.listToObjects(info));
+                        JOptionPane.showMessageDialog(null, "Une Specialité a été modifiée\n" + textField1.getText()+": "+textField2.getText()); 
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                executor.shutdown();
+                editToAdd();
+                this.setVisible(false);
 
-        // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-        private JLabel label1;
-        private JLabel label2;
-        private JTextField textField1;
-        private JLabel label3;
-        private JTextField textField2;
-        private JButton button1;
-        // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
+            }
+        }
+        public void applyChangesToList(String id, String changedLibb){
+            for(Specialite sp: info)
+                if(sp.getIdFill().equals(id)){
+                    sp.setFillier(changedLibb);
+                    return;
+                }
+                    
+        }
     }
     public static class AjouterPFEDialog extends JDialog {
         private boolean isMonome;
@@ -583,13 +654,15 @@ public class AjouterPage {
             label25 = new JLabel();
             label28 = new JLabel();
             label31 = new JLabel();
-            scheduledChB = new JCheckBox();
-            stageChB = new JCheckBox();
+            approuveChB = new JCheckBox();
             valideChB = new JCheckBox();
             button1 = new JButton();
             
             JLabel soutLabel = new JLabel("Soutenance");
+            soutLabel.setVisible(false);
+            soutList.removeIf(s->s.isHasPFE());
             LoVSoutenance soutLoV = new LoVSoutenance(soutList);
+            soutLoV.setVisible(false);
             isMonome = true;
             hasInternship = false;
             //======== this ========
@@ -628,6 +701,7 @@ public class AjouterPage {
             //---- label4 ----
             label4.setText("Id PFE");
             contentPane.add(label4, "cell 1 1");
+            idPfeField.setEditable(false);
             contentPane.add(idPfeField, "cell 2 1,growy");
 
             //---- label5 ----
@@ -772,13 +846,9 @@ public class AjouterPage {
             contentPane.add(soutLabel,"cell 5 10, aligny top,growy 0");
             contentPane.add(soutLoV, "cell 6 10 3 1, aligny top");
 
-            //---- scheduledChB ----
-            scheduledChB.setText("Est approuv\u00e9 par la comit\u00e9");
-            contentPane.add(scheduledChB, "cell 1 11 2 1");
-
-            //---- stageChB ----
-            stageChB.setText("A fait un Stage");
-            contentPane.add(stageChB, "cell 1 12 2 1");
+            //---- approuveChB ----
+            approuveChB.setText("est approuvé par la comité");
+            contentPane.add(approuveChB, "cell 1 11 2 1");
 
             //---- valideChB ----
             valideChB.setText("Est valid\u00e9 par le rapporteur");
@@ -806,6 +876,7 @@ public class AjouterPage {
                         label31.setVisible(false);
                         encExtForm.setVisible(false);
                         isMonome = false;
+                        hasInternship=false;
                         
                         break;
                     case "Monôme/Externe":
@@ -813,15 +884,29 @@ public class AjouterPage {
                         label28.setVisible(false);
                         label31.setVisible(true);
                         encExtForm.setVisible(true);
+                        isMonome = true;
+                        hasInternship=true;
                         break;
                     case "Binôme/Externe":
                         etu2Form.setVisible(true);
                         label28.setVisible(true);
                         label31.setVisible(true);
                         encExtForm.setVisible(true);
+                        isMonome = false;
+                        hasInternship=true;
                         break;
+                }   
+            });
+            valideChB.addActionListener(l->{
+                if(valideChB.isSelected()){
+                    soutLoV.setVisible(true);
+                    soutLabel.setVisible(true);
                 }
-                
+                else{
+                    soutLoV.setVisible(false);
+                    soutLabel.setVisible(false);
+                }
+                    
             });
             button1.addActionListener(event->{
                 int duree;
@@ -829,11 +914,10 @@ public class AjouterPage {
                 if(AnneeField.getText().trim().equals("") || sujetField.getText().trim().equals("")|| themeField.getText().trim().equals("")||
                         descArea.getText().trim().equals("") || encIsimmForm.getIdText().equals("cin")|| rappIsimmForm.getIdText().equals("cin") ||
                         etu1Form.getIdText().equals("cin") || 
-                        (stageChB.isSelected() && (dateDebField.getText().trim().equals("") || dateFinField.getText().trim().equals(""))) ||
                         // Binome & Has Internship check
                         (!isMonome && etu2Form.getIdText().trim().equals("cin")) || (hasInternship && (encExtForm.getIdText().trim().equals("cin")))||
-                        (scheduledChB.isSelected() && soutLoV.getIdText().equals("id")) )
-                    JOptionPane.showMessageDialog(null, "Vous avez une(des) faute(s) de saisie des données", "Echec d'ajout", JOptionPane.ERROR_MESSAGE);
+                        (valideChB.isSelected() && soutLoV.getIdText().equals("id")) )
+                    JOptionPane.showMessageDialog(null,"Il faut remplir tous les champs", "Echec d'ajout", JOptionPane.ERROR_MESSAGE);
                 else{
                     //Add PFE
                     //PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, 
@@ -848,25 +932,50 @@ public class AjouterPage {
                     Callable<Boolean> populateThread = () -> {
                         try{
                             MyDataBaseConnector dbc = new MyDataBaseConnector();
-                            dbc.query(String.format("insert into PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, "
+                            String[] grFill = filliereCB.getSelectedItem().toString().split("_");
+                            String canBeNullDateDebut = canBeNull(dateDebField.getText(), ch->ch.equals(""));
+                            String canBeNullDateFin = canBeNull(dateFinField.getText(), ch->ch.equals(""));
+                            String dateR1 =formattedTextField1.getText();
+                            String dateR2 =formattedTextField2.getText();
+                            String idEncExt = canBeNull(encExtForm.getIdText(), ch->ch.equals("cin"));
+                            String idEtu2 = canBeNull(etu2Form.getIdText(), ch->ch.equals("cin"));
+                            String idSout =canBeNull(soutLoV.getIdText(), ch->ch.equals("id"));
+
+                            String exec = String.format("insert into PFE (IDPFE, THEMEPFE, SUJETPFE, ANNEE, DESCPFE, DUREESTAGE, ISAPPROVED, "
                                     + "ISSCHEDULED, ISVALIDBYRAPP, ISMONOME, HASINTERNSHIP, ISINTERNSHIPLOCAL, DATEDEBUT, DATEFIN, DATER1, "
                                     + "DATER2, ENCADEUREXT, FIRSTETU, SECONDETU, ENCADREUR, RAPPORTEUR, IDGR, IDFILL, IDSOU) "
-                                    + "values()"));
-                            String[] grFill = filliereCB.getSelectedItem().toString().split("_");
+                                    + "values(%d,'%s','%s',%d,'%s',%d,%d,%d,%d,%d,%d,%d,TO_DATE('"+canBeNullDateDebut+"', 'DD-MM-YYYY'),TO_DATE('"+canBeNullDateFin+"', 'DD-MM-YYYY'),"
+                                    + "TO_DATE('"+dateR1+"', 'DD-MM-YYYY'),TO_DATE('"+dateR2+"', 'DD-MM-YYYY'),"+idEncExt+",'%s',"+idEtu2+",'%s','%s','%s','%s',"+idSout+")",
+                                    Integer.parseInt(idPfeField.getText()),themeField.getText(), sujetField.getText(),Integer.parseInt(AnneeField.getText()),
+                                    descArea.getText(),duree,(approuveChB.isSelected())?1:0, 1,valideChB.isSelected()?1:0, isMonome?1:0, hasInternship?1:0, 
+                                    (encExtForm.getCountry().equalsIgnoreCase("Tunisia"))?1:0,
+                                    etu1Form.getIdText(),
+                                    encIsimmForm.getIdText(), 
+                                    rappIsimmForm.getIdText(),
+                                    grFill[0], grFill[1]);
 
-                            info.add(new PFE(Integer.parseInt(idPfeField.getText()), themeField.getText(), sujetField.getText(), descArea.getText(), grFill[0], grFill[1], 
-                                    Integer.parseInt(AnneeField.getText()), format.parse(canBeNull(dateDebField.getText(), ch->ch.equals(""))), duree, 
-                                    format.parse(canBeNull(dateFinField.getText(), ch->ch.equals(""))),format.parse(formattedTextField1.getText()), 
-                                    format.parse(formattedTextField2.getText()), canBeNull(encExtForm.getIdText(), ch->ch.equals("cin")), 
-                                    etu1Form.getIdText(), canBeNull(etu2Form.getIdText(), ch->ch.equals("cin")),encIsimmForm.getIdText(),rappIsimmForm.getIdText(), 
-                                    canBeNull(soutLoV.getIdText(), ch->ch.equals("id")), true, scheduledChB.isSelected(), valideChB.isSelected(), isMonome, hasInternship, 
+                            dbc.query(exec);
+                            
+
+                            info.add(new PFE(Integer.parseInt(idPfeField.getText()), themeField.getText(), sujetField.getText(), descArea.getText(), 
+                                    grFill[0], grFill[1], Integer.parseInt(AnneeField.getText()),format.parse(canBeNullDateDebut), duree, format.parse(canBeNullDateFin), 
+                                    format.parse(dateR1), format.parse(dateR2) ,idEncExt, etu1Form.getIdText(),idEtu2,encIsimmForm.getIdText(),rappIsimmForm.getIdText(), 
+                                    idSout, approuveChB.isSelected(), true, valideChB.isSelected(), isMonome, hasInternship, 
                                     encExtForm.getCountry().equalsIgnoreCase("Tunisia")));
+
+                            // Mettre à jour la soutenance visé (hasPFE= 1)
+                            if(idSout!=null)
+                                dbc.query("update Soutenance set hasPFE =1 where idSou="+idSout);
+
+
                             return true;
                         }catch(SQLException sqlE){
 
                             sqlE.printStackTrace();
-                            JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                            //JOptionPane.showMessageDialog(null, sqlE, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
 
+                        }catch(Exception e){
+                            e.printStackTrace();
                         }
 
                         return false;
@@ -874,7 +983,7 @@ public class AjouterPage {
                     Future<Boolean> futureSp = executorL.submit(populateThread);
                     try{
                         if(futureSp.get()){
-                            comp.clearTable();
+                            comp.populateTable(MyComponents.listToObjects(info));
                             JOptionPane.showMessageDialog(null, "Une nouvelle PFE a été ajouté\n" + idPfeField.getText()); 
                             dispose();
                         }
@@ -888,7 +997,7 @@ public class AjouterPage {
         }
 
         private JLabel label4;
-        private JTextField idPfeField;
+        public JTextField idPfeField;
         private JLabel label5;
         private JTextField AnneeField;
         private JLabel label6;
@@ -923,8 +1032,7 @@ public class AjouterPage {
         
         private JLabel label31;
        
-        private JCheckBox scheduledChB;
-        private JCheckBox stageChB;
+        private JCheckBox approuveChB;
         private JCheckBox valideChB;
         private JButton button1;
         // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
@@ -1044,7 +1152,7 @@ public class AjouterPage {
                                 Integer.parseInt(idSField.getText()),heureSField.getText(),
                                 (estValidChB.isSelected())?1:0,LoVExam.getIdText(), Integer.parseInt(textField1.getText())));
                         info.add(new Soutenance(Integer.parseInt(idSField.getText()),format.parse(dateSField.getText()),heureSField.getText(),
-                                estValidChB.isSelected(),LoVExam.getIdText(), LoVExam.getNom(),LoVExam.getPrenom(),Integer.parseInt(textField1.getText())));
+                                estValidChB.isSelected(),LoVExam.getIdText(), LoVExam.getNom(),LoVExam.getPrenom(),Integer.parseInt(textField1.getText()),false));
                         return true;
                     }catch(SQLException sqlE){
                         
@@ -1292,6 +1400,7 @@ public class AjouterPage {
     public static String canBeNull(String obj, Predicate<String> pred){
         if(pred.test(obj))
             return null;
+        System.out.println("\n\n'"+obj+"'\n\n");
         return obj;
     }
 }

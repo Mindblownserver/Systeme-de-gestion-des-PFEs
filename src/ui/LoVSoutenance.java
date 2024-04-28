@@ -49,8 +49,8 @@ public class LoVSoutenance extends JPanel {
             if (value instanceof String) {
                 // Get the first half of the string
                 String aux =(String) value;
-                int indexComma = aux.indexOf(",");
-                String slicedText = aux.substring(0, indexComma);
+                int indexComma = aux.lastIndexOf(",");
+                String slicedText = aux.substring(0,indexComma);
                 label.setText(slicedText);
             }
 
@@ -105,9 +105,9 @@ public class LoVSoutenance extends JPanel {
                 String np,idSout;
                 String item = list.getSelectedValue().toString();
                 int indexComma = item.indexOf(",");
-                int indexComma2 = item.indexOf(indexComma);
-                np = item.substring(0, indexComma);
-                idSout = item.substring(indexComma+1,indexComma2);
+                int indexComma2 = item.lastIndexOf(",");
+                np = item.substring(indexComma+1, indexComma2);
+                idSout = item.substring(0,indexComma);
                 
                 
                 idField.setText(idSout);

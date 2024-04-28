@@ -8,6 +8,8 @@ import model.*;
 import repo.MyDataBaseConnector;
 import java.util.List;
 import java.sql.ResultSet;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 /*
  * Created by JFormDesigner on Fri Mar 29 13:45:27 WAT 2024
  */
@@ -19,7 +21,8 @@ import java.sql.ResultSet;
  */
 public class MainWindow extends JFrame {
 	private JMenuBar mb;
-	private JMenu file;
+        private JMenu home;
+	private JMenu exit;
         private JMenu pfe;
         private JMenuItem pfeConsult;
 	private JMenu jury;
@@ -34,13 +37,11 @@ public class MainWindow extends JFrame {
 	private JMenuItem paramSpecialite;
 	private JMenuItem paramEncadreurExt;
         private JMenuItem paramLocal;
-	private JMenuItem fileExit;
-        private JMenuItem fileSave;
         private JPanel cardContainer;
 	private CardLayout cl=new CardLayout();
         // declare pages
 	private MainLoginPage loginPanel;
-        private HomePage homePage;
+        private NewHomePage homePage;
         private ViewEnseignantPanel enseignantP;
         private ViewEtudiantPanel etudiantP;
         private viewPfePanel pfeP;
@@ -70,8 +71,10 @@ public class MainWindow extends JFrame {
             System.out.println();
             mb=new JMenuBar();
             mb.setFont(MyComponents.h3);
-            file =new JMenu("file");
-            file.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("file.svg")));
+            exit =new JMenu("Exit");
+            home =new JMenu("Home");
+            exit.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("exit.svg")));
+            home.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("home.svg")));
             pfe = new JMenu("PFE");
             pfe.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("pfe.svg")));
             jury = new JMenu("Jury");
@@ -89,8 +92,6 @@ public class MainWindow extends JFrame {
             paramGroupe = new JMenuItem("Groupe");
             paramSpecialite = new JMenuItem("Specialité");
             paramLocal = new JMenuItem("Locale");
-            fileExit = new JMenuItem("exit");
-            fileSave = new JMenuItem("save data");
             etudConsult= new JMenuItem("Consulter etudiant");
             ensConsult = new JMenuItem("Consulter enseignant");
             pfeConsult = new JMenuItem("Consulter PFE");
@@ -101,7 +102,7 @@ public class MainWindow extends JFrame {
             // inits pages
             cardContainer = new JPanel();
             loginPanel = new MainLoginPage();
-            homePage = new HomePage();
+            homePage = new NewHomePage();
             enseignantP = new ViewEnseignantPanel(Enseignant.getColumnNames(),ensList);
             etudiantP = new ViewEtudiantPanel(Etudiant.getColumnNames(),etuList);
             pfeP = new viewPfePanel(PFE.getColumnNames(), pfeList, ensList, encExtList, etuList,grList,soutList);
@@ -121,8 +122,6 @@ public class MainWindow extends JFrame {
                 etudiant.add(etudConsult);
                 enseignant.add(ensConsult);
                 pfe.add(pfeConsult);
-                file.add(fileExit);
-                file.add(fileSave);
                 jury.add(juryConsult); // sa propre façon de lecture
                 param.add(paramGroupe);
                 param.add(paramSpecialite);
@@ -130,12 +129,14 @@ public class MainWindow extends JFrame {
                 param.add(paramOrganismeExt);
                 param.add(paramEncadreurExt);
                 param.add(paramLocal);
-                mb.add(file);
+                mb.add(home);
                 mb.add(pfe);
                 mb.add(jury);
                 mb.add(etudiant);
                 mb.add(enseignant);
                 mb.add(param);
+                mb.add(exit);
+                
             }
             // setup this cardContainer & ActionListeners
             {
@@ -215,8 +216,38 @@ public class MainWindow extends JFrame {
                 });
 
 
-                fileExit.addActionListener(l->{
-                    System.exit(0);
+                exit.addMenuListener(new MenuListener() {
+                    @Override
+                    public void menuSelected(MenuEvent me) {
+                        System.exit(0);
+                    }
+
+                    @Override
+                    public void menuDeselected(MenuEvent me) {
+                        
+                    }
+
+                    @Override
+                    public void menuCanceled(MenuEvent me) {
+                        
+                    }
+                });
+                home.addMenuListener(new MenuListener() {
+                    @Override
+                    public void menuSelected(MenuEvent me) {
+                        cl.show(cardContainer, "2");
+                        home.setSelected(false);
+                    }
+
+                    @Override
+                    public void menuDeselected(MenuEvent me) {
+             
+                    }
+
+                    @Override
+                    public void menuCanceled(MenuEvent me) {
+             
+                    }
                 });
 
             }
@@ -242,12 +273,13 @@ public class MainWindow extends JFrame {
                 loadEns();
                 loadEtu();
                 loadJury();
-                loadPfe();
                 loadSout();
+                loadPfe();
+                
                 dbc.conn.close();
                 
             }catch(Exception e){
-                System.out.println("ERROORRRR "+e);
+                System.out.println("\n\n ERROORRRR \n\n"+e);
             }
             
             
@@ -330,13 +362,13 @@ public class MainWindow extends JFrame {
             }   
         }
         private void loadSout()throws ClassNotFoundException,SQLException{
-            dbc.query("Select IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY, ens.NOM,ens.PRENOM from Soutenance s "
-                    + "join Enseignant e on e.cin = s.EXAMINATEUR");
+            dbc.query("Select IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY, hasPFE,ens.NOM,ens.PRENOM from Soutenance s "
+                    + "join Enseignant ens on ens.cin = s.EXAMINATEUR order by IDSOU");
             ResultSet res = dbc.rs;
             while(dbc.rs.next()){
-                // IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY
+                
                 soutList.add(new Soutenance(res.getInt("IDSou"), res.getDate("DateSout"), res.getString("Heure"), res.getBoolean("IsValid"),
-                res.getString("examinateur"),res.getString(7),res.getString(8), res.getInt("IDJURY")));
+                res.getString("examinateur"),res.getString(8),res.getString(9), res.getInt("IDJURY"),res.getBoolean("hasPFE")));
                 
                 
             }   

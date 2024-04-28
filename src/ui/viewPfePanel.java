@@ -122,7 +122,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
 
                 //---- themeField ----
                 themeField.setEditable(false);
-                themeField.setText("Architecture des micro services");
+//                themeField.setText("Architecture des micro services");
                 themeField.setBackground(Color.white);
                 this.add(themeField, "cell 1 1,growy");
 
@@ -131,7 +131,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
                 this.add(label3, "cell 0 2,aligny center,growy 0");
 
                 //---- sujetField ----
-                sujetField.setText("Migration d'une application vers une architecture micro services");
+  //              sujetField.setText("Migration d'une application vers une architecture micro services");
                 sujetField.setEditable(false);
                 sujetField.setBackground(Color.white);
                 this.add(sujetField, "cell 1 2,growy");
@@ -144,7 +144,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
                 {
 
                     //---- descArea ----
-                    descArea.setText("M\u00e9moire de fin de cycle pour l'obtention du dipl\u00f4me de master en sciences commerciales\nOption : Marketing Th\u00e8me : R\u00e9alis\u00e9 par : Encadr\u00e9 par : AMROUCHI Kaci Mr. KHERRI Abdenacer Maitre de conf\u00e9rences \u00e0 HEC Alger 5 \u00e8me promotion Juin 2018 \n\u00c9cole des Hautes \u00c9tudes Commerciales \nL'impact de la communication digitale sur la fid\u00e9lisation de la client\u00e8le \n\u00c9tude de cas : Formation-dz R\u00e9sum\u00e9 I R\u00e9sum\u00e9 : \nLe monde a chang\u00e9, la soci\u00e9t\u00e9 a \u00e9volu\u00e9, l'av\u00e8nement du digital a modifi\u00e9 nos habitudes et notre fa\u00e7on de vivre.");
+    //                descArea.setText("M\u00e9moire de fin de cycle pour l'obtention du dipl\u00f4me de master en sciences commerciales\nOption : Marketing Th\u00e8me : R\u00e9alis\u00e9 par : Encadr\u00e9 par : AMROUCHI Kaci Mr. KHERRI Abdenacer Maitre de conf\u00e9rences \u00e0 HEC Alger 5 \u00e8me promotion Juin 2018 \n\u00c9cole des Hautes \u00c9tudes Commerciales \nL'impact de la communication digitale sur la fid\u00e9lisation de la client\u00e8le \n\u00c9tude de cas : Formation-dz R\u00e9sum\u00e9 I R\u00e9sum\u00e9 : \nLe monde a chang\u00e9, la soci\u00e9t\u00e9 a \u00e9volu\u00e9, l'av\u00e8nement du digital a modifi\u00e9 nos habitudes et notre fa\u00e7on de vivre.");
                     descArea.setRows(13);
                     descArea.setLineWrap(true);
                     descArea.setEditable(false);
@@ -359,6 +359,7 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
         pfeTab.setBackground(Color.WHITE);
 
         ajouterBtn.addActionListener(l->{
+            ajouterPfeD.idPfeField.setText(String.valueOf(getNextPfeId()));
             ajouterPfeD.setVisible(true);
         });
         eastBorder.setPreferredSize(new Dimension(10,0));
@@ -488,6 +489,21 @@ public class viewPfePanel extends JPanel implements TableActionEvent{
 
     @Override
     public void onView(int row) {
+    }
+    
+    public int getNextPfeId(){
+        try{
+            MyDataBaseConnector dbc = new MyDataBaseConnector();
+            
+            dbc.query("select max(IDPFE) nbr from PFE ");
+            dbc.rs.next();
+            int i = dbc.rs.getInt("nbr");
+            dbc.conn.close();
+            return i+1;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return -1;
     }
 }
 

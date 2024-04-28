@@ -1,6 +1,6 @@
 package model;
 
-public class Enseignant extends Personne{
+public class Enseignant extends Personne implements ColumnNames{
     private String grad;
     private boolean canBePresident;
     private String photo;

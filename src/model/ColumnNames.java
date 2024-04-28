@@ -9,6 +9,6 @@ package model;
  * @author yassine
  */
 public interface ColumnNames {
-    public String [] getColumnNames();
+    public static String [] getColumnNames();
     
 }

@@ -13,9 +13,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -94,10 +96,6 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                 JComboBox<String> grpCB = new JComboBox<>();
                 MyComponents.EtudiantTable table = new MyComponents.EtudiantTable(info);
 
-                deleteBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
-                
-                modifyBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
-
 		//======== this ========
 		setLayout(new BorderLayout());
 
@@ -131,82 +129,107 @@ public class ViewEtudiantPanel extends javax.swing.JPanel {
                                 panel1.setVisible(estVisible);
 				panel1.setBorder(LineBorder.createBlackLineBorder());
 				panel1.setLayout(new MigLayout(
-					"insets 0 4 50 0,hidemode 3,alignx center",
+					"insets 0 4 50 0,hidemode 3,alignx center,debug",
 					// columns
 					"[80,fill]" +
 					"[97,fill]",
 					// rows
-					"[40,shrink 0,top]" +
-					"[42]0" +
+					"[37,shrink 0,top]" +
+					"[32]0" +
+					"[32,fill]5" +
+					"[32]0" +
+                                        "[32,fill]5" +
+					"[32]0" +
+					"[32,fill]5" +
 					"[32]" +
-					"[42]0" +
-					"[32,fill]" +
-					"[41]" +
-					"[32,fill]" +
-					"[42]" +
-                                        "[32,fill]" +
-					"[42]" +
-					"[32,fill]" +
-                                        "[42]" +
-                                        "[32,fill]" +
-					"[42]" +
-					"[32,fill]" +
-					"20[32, fill]" 
+					"[32,fill]5" +
+					"[32]" +
+                                        "[32,fill]5" +
+					"[32]" +
+					"[32,fill]5" +
+                                        "[32]" +
+                                        "[32,fill]5" +
+					"[32]" +
+					"[32,fill]5" +
+					"[32]5" +
+                                        "3[32, fill]" 
                                         ));
 
 				//---- titreAjout ----
 				titreAjout.setText("Ajouter etudiant");
-				titreAjout.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
+				titreAjout.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
 				panel1.add(titreAjout, "cell 0 0 2 1,height 100:100:100");
 
 				//---- cin ----
 				cin.setText("cin ");
-				cin.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 15));
+				cin.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
 				panel1.add(cin, "cell 0 1");
 				panel1.add(cinField, "cell 0 2,growy");
+                                
+                                JLabel nceLbl = new JLabel("NCE ");
+				nceLbl.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+				panel1.add(nceLbl, "cell 0 3");
+                                JTextField nceField = new JTextField();
+				panel1.add(nceField, "cell 0 4,growy");
 
 				//---- prenom ----
 				prenom.setText("Prenom");
-				panel1.add(prenom, "cell 0 3");
-				panel1.add(prenomField, "cell 0 4 2 1, width 200px");
+				panel1.add(prenom, "cell 0 5");
+				panel1.add(prenomField, "cell 0 6 2 1, width 200px");
 
 				//---- nom ----
 				nom.setText("Nom");
-				panel1.add(nom, "cell 0 5");
-				panel1.add(nomField, "cell 0 6 2 1,width 200px");
+				panel1.add(nom, "cell 0 7");
+				panel1.add(nomField, "cell 0 8 2 1,width 200px");
 
 				//---- photo ----
 				photo.setText("photo");
-				panel1.add(photo, "cell 0 7");
-				panel1.add(photoCB, "cell 0 8 2 1,width 200px");
+				panel1.add(photo, "cell 0 9");
+				panel1.add(photoCB, "cell 0 10 2 1,width 200px");
                                 
                                 //---- Filliere ----
 				grp.setText("Fillière");
-				panel1.add(grp, "cell 0 9");
-				panel1.add(grpCB, "cell 0 10 2 1,width 200px");
+				panel1.add(grp, "cell 0 11");
+				panel1.add(grpCB, "cell 0 12 2 1,width 200px");
                                 
                                 //---- Email ----
 				JLabel emailLbl = new JLabel("Email");
-				panel1.add(emailLbl, "cell 0 11");
+				panel1.add(emailLbl, "cell 0 13");
                                 JTextField emailField = new JTextField();
                                 
-				panel1.add(emailField, "cell 0 12 2 1,width 200px");
+				panel1.add(emailField, "cell 0 14 2 1,width 200px");
                                 
                                 //---- tel ----
 				JLabel telLbl = new JLabel("Tel");
-				panel1.add(telLbl, "cell 0 13");
+				panel1.add(telLbl, "cell 0 15");
                                 JTextField telField = new JTextField();
-				panel1.add(telField, "cell 0 14 2 1,width 200px");
+				panel1.add(telField, "cell 0 16 2 1,width 200px");
+                                
+                                JCheckBox hasBinomeChB = new JCheckBox("Aura un binôme?");
+                                panel1.add(hasBinomeChB, "cell 0 17 2 1");
                                 
                                 //---- AjouterBtn ----
 				AjouterBtn.setText("Ajouter Etudiant");
-				panel1.add(AjouterBtn, "cell 0 15 2 1");
+				panel1.add(AjouterBtn, "cell 0 18, width 80px");
+                                
                                 AjouterBtn.addActionListener(event->{
                                     try{
                                         MyDataBaseConnector dbc = new MyDataBaseConnector();
-                                        dbc.query("insert into Etudiant (cin, nom, prenom, email, tel, photo,nce,hasBinome) VALUES "
-                                                + "()");
-                                    }catch(Exception e){
+                                        dbc.query(String.format("insert into Etudiant (cin, nom, prenom, email, tel, photo,nce,hasBinome) VALUES "
+                                                + "('%s','%s','%s','%s','%s','%s','%s',%d)"
+                                                ,cinField.getText(),nomField.getText(),prenomField.getText(),emailField.getText(),telField.getText(),
+                                                photoCB.getText(),nceField.getText(),(hasBinomeChB.isSelected())?1:0));
+                                        
+                                        info.add(new Etudiant(cinField.getText(), nomField.getText(), prenomField.getText(), photoCB.getText(), emailField.getText()
+                                                ,telField.getText(), nceField.getText(), hasBinomeChB.isSelected()));
+                                        table.populateTable(MyComponents.listToObjects(info));
+                                        
+                                        JOptionPane.showMessageDialog(null, "Un nouveau Étudiant a été ajouté " + cinField.getText()+":"+prenomField.getText() +" "+nomField.getText());
+                                    
+                                    }catch(java.sql.SQLException sql){
+                                        JOptionPane.showMessageDialog(null, sql, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                    catch(Exception e){
                                         e.printStackTrace();
                                     }
                                 });

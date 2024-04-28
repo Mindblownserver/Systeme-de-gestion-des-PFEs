@@ -11,6 +11,9 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import model.*;
 import net.miginfocom.swing.MigLayout;
+import repo.MyDataBaseConnector;
+import ui.AjouterPage.AjouterEncadreurExt;
+import ui.MyComponents.EncadreurExterieurTable;
 public class ViewEncadreurExternePanel extends JPanel {
 	private JLabel title;
 	private JPanel border2;
@@ -20,19 +23,48 @@ public class ViewEncadreurExternePanel extends JPanel {
 	private JButton deleteBtn = new JButton();
 	private JButton ajouterBtn = new JButton("Ajouter");    
 	private Boolean estVisible=false;
+        private MyComponents.EncadreurExterieurTable table;
+        private AjouterPage.AjouterEncadreurExt leftComp;
+        
+        private TableActionEvent event = new TableActionEvent() {
+            @Override
+            public void onEdit(int row) {
+                System.out.println("Edit row : " + row);
+                
+            }
+
+            @Override
+            public void onDelete(int row) {
+                System.out.println("Delete row : " + row);
+                String idEncadExt = table.getTable().getModel().getValueAt(row, 0).toString();
+                try{
+                    MyDataBaseConnector dbc = new MyDataBaseConnector();
+                    dbc.query("update PFE "
+                            + "set ENCADEUREXT=null "
+                            + "where ENCADEUREXT='"+idEncadExt+"'");
+                    dbc.query("delete from ENCADREUREXT where cin='"+idEncadExt+"'");
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onView(int row) {
+                System.out.println("View row : " + row);
+            }
+        };
         
 	public ViewEncadreurExternePanel(String nomDuClasse, List<EncadreurExt> info, String[] comboBoxValues) {
-                JComponent leftComp = null;
-                ComponentWithTable tableComp=null;
-                tableComp = new MyComponents.EncadreurExterieurTable(info);
-                leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues, info, tableComp);
+                table = new MyComponents.EncadreurExterieurTable(info,event);
+                leftComp= new AjouterPage.AjouterEncadreurExt(comboBoxValues, info, table);
                 
 
                 
-		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
+		initComponents(nomDuClasse,info.get(0).getColumnNames(),table,leftComp);
 	}
 
-	private void initComponents(String nomDuClasse, String[] critereTab, ComponentWithTable table ,JComponent leftAddition) {
+	private void initComponents(String nomDuClasse, String[] critereTab, EncadreurExterieurTable table ,AjouterEncadreurExt leftAddition) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		border2 = new JPanel();
 		centerContent = new JPanel();
@@ -106,8 +138,7 @@ public class ViewEncadreurExternePanel extends JPanel {
                 title.setFont(new Font("SansSerif", Font.BOLD, 24));
                 title.setHorizontalAlignment(SwingConstants.LEFT);
                 ajouterBtn.addActionListener(ee->{
-                    estVisible = !estVisible;
-                    leftAddition.setVisible(estVisible);
+                    leftAddition.setVisible(!leftAddition.isVisible());
                 });
                 // Modify Row
                  // Search functionality

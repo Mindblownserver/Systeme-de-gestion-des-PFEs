@@ -33,7 +33,7 @@ public class EncadreurExt extends Personne implements ColumnNames{
     }
 
     @Override
-    public String[] getColumnNames() {
+    public static String[] getColumnNames() {
         String[]res = {"Cin","Prenom","Nom","Email","tel","Poste","id Société"};
         return res;
     }

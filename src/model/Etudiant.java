@@ -1,6 +1,6 @@
 package model;
 
-public class Etudiant extends Personne {
+public class Etudiant extends Personne implements ColumnNames{
     private String NCE;
     private String photo;
     private boolean hasBinome;
@@ -33,7 +33,7 @@ public class Etudiant extends Personne {
     public void setHasBinome(boolean hasBinome) {
         this.hasBinome = hasBinome;
     }
-
+    
     public static String[] getColumnNames() {
         return new String[]{"Cin","Prenom","Nom","Photo","Nce","Email","Tel","A un binôme"};
     }

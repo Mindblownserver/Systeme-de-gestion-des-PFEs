@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Stack;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -1002,34 +1001,9 @@ public class MyComponents {
         }
     }
     public static class EncadreurExterieurTable extends JScrollPane implements ComponentWithTable{
-        TableActionEvent event = new TableActionEvent() {
-            @Override
-            public void onEdit(int row) {
-                System.out.println("Edit row : " + row);
-            }
-
-            @Override
-            public void onDelete(int row) {
-                System.out.println("Delete row : " + row);
-                String idEncadExt = encExtTable.getModel().getValueAt(row, 0).toString();
-                try{
-                    MyDataBaseConnector dbc = new MyDataBaseConnector();
-                    dbc.query("update PFE "
-                            + "set ENCADEUREXT=null "
-                            + "where ENCADEUREXT='"+idEncadExt+"'");
-                    dbc.query("delete from ENCADREUREXT where cin='"+idEncadExt+"'");
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onView(int row) {
-                System.out.println("View row : " + row);
-            }
-        };
-        public EncadreurExterieurTable(List<? extends ColumnNames> info){
+        TableActionEvent event ;
+        public EncadreurExterieurTable(List<? extends ColumnNames> info,TableActionEvent e){
+            this.event= e;
             initComponents(info);
         }
         

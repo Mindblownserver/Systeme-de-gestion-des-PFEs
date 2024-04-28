@@ -10,15 +10,17 @@ public class Soutenance {
     private Enseignant examinateur;
     private int idJury;
     private int idPfe=-1;
+    private boolean hasPFE=false;
     //IDSOU, DATESOUT, HEURE, ISVALID, EXAMINATEUR, IDJURY
 
-    public Soutenance(int id, Date date, String heure, boolean isValid, String cinExam, String nomExam,String prenomExam,int idJury) {
+    public Soutenance(int id, Date date, String heure, boolean isValid, String cinExam, String nomExam,String prenomExam,int idJury, boolean hasPFE) {
         this.idSout = id;
         this.date = date;
         this.heure = heure;
         this.examinateur = new Enseignant(cinExam,nomExam,prenomExam,null,null,null,null);
         this.idJury = idJury;
         this.isValid = isValid;
+        this.hasPFE=hasPFE;
     }
     public Soutenance(int id, Date date, String heure, boolean isValid, String cinExam,String nomExam,String prenomExam, int idJury,int pfe) {
         this.idSout = id;
@@ -28,6 +30,7 @@ public class Soutenance {
         this.idJury = idJury;
         this.isValid = isValid;
         this.idPfe = pfe;
+        this.hasPFE = true;
     }
 
 
@@ -85,6 +88,11 @@ public class Soutenance {
         return idSout;
     }
     public String toString(){
-        return examinateur.getPrenom()+" "+ examinateur.getNom()+","+idSout+","+examinateur.getCin();
+        return idSout+","+examinateur.getPrenom()+" "+ examinateur.getNom()+","+examinateur.getCin();
     }
+
+    public boolean isHasPFE() {
+        return hasPFE;
+    }
+    
 }

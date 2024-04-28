@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
+import java.sql.SQLException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
@@ -23,11 +24,16 @@ public class ViewSpecialitePanel extends JPanel {
 	private Boolean estVisible=false;
         private ComponentWithTable tableComp;
         private List<Specialite> info;
+        private AjouterPage.AjouterSp leftComp;
         
         TableActionEvent event = new TableActionEvent() {
             @Override
             public void onEdit(int row) {
                 System.out.println("Edit row : " + row);
+                String idFill=tableComp.getTable().getModel().getValueAt(row, 0).toString();
+                String libb=tableComp.getTable().getModel().getValueAt(row, 1).toString();
+                leftComp.addToEdit(idFill,libb);
+                leftComp.setVisible(true);
             }
 
             @Override
@@ -37,12 +43,15 @@ public class ViewSpecialitePanel extends JPanel {
                 try{
                     MyDataBaseConnector dbc = new MyDataBaseConnector();
                     dbc.query("delete from Specialite where idFill ='"+idFill+"'");
-                    dbc.query("delete from Groupe where idFill='"+idFill+"'");
-                    dbc.query("delete from Jury where idFill='"+idFill+"'");
-                    dbc.query("delete from Soutenance where idJury =(select idJury from Jury where idFill='"+idFill+"')");
-                    dbc.query("delete from PFE where idFill='"+idFill+"'");
-
-                }catch(Exception e){
+                }catch(SQLException sqlE){
+                    String errmsg;
+                    if(sqlE.getErrorCode()==2292)
+                        errmsg= "On ne peut pas supprimer une spécialité déjà utilisée";
+                    else
+                        errmsg = sqlE.getMessage();
+                    JOptionPane.showMessageDialog(null, errmsg, "Erreur de suppression", JOptionPane.ERROR_MESSAGE);
+                }
+                catch(Exception e){
                     e.printStackTrace();
                 }
                 if (tableComp.getTable().isEditing()) {
@@ -58,10 +67,7 @@ public class ViewSpecialitePanel extends JPanel {
             }
         };
         
-        
-	public ViewSpecialitePanel(String nomDuClasse, List<Specialite> info, String[] comboBoxValues) {
-                JComponent leftComp = null;
-                tableComp=null;
+	public ViewSpecialitePanel(String nomDuClasse, List<Specialite> info, String[] comboBoxValues) {               
                 this.info = info;
                 tableComp = new MyComponents.SpTable(info, event);
                 leftComp= new AjouterPage.AjouterSp(tableComp, info);
@@ -70,7 +76,7 @@ public class ViewSpecialitePanel extends JPanel {
 		initComponents(nomDuClasse,info.get(0).getColumnNames(),tableComp,leftComp);
 	}
 
-	private void initComponents(String nomDuClasse, String[] critereTab, ComponentWithTable table ,JComponent leftAddition) {
+	private void initComponents(String nomDuClasse, String[] critereTab, ComponentWithTable table ,AjouterPage.AjouterSp leftAddition) {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		border2 = new JPanel();
 		centerContent = new JPanel();
@@ -80,7 +86,6 @@ public class ViewSpecialitePanel extends JPanel {
                 JTextField searchBar= new JTextField();
                 JComboBox critereCB= new JComboBox<>(critereTab);
                 JPanel titlePanel = new JPanel();
-                JPanel eastBorder = new JPanel();
                 
                 deleteBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("delete.svg")));
                 modifyBtn.setIcon(new FlatSVGIcon(ClassLoader.getSystemResource("edit.svg")));
@@ -144,8 +149,8 @@ public class ViewSpecialitePanel extends JPanel {
                 title.setFont(new Font("SansSerif", Font.BOLD, 24));
                 title.setHorizontalAlignment(SwingConstants.LEFT);
                 ajouterBtn.addActionListener(ee->{
-                    estVisible = !estVisible;
-                    leftAddition.setVisible(estVisible);
+                    leftAddition.editToAdd();
+                    leftAddition.setVisible(!leftAddition.isVisible());
                 });
                 // Modify Row
                  // Search functionality

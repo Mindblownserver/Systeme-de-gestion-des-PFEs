@@ -27,6 +27,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -127,22 +128,26 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                                 "[80,fill]" +
                                 "[97,fill]",
                                 // rows
-                                "[40,shrink 0,top]" +
-                                "[42]0" +
+                                "[37,shrink 0,top]" +
+                                "[32]0" +
+                                "[32,fill]5" +
+                                "[32]0" +
+                                "[32,fill]5" +
+                                "[32]0" +
+                                "[32,fill]5" +
                                 "[32]" +
-                                "[42]0" +
-                                "[32,fill]" +
-                                "[41]" +
+                                "[32,fill]5" +
                                 "[32]" +
-                                "[42]" +
+                                "[32,fill]5" +
                                 "[32]" +
-                                "[41]" +
+                                "[32,fill]5" +
                                 "[32]" +
-                                "[42]0" +
-                                "[13,fill]" +
+                                "[32,fill]5" +
                                 "[32]" +
-                                "[]" +
-                                "[]"));
+                                "[32,fill]5" +
+                                "[32]5" +
+                                "3[32, fill]" 
+                        ));
 
                         //---- titreAjout ----
                         titreAjout.setText("Ajouter enseignant");
@@ -153,7 +158,7 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         cin.setText("cin ");
                         cin.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 15));
                         panel1.add(cin, "cell 0 1");
-                        panel1.add(cinField, "cell 0 2, width 50px");
+                        panel1.add(cinField, "cell 0 2, width 100px");
 
                         //---- prenom ----
                         prenom.setText("Prenom");
@@ -169,27 +174,49 @@ public class ViewEnseignantPanel extends javax.swing.JPanel {
                         grad.setText("grad");
                         panel1.add(grad, "cell 0 7");
                         panel1.add(gradField, "cell 0 8, width 50px");
+                        
+                        JLabel photoLbl = new JLabel("photo");
+                        panel1.add(photoLbl, "cell 0 9");
+                        JTextField photoField = new JTextField();
+                        panel1.add(photoField, "cell 0 10 2 1, width 200px");
 
                         //---- label7 ----
-                        label7.setText("theme");
-                        panel1.add(label7, "cell 0 9");
-                        panel1.add(themeField, "cell 0 10 2 1, width 200px");
+                        label7.setText("email");
+                        panel1.add(label7, "cell 0 11");
+                        JTextField emailField = new JTextField();
+                        panel1.add(emailField, "cell 0 12 2 1, width 200px");
+                        
+                        JLabel telLbl = new JLabel("tel");
+                        panel1.add(telLbl, "cell 0 13");
+                        JTextField telField = new JTextField();
+                        panel1.add(telField, "cell 0 14 2 1, width 200px");
 
                         //---- label8 ----
                         label8.setText("Peut \u00eatre president?");
-                        panel1.add(label8, "cell 0 11 2 1");
-                        panel1.add(presidentCheckBox, "cell 0 12");
+                        panel1.add(label8, "cell 0 15 2 1");
+                        panel1.add(presidentCheckBox, "cell 0 16");
 
                         //---- AjouterBtn ----
                         AjouterBtn.setText("Ajouter enseignant");
-                        panel1.add(AjouterBtn, "cell 0 14 2 1");
+                        panel1.add(AjouterBtn, "cell 0 17 2 1");
                         
                         AjouterBtn.addActionListener(event->{
                                     try{
                                         MyDataBaseConnector dbc = new MyDataBaseConnector();
-                                        dbc.query("insert into Etudiant (cin, nom, prenom, email, tel, photo,nce,hasBinome) VALUES "
-                                                + "()");
-                                    }catch(Exception e){
+                                        dbc.query(String.format("insert into Enseignant(cin, nom, prenom, email, tel, photo, grad,canBePres) VALUES "
+                                                + "('%s','%s','%s','%s','%s','%s','%s',%d)",
+                                                cinField.getText(),nomField.getText(),prenomField.getText(),emailField.getText(),telField.getText(),
+                                                photoField.getText(), gradField.getText(),(presidentCheckBox.isSelected())?1:0));
+                                        info.add(new Enseignant(cinField.getText(), nomField.getText(), prenomField.getText(), photoField.getText(), 
+                                                emailField.getText(), telField.getText(), gradField.getText(),presidentCheckBox.isSelected()));
+                                        
+                                        table.populateTable(MyComponents.listToObjects(info));
+                                        JOptionPane.showMessageDialog(null, "Un nouveau Étudiant a été ajouté " + cinField.getText()+":"+prenomField.getText() +" "+nomField.getText());
+                                    
+                                    }catch(java.sql.SQLException sql){
+                                        JOptionPane.showMessageDialog(null, sql, "Erreur D'ajout", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                    catch(Exception e){
                                         e.printStackTrace();
                                     }
                                 });
